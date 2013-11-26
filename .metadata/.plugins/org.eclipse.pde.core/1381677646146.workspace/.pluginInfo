@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<map>
-	<bundle bundleID="727" localization="OSGI-INF/l10n/bundle" name="org.example.sampledsl" project="org.example.sampledsl" provider="My Company"/>
-	<bundle bundleID="728" localization="OSGI-INF/l10n/bundle" name="org.example.sampledsl.tests" project="org.example.sampledsl.tests" provider="My Company"/>
-	<bundle bundleID="729" localization="OSGI-INF/l10n/bundle" name="org.example.sampledsl.ui" project="org.example.sampledsl.ui" provider="My Company"/>
-</map>

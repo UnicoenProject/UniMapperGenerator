@@ -1,0 +1,31 @@
+grammar org.xtext.example.mydsl.MyDsl with org.eclipse.xtext.common.Terminals
+
+generate myDsl "http://www.xtext.org/example/mydsl/MyDsl"
+
+Model:
+	Grammar rules+=Rule*;
+
+Grammar:
+	"grammar" gram=ID ";";
+
+Rule:
+	name=ID ":" exp=Expression ";";
+
+Expression:
+	elements+=Element ("|"
+	elements+=Element)*;
+
+Element:
+	(terms+=Term)+;
+
+Term:
+	rcall=RuleCall | bexp=BracketsExp | kword=Keyword;
+
+BracketsExp:
+	("(" Expression ")" | "[" Expression "]") ("+" | "*")?;
+
+Keyword:
+	text=STRING "?"?;
+
+RuleCall:
+	ref=[Rule|ID] ("+" | "*")?;
