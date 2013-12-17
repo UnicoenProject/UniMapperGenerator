@@ -3,17 +3,110 @@
  */
 package org.xtext.example.mydsl.generator;
 
+import com.google.common.collect.Iterables;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.generator.IFileSystemAccess;
 import org.eclipse.xtext.generator.IGenerator;
+import org.eclipse.xtext.xbase.lib.IteratorExtensions;
+import org.xtext.example.mydsl.myDsl.Element;
+import org.xtext.example.mydsl.myDsl.Expression;
+import org.xtext.example.mydsl.myDsl.Model;
+import org.xtext.example.mydsl.myDsl.Rule;
+import org.xtext.example.mydsl.myDsl.RuleCall;
+import org.xtext.example.mydsl.myDsl.Term;
 
-/**
- * Generates code from your model files on save.
- * 
- * see http://www.eclipse.org/Xtext/documentation.html#TutorialCodeGeneration
- */
 @SuppressWarnings("all")
 public class MyDslGenerator implements IGenerator {
   public void doGenerate(final Resource resource, final IFileSystemAccess fsa) {
+    TreeIterator<EObject> _allContents = resource.getAllContents();
+    Iterable<EObject> _iterable = IteratorExtensions.<EObject>toIterable(_allContents);
+    Iterable<Model> _filter = Iterables.<Model>filter(_iterable, Model.class);
+    for (final Model m : _filter) {
+      CharSequence _compile = this.compile(m);
+      fsa.generateFile("model.g", _compile);
+    }
+  }
+  
+  public CharSequence compile(final Model m) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("grammar CSV;");
+    _builder.newLine();
+    _builder.append("\t\t");
+    _builder.newLine();
+    {
+      EList<Rule> _rules = m.getRules();
+      for(final Rule r : _rules) {
+        CharSequence _compile = this.compile(r);
+        _builder.append(_compile, "");
+        _builder.newLineIfNotEmpty();
+      }
+    }
+    return _builder;
+  }
+  
+  public CharSequence compile(final Rule r) {
+    StringConcatenation _builder = new StringConcatenation();
+    String _name = r.getName();
+    _builder.append(_name, "");
+    _builder.append(" : ");
+    Expression _expression = r.getExpression();
+    CharSequence _compile = this.compile(_expression);
+    _builder.append(_compile, "");
+    _builder.append(" ;");
+    _builder.newLineIfNotEmpty();
+    return _builder;
+  }
+  
+  public CharSequence compile(final Expression exp) {
+    StringConcatenation _builder = new StringConcatenation();
+    {
+      EList<Element> _elements = exp.getElements();
+      for(final Element e : _elements) {
+        CharSequence _compile = this.compile(e);
+        _builder.append(_compile, "");
+        _builder.append(" | ");
+      }
+    }
+    _builder.newLineIfNotEmpty();
+    return _builder;
+  }
+  
+  public CharSequence compile(final Element e) {
+    StringConcatenation _builder = new StringConcatenation();
+    {
+      EList<Term> _terms = e.getTerms();
+      for(final Term t : _terms) {
+        CharSequence _compile = this.compile(t);
+        _builder.append(_compile, "");
+        _builder.newLineIfNotEmpty();
+      }
+    }
+    return _builder;
+  }
+  
+  public CharSequence compile(final Term t) {
+    StringConcatenation _builder = new StringConcatenation();
+    {
+      EList<RuleCall> _rCall = t.getRCall();
+      for(final RuleCall r : _rCall) {
+        CharSequence _compile = this.compile(r);
+        _builder.append(_compile, "");
+        _builder.newLineIfNotEmpty();
+      }
+    }
+    return _builder;
+  }
+  
+  public CharSequence compile(final RuleCall r) {
+    StringConcatenation _builder = new StringConcatenation();
+    Rule _ref = r.getRef();
+    String _name = _ref.getName();
+    _builder.append(_name, "");
+    _builder.newLineIfNotEmpty();
+    return _builder;
   }
 }

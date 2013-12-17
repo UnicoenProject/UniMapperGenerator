@@ -65,12 +65,11 @@ public class MyDslFactoryImpl extends EFactoryImpl implements MyDslFactory
     switch (eClass.getClassifierID())
     {
       case MyDslPackage.MODEL: return createModel();
-      case MyDslPackage.GRAMMAR: return createGrammar();
       case MyDslPackage.RULE: return createRule();
       case MyDslPackage.EXPRESSION: return createExpression();
       case MyDslPackage.ELEMENT: return createElement();
       case MyDslPackage.TERM: return createTerm();
-      case MyDslPackage.BRACKETS_EXP: return createBracketsExp();
+      case MyDslPackage.KEY_CONSTR: return createKeyConstr();
       case MyDslPackage.KEYWORD: return createKeyword();
       case MyDslPackage.RULE_CALL: return createRuleCall();
       default:
@@ -87,17 +86,6 @@ public class MyDslFactoryImpl extends EFactoryImpl implements MyDslFactory
   {
     ModelImpl model = new ModelImpl();
     return model;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public Grammar createGrammar()
-  {
-    GrammarImpl grammar = new GrammarImpl();
-    return grammar;
   }
 
   /**
@@ -149,10 +137,10 @@ public class MyDslFactoryImpl extends EFactoryImpl implements MyDslFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public BracketsExp createBracketsExp()
+  public KeyConstr createKeyConstr()
   {
-    BracketsExpImpl bracketsExp = new BracketsExpImpl();
-    return bracketsExp;
+    KeyConstrImpl keyConstr = new KeyConstrImpl();
+    return keyConstr;
   }
 
   /**

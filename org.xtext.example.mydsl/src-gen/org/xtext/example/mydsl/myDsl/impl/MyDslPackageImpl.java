@@ -9,10 +9,9 @@ import org.eclipse.emf.ecore.EReference;
 
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
-import org.xtext.example.mydsl.myDsl.BracketsExp;
 import org.xtext.example.mydsl.myDsl.Element;
 import org.xtext.example.mydsl.myDsl.Expression;
-import org.xtext.example.mydsl.myDsl.Grammar;
+import org.xtext.example.mydsl.myDsl.KeyConstr;
 import org.xtext.example.mydsl.myDsl.Keyword;
 import org.xtext.example.mydsl.myDsl.Model;
 import org.xtext.example.mydsl.myDsl.MyDslFactory;
@@ -35,13 +34,6 @@ public class MyDslPackageImpl extends EPackageImpl implements MyDslPackage
    * @generated
    */
   private EClass modelEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass grammarEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -76,7 +68,7 @@ public class MyDslPackageImpl extends EPackageImpl implements MyDslPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass bracketsExpEClass = null;
+  private EClass keyConstrEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -170,29 +162,9 @@ public class MyDslPackageImpl extends EPackageImpl implements MyDslPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getGrammar()
+  public EReference getModel_Rules()
   {
-    return grammarEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EReference getGrammar_Rules()
-  {
-    return (EReference)grammarEClass.getEStructuralFeatures().get(0);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getGrammar_Gram()
-  {
-    return (EAttribute)grammarEClass.getEStructuralFeatures().get(1);
+    return (EReference)modelEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -220,7 +192,7 @@ public class MyDslPackageImpl extends EPackageImpl implements MyDslPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getRule_Exp()
+  public EReference getRule_Expression()
   {
     return (EReference)ruleEClass.getEStructuralFeatures().get(1);
   }
@@ -280,7 +252,7 @@ public class MyDslPackageImpl extends EPackageImpl implements MyDslPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getTerm_Rcall()
+  public EReference getTerm_KConstr()
   {
     return (EReference)termEClass.getEStructuralFeatures().get(0);
   }
@@ -290,7 +262,7 @@ public class MyDslPackageImpl extends EPackageImpl implements MyDslPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getTerm_Bexp()
+  public EReference getTerm_RCall()
   {
     return (EReference)termEClass.getEStructuralFeatures().get(1);
   }
@@ -300,9 +272,9 @@ public class MyDslPackageImpl extends EPackageImpl implements MyDslPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getTerm_Kword()
+  public EClass getKeyConstr()
   {
-    return (EReference)termEClass.getEStructuralFeatures().get(2);
+    return keyConstrEClass;
   }
 
   /**
@@ -310,9 +282,9 @@ public class MyDslPackageImpl extends EPackageImpl implements MyDslPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getBracketsExp()
+  public EReference getKeyConstr_KWord()
   {
-    return bracketsExpEClass;
+    return (EReference)keyConstrEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -386,14 +358,11 @@ public class MyDslPackageImpl extends EPackageImpl implements MyDslPackage
 
     // Create classes and their features
     modelEClass = createEClass(MODEL);
-
-    grammarEClass = createEClass(GRAMMAR);
-    createEReference(grammarEClass, GRAMMAR__RULES);
-    createEAttribute(grammarEClass, GRAMMAR__GRAM);
+    createEReference(modelEClass, MODEL__RULES);
 
     ruleEClass = createEClass(RULE);
     createEAttribute(ruleEClass, RULE__NAME);
-    createEReference(ruleEClass, RULE__EXP);
+    createEReference(ruleEClass, RULE__EXPRESSION);
 
     expressionEClass = createEClass(EXPRESSION);
     createEReference(expressionEClass, EXPRESSION__ELEMENTS);
@@ -402,11 +371,11 @@ public class MyDslPackageImpl extends EPackageImpl implements MyDslPackage
     createEReference(elementEClass, ELEMENT__TERMS);
 
     termEClass = createEClass(TERM);
+    createEReference(termEClass, TERM__KCONSTR);
     createEReference(termEClass, TERM__RCALL);
-    createEReference(termEClass, TERM__BEXP);
-    createEReference(termEClass, TERM__KWORD);
 
-    bracketsExpEClass = createEClass(BRACKETS_EXP);
+    keyConstrEClass = createEClass(KEY_CONSTR);
+    createEReference(keyConstrEClass, KEY_CONSTR__KWORD);
 
     keywordEClass = createEClass(KEYWORD);
     createEAttribute(keywordEClass, KEYWORD__TEXT);
@@ -444,19 +413,14 @@ public class MyDslPackageImpl extends EPackageImpl implements MyDslPackage
     // Set bounds for type parameters
 
     // Add supertypes to classes
-    grammarEClass.getESuperTypes().add(this.getModel());
-    expressionEClass.getESuperTypes().add(this.getBracketsExp());
 
     // Initialize classes and features; add operations and parameters
     initEClass(modelEClass, Model.class, "Model", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(grammarEClass, Grammar.class, "Grammar", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getGrammar_Rules(), this.getRule(), null, "rules", null, 0, -1, Grammar.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getGrammar_Gram(), ecorePackage.getEString(), "gram", null, 0, 1, Grammar.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getModel_Rules(), this.getRule(), null, "rules", null, 0, -1, Model.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(ruleEClass, Rule.class, "Rule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getRule_Name(), ecorePackage.getEString(), "name", null, 0, 1, Rule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getRule_Exp(), this.getExpression(), null, "exp", null, 0, 1, Rule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getRule_Expression(), this.getExpression(), null, "expression", null, 0, 1, Rule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(expressionEClass, Expression.class, "Expression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getExpression_Elements(), this.getElement(), null, "elements", null, 0, -1, Expression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -465,11 +429,11 @@ public class MyDslPackageImpl extends EPackageImpl implements MyDslPackage
     initEReference(getElement_Terms(), this.getTerm(), null, "terms", null, 0, -1, Element.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(termEClass, Term.class, "Term", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getTerm_Rcall(), this.getRuleCall(), null, "rcall", null, 0, 1, Term.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getTerm_Bexp(), this.getBracketsExp(), null, "bexp", null, 0, 1, Term.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getTerm_Kword(), this.getKeyword(), null, "kword", null, 0, 1, Term.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getTerm_KConstr(), this.getKeyConstr(), null, "kConstr", null, 0, -1, Term.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getTerm_RCall(), this.getRuleCall(), null, "rCall", null, 0, -1, Term.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(bracketsExpEClass, BracketsExp.class, "BracketsExp", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEClass(keyConstrEClass, KeyConstr.class, "KeyConstr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getKeyConstr_KWord(), this.getKeyword(), null, "kWord", null, 0, -1, KeyConstr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(keywordEClass, Keyword.class, "Keyword", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getKeyword_Text(), ecorePackage.getEString(), "text", null, 0, 1, Keyword.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

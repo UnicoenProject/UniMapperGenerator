@@ -67,50 +67,22 @@ public interface MyDslPackage extends EPackage
   int MODEL = 0;
 
   /**
-   * The number of structural features of the '<em>Model</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int MODEL_FEATURE_COUNT = 0;
-
-  /**
-   * The meta object id for the '{@link org.xtext.example.mydsl.myDsl.impl.GrammarImpl <em>Grammar</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see org.xtext.example.mydsl.myDsl.impl.GrammarImpl
-   * @see org.xtext.example.mydsl.myDsl.impl.MyDslPackageImpl#getGrammar()
-   * @generated
-   */
-  int GRAMMAR = 1;
-
-  /**
    * The feature id for the '<em><b>Rules</b></em>' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int GRAMMAR__RULES = MODEL_FEATURE_COUNT + 0;
+  int MODEL__RULES = 0;
 
   /**
-   * The feature id for the '<em><b>Gram</b></em>' attribute.
+   * The number of structural features of the '<em>Model</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int GRAMMAR__GRAM = MODEL_FEATURE_COUNT + 1;
-
-  /**
-   * The number of structural features of the '<em>Grammar</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int GRAMMAR_FEATURE_COUNT = MODEL_FEATURE_COUNT + 2;
+  int MODEL_FEATURE_COUNT = 1;
 
   /**
    * The meta object id for the '{@link org.xtext.example.mydsl.myDsl.impl.RuleImpl <em>Rule</em>}' class.
@@ -120,7 +92,7 @@ public interface MyDslPackage extends EPackage
    * @see org.xtext.example.mydsl.myDsl.impl.MyDslPackageImpl#getRule()
    * @generated
    */
-  int RULE = 2;
+  int RULE = 1;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -132,13 +104,13 @@ public interface MyDslPackage extends EPackage
   int RULE__NAME = 0;
 
   /**
-   * The feature id for the '<em><b>Exp</b></em>' containment reference.
+   * The feature id for the '<em><b>Expression</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int RULE__EXP = 1;
+  int RULE__EXPRESSION = 1;
 
   /**
    * The number of structural features of the '<em>Rule</em>' class.
@@ -150,25 +122,6 @@ public interface MyDslPackage extends EPackage
   int RULE_FEATURE_COUNT = 2;
 
   /**
-   * The meta object id for the '{@link org.xtext.example.mydsl.myDsl.impl.BracketsExpImpl <em>Brackets Exp</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see org.xtext.example.mydsl.myDsl.impl.BracketsExpImpl
-   * @see org.xtext.example.mydsl.myDsl.impl.MyDslPackageImpl#getBracketsExp()
-   * @generated
-   */
-  int BRACKETS_EXP = 6;
-
-  /**
-   * The number of structural features of the '<em>Brackets Exp</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int BRACKETS_EXP_FEATURE_COUNT = 0;
-
-  /**
    * The meta object id for the '{@link org.xtext.example.mydsl.myDsl.impl.ExpressionImpl <em>Expression</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -176,7 +129,7 @@ public interface MyDslPackage extends EPackage
    * @see org.xtext.example.mydsl.myDsl.impl.MyDslPackageImpl#getExpression()
    * @generated
    */
-  int EXPRESSION = 3;
+  int EXPRESSION = 2;
 
   /**
    * The feature id for the '<em><b>Elements</b></em>' containment reference list.
@@ -185,7 +138,7 @@ public interface MyDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int EXPRESSION__ELEMENTS = BRACKETS_EXP_FEATURE_COUNT + 0;
+  int EXPRESSION__ELEMENTS = 0;
 
   /**
    * The number of structural features of the '<em>Expression</em>' class.
@@ -194,7 +147,7 @@ public interface MyDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int EXPRESSION_FEATURE_COUNT = BRACKETS_EXP_FEATURE_COUNT + 1;
+  int EXPRESSION_FEATURE_COUNT = 1;
 
   /**
    * The meta object id for the '{@link org.xtext.example.mydsl.myDsl.impl.ElementImpl <em>Element</em>}' class.
@@ -204,7 +157,7 @@ public interface MyDslPackage extends EPackage
    * @see org.xtext.example.mydsl.myDsl.impl.MyDslPackageImpl#getElement()
    * @generated
    */
-  int ELEMENT = 4;
+  int ELEMENT = 3;
 
   /**
    * The feature id for the '<em><b>Terms</b></em>' containment reference list.
@@ -232,34 +185,25 @@ public interface MyDslPackage extends EPackage
    * @see org.xtext.example.mydsl.myDsl.impl.MyDslPackageImpl#getTerm()
    * @generated
    */
-  int TERM = 5;
+  int TERM = 4;
 
   /**
-   * The feature id for the '<em><b>Rcall</b></em>' containment reference.
+   * The feature id for the '<em><b>KConstr</b></em>' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int TERM__RCALL = 0;
+  int TERM__KCONSTR = 0;
 
   /**
-   * The feature id for the '<em><b>Bexp</b></em>' containment reference.
+   * The feature id for the '<em><b>RCall</b></em>' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int TERM__BEXP = 1;
-
-  /**
-   * The feature id for the '<em><b>Kword</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int TERM__KWORD = 2;
+  int TERM__RCALL = 1;
 
   /**
    * The number of structural features of the '<em>Term</em>' class.
@@ -268,7 +212,35 @@ public interface MyDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int TERM_FEATURE_COUNT = 3;
+  int TERM_FEATURE_COUNT = 2;
+
+  /**
+   * The meta object id for the '{@link org.xtext.example.mydsl.myDsl.impl.KeyConstrImpl <em>Key Constr</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.xtext.example.mydsl.myDsl.impl.KeyConstrImpl
+   * @see org.xtext.example.mydsl.myDsl.impl.MyDslPackageImpl#getKeyConstr()
+   * @generated
+   */
+  int KEY_CONSTR = 5;
+
+  /**
+   * The feature id for the '<em><b>KWord</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int KEY_CONSTR__KWORD = 0;
+
+  /**
+   * The number of structural features of the '<em>Key Constr</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int KEY_CONSTR_FEATURE_COUNT = 1;
 
   /**
    * The meta object id for the '{@link org.xtext.example.mydsl.myDsl.impl.KeywordImpl <em>Keyword</em>}' class.
@@ -278,7 +250,7 @@ public interface MyDslPackage extends EPackage
    * @see org.xtext.example.mydsl.myDsl.impl.MyDslPackageImpl#getKeyword()
    * @generated
    */
-  int KEYWORD = 7;
+  int KEYWORD = 6;
 
   /**
    * The feature id for the '<em><b>Text</b></em>' attribute.
@@ -306,7 +278,7 @@ public interface MyDslPackage extends EPackage
    * @see org.xtext.example.mydsl.myDsl.impl.MyDslPackageImpl#getRuleCall()
    * @generated
    */
-  int RULE_CALL = 8;
+  int RULE_CALL = 7;
 
   /**
    * The feature id for the '<em><b>Ref</b></em>' reference.
@@ -338,36 +310,15 @@ public interface MyDslPackage extends EPackage
   EClass getModel();
 
   /**
-   * Returns the meta object for class '{@link org.xtext.example.mydsl.myDsl.Grammar <em>Grammar</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Grammar</em>'.
-   * @see org.xtext.example.mydsl.myDsl.Grammar
-   * @generated
-   */
-  EClass getGrammar();
-
-  /**
-   * Returns the meta object for the containment reference list '{@link org.xtext.example.mydsl.myDsl.Grammar#getRules <em>Rules</em>}'.
+   * Returns the meta object for the containment reference list '{@link org.xtext.example.mydsl.myDsl.Model#getRules <em>Rules</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the containment reference list '<em>Rules</em>'.
-   * @see org.xtext.example.mydsl.myDsl.Grammar#getRules()
-   * @see #getGrammar()
+   * @see org.xtext.example.mydsl.myDsl.Model#getRules()
+   * @see #getModel()
    * @generated
    */
-  EReference getGrammar_Rules();
-
-  /**
-   * Returns the meta object for the attribute '{@link org.xtext.example.mydsl.myDsl.Grammar#getGram <em>Gram</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Gram</em>'.
-   * @see org.xtext.example.mydsl.myDsl.Grammar#getGram()
-   * @see #getGrammar()
-   * @generated
-   */
-  EAttribute getGrammar_Gram();
+  EReference getModel_Rules();
 
   /**
    * Returns the meta object for class '{@link org.xtext.example.mydsl.myDsl.Rule <em>Rule</em>}'.
@@ -391,15 +342,15 @@ public interface MyDslPackage extends EPackage
   EAttribute getRule_Name();
 
   /**
-   * Returns the meta object for the containment reference '{@link org.xtext.example.mydsl.myDsl.Rule#getExp <em>Exp</em>}'.
+   * Returns the meta object for the containment reference '{@link org.xtext.example.mydsl.myDsl.Rule#getExpression <em>Expression</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Exp</em>'.
-   * @see org.xtext.example.mydsl.myDsl.Rule#getExp()
+   * @return the meta object for the containment reference '<em>Expression</em>'.
+   * @see org.xtext.example.mydsl.myDsl.Rule#getExpression()
    * @see #getRule()
    * @generated
    */
-  EReference getRule_Exp();
+  EReference getRule_Expression();
 
   /**
    * Returns the meta object for class '{@link org.xtext.example.mydsl.myDsl.Expression <em>Expression</em>}'.
@@ -454,47 +405,47 @@ public interface MyDslPackage extends EPackage
   EClass getTerm();
 
   /**
-   * Returns the meta object for the containment reference '{@link org.xtext.example.mydsl.myDsl.Term#getRcall <em>Rcall</em>}'.
+   * Returns the meta object for the containment reference list '{@link org.xtext.example.mydsl.myDsl.Term#getKConstr <em>KConstr</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Rcall</em>'.
-   * @see org.xtext.example.mydsl.myDsl.Term#getRcall()
+   * @return the meta object for the containment reference list '<em>KConstr</em>'.
+   * @see org.xtext.example.mydsl.myDsl.Term#getKConstr()
    * @see #getTerm()
    * @generated
    */
-  EReference getTerm_Rcall();
+  EReference getTerm_KConstr();
 
   /**
-   * Returns the meta object for the containment reference '{@link org.xtext.example.mydsl.myDsl.Term#getBexp <em>Bexp</em>}'.
+   * Returns the meta object for the containment reference list '{@link org.xtext.example.mydsl.myDsl.Term#getRCall <em>RCall</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Bexp</em>'.
-   * @see org.xtext.example.mydsl.myDsl.Term#getBexp()
+   * @return the meta object for the containment reference list '<em>RCall</em>'.
+   * @see org.xtext.example.mydsl.myDsl.Term#getRCall()
    * @see #getTerm()
    * @generated
    */
-  EReference getTerm_Bexp();
+  EReference getTerm_RCall();
 
   /**
-   * Returns the meta object for the containment reference '{@link org.xtext.example.mydsl.myDsl.Term#getKword <em>Kword</em>}'.
+   * Returns the meta object for class '{@link org.xtext.example.mydsl.myDsl.KeyConstr <em>Key Constr</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Kword</em>'.
-   * @see org.xtext.example.mydsl.myDsl.Term#getKword()
-   * @see #getTerm()
+   * @return the meta object for class '<em>Key Constr</em>'.
+   * @see org.xtext.example.mydsl.myDsl.KeyConstr
    * @generated
    */
-  EReference getTerm_Kword();
+  EClass getKeyConstr();
 
   /**
-   * Returns the meta object for class '{@link org.xtext.example.mydsl.myDsl.BracketsExp <em>Brackets Exp</em>}'.
+   * Returns the meta object for the containment reference list '{@link org.xtext.example.mydsl.myDsl.KeyConstr#getKWord <em>KWord</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Brackets Exp</em>'.
-   * @see org.xtext.example.mydsl.myDsl.BracketsExp
+   * @return the meta object for the containment reference list '<em>KWord</em>'.
+   * @see org.xtext.example.mydsl.myDsl.KeyConstr#getKWord()
+   * @see #getKeyConstr()
    * @generated
    */
-  EClass getBracketsExp();
+  EReference getKeyConstr_KWord();
 
   /**
    * Returns the meta object for class '{@link org.xtext.example.mydsl.myDsl.Keyword <em>Keyword</em>}'.
@@ -572,30 +523,12 @@ public interface MyDslPackage extends EPackage
     EClass MODEL = eINSTANCE.getModel();
 
     /**
-     * The meta object literal for the '{@link org.xtext.example.mydsl.myDsl.impl.GrammarImpl <em>Grammar</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see org.xtext.example.mydsl.myDsl.impl.GrammarImpl
-     * @see org.xtext.example.mydsl.myDsl.impl.MyDslPackageImpl#getGrammar()
-     * @generated
-     */
-    EClass GRAMMAR = eINSTANCE.getGrammar();
-
-    /**
      * The meta object literal for the '<em><b>Rules</b></em>' containment reference list feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference GRAMMAR__RULES = eINSTANCE.getGrammar_Rules();
-
-    /**
-     * The meta object literal for the '<em><b>Gram</b></em>' attribute feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EAttribute GRAMMAR__GRAM = eINSTANCE.getGrammar_Gram();
+    EReference MODEL__RULES = eINSTANCE.getModel_Rules();
 
     /**
      * The meta object literal for the '{@link org.xtext.example.mydsl.myDsl.impl.RuleImpl <em>Rule</em>}' class.
@@ -616,12 +549,12 @@ public interface MyDslPackage extends EPackage
     EAttribute RULE__NAME = eINSTANCE.getRule_Name();
 
     /**
-     * The meta object literal for the '<em><b>Exp</b></em>' containment reference feature.
+     * The meta object literal for the '<em><b>Expression</b></em>' containment reference feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference RULE__EXP = eINSTANCE.getRule_Exp();
+    EReference RULE__EXPRESSION = eINSTANCE.getRule_Expression();
 
     /**
      * The meta object literal for the '{@link org.xtext.example.mydsl.myDsl.impl.ExpressionImpl <em>Expression</em>}' class.
@@ -670,38 +603,38 @@ public interface MyDslPackage extends EPackage
     EClass TERM = eINSTANCE.getTerm();
 
     /**
-     * The meta object literal for the '<em><b>Rcall</b></em>' containment reference feature.
+     * The meta object literal for the '<em><b>KConstr</b></em>' containment reference list feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference TERM__RCALL = eINSTANCE.getTerm_Rcall();
+    EReference TERM__KCONSTR = eINSTANCE.getTerm_KConstr();
 
     /**
-     * The meta object literal for the '<em><b>Bexp</b></em>' containment reference feature.
+     * The meta object literal for the '<em><b>RCall</b></em>' containment reference list feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference TERM__BEXP = eINSTANCE.getTerm_Bexp();
+    EReference TERM__RCALL = eINSTANCE.getTerm_RCall();
 
     /**
-     * The meta object literal for the '<em><b>Kword</b></em>' containment reference feature.
+     * The meta object literal for the '{@link org.xtext.example.mydsl.myDsl.impl.KeyConstrImpl <em>Key Constr</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
+     * @see org.xtext.example.mydsl.myDsl.impl.KeyConstrImpl
+     * @see org.xtext.example.mydsl.myDsl.impl.MyDslPackageImpl#getKeyConstr()
      * @generated
      */
-    EReference TERM__KWORD = eINSTANCE.getTerm_Kword();
+    EClass KEY_CONSTR = eINSTANCE.getKeyConstr();
 
     /**
-     * The meta object literal for the '{@link org.xtext.example.mydsl.myDsl.impl.BracketsExpImpl <em>Brackets Exp</em>}' class.
+     * The meta object literal for the '<em><b>KWord</b></em>' containment reference list feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see org.xtext.example.mydsl.myDsl.impl.BracketsExpImpl
-     * @see org.xtext.example.mydsl.myDsl.impl.MyDslPackageImpl#getBracketsExp()
      * @generated
      */
-    EClass BRACKETS_EXP = eINSTANCE.getBracketsExp();
+    EReference KEY_CONSTR__KWORD = eINSTANCE.getKeyConstr_KWord();
 
     /**
      * The meta object literal for the '{@link org.xtext.example.mydsl.myDsl.impl.KeywordImpl <em>Keyword</em>}' class.

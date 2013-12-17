@@ -7,14 +7,12 @@
     editorPluginID="org.xtext.example.mydsl.editor" runtimeVersion="2.9">
   <genPackages prefix="MyDsl" basePackage="org.xtext.example.mydsl" disposableProviderFactory="true"
       fileExtensions="mydsl" ecorePackage="MyDsl.ecore#/">
-    <genClasses ecoreClass="MyDsl.ecore#//Model"/>
-    <genClasses ecoreClass="MyDsl.ecore#//Grammar">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MyDsl.ecore#//Grammar/rules"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MyDsl.ecore#//Grammar/gram"/>
+    <genClasses ecoreClass="MyDsl.ecore#//Model">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MyDsl.ecore#//Model/rules"/>
     </genClasses>
     <genClasses ecoreClass="MyDsl.ecore#//Rule">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MyDsl.ecore#//Rule/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MyDsl.ecore#//Rule/exp"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MyDsl.ecore#//Rule/expression"/>
     </genClasses>
     <genClasses ecoreClass="MyDsl.ecore#//Expression">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MyDsl.ecore#//Expression/elements"/>
@@ -23,11 +21,12 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MyDsl.ecore#//Element/terms"/>
     </genClasses>
     <genClasses ecoreClass="MyDsl.ecore#//Term">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MyDsl.ecore#//Term/rcall"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MyDsl.ecore#//Term/bexp"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MyDsl.ecore#//Term/kword"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MyDsl.ecore#//Term/kConstr"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MyDsl.ecore#//Term/rCall"/>
     </genClasses>
-    <genClasses ecoreClass="MyDsl.ecore#//BracketsExp"/>
+    <genClasses ecoreClass="MyDsl.ecore#//KeyConstr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MyDsl.ecore#//KeyConstr/kWord"/>
+    </genClasses>
     <genClasses ecoreClass="MyDsl.ecore#//Keyword">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MyDsl.ecore#//Keyword/text"/>
     </genClasses>

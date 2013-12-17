@@ -79,14 +79,6 @@ public class MyDslSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case MyDslPackage.GRAMMAR:
-      {
-        Grammar grammar = (Grammar)theEObject;
-        T result = caseGrammar(grammar);
-        if (result == null) result = caseModel(grammar);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
       case MyDslPackage.RULE:
       {
         Rule rule = (Rule)theEObject;
@@ -98,7 +90,6 @@ public class MyDslSwitch<T> extends Switch<T>
       {
         Expression expression = (Expression)theEObject;
         T result = caseExpression(expression);
-        if (result == null) result = caseBracketsExp(expression);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -116,10 +107,10 @@ public class MyDslSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case MyDslPackage.BRACKETS_EXP:
+      case MyDslPackage.KEY_CONSTR:
       {
-        BracketsExp bracketsExp = (BracketsExp)theEObject;
-        T result = caseBracketsExp(bracketsExp);
+        KeyConstr keyConstr = (KeyConstr)theEObject;
+        T result = caseKeyConstr(keyConstr);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -153,22 +144,6 @@ public class MyDslSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseModel(Model object)
-  {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpreting the object as an instance of '<em>Grammar</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Grammar</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public T caseGrammar(Grammar object)
   {
     return null;
   }
@@ -238,17 +213,17 @@ public class MyDslSwitch<T> extends Switch<T>
   }
 
   /**
-   * Returns the result of interpreting the object as an instance of '<em>Brackets Exp</em>'.
+   * Returns the result of interpreting the object as an instance of '<em>Key Constr</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
    * returning a non-null result will terminate the switch.
    * <!-- end-user-doc -->
    * @param object the target of the switch.
-   * @return the result of interpreting the object as an instance of '<em>Brackets Exp</em>'.
+   * @return the result of interpreting the object as an instance of '<em>Key Constr</em>'.
    * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
    * @generated
    */
-  public T caseBracketsExp(BracketsExp object)
+  public T caseKeyConstr(KeyConstr object)
   {
     return null;
   }

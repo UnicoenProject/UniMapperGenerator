@@ -13,7 +13,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.xtext.example.mydsl.myDsl.Rule#getName <em>Name</em>}</li>
- *   <li>{@link org.xtext.example.mydsl.myDsl.Rule#getExp <em>Exp</em>}</li>
+ *   <li>{@link org.xtext.example.mydsl.myDsl.Rule#getExpression <em>Expression</em>}</li>
  * </ul>
  * </p>
  *
@@ -50,29 +50,29 @@ public interface Rule extends EObject
   void setName(String value);
 
   /**
-   * Returns the value of the '<em><b>Exp</b></em>' containment reference.
+   * Returns the value of the '<em><b>Expression</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Exp</em>' containment reference isn't clear,
+   * If the meaning of the '<em>Expression</em>' containment reference isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Exp</em>' containment reference.
-   * @see #setExp(Expression)
-   * @see org.xtext.example.mydsl.myDsl.MyDslPackage#getRule_Exp()
+   * @return the value of the '<em>Expression</em>' containment reference.
+   * @see #setExpression(Expression)
+   * @see org.xtext.example.mydsl.myDsl.MyDslPackage#getRule_Expression()
    * @model containment="true"
    * @generated
    */
-  Expression getExp();
+  Expression getExpression();
 
   /**
-   * Sets the value of the '{@link org.xtext.example.mydsl.myDsl.Rule#getExp <em>Exp</em>}' containment reference.
+   * Sets the value of the '{@link org.xtext.example.mydsl.myDsl.Rule#getExpression <em>Expression</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Exp</em>' containment reference.
-   * @see #getExp()
+   * @param value the new value of the '<em>Expression</em>' containment reference.
+   * @see #getExpression()
    * @generated
    */
-  void setExp(Expression value);
+  void setExpression(Expression value);
 
 } // Rule

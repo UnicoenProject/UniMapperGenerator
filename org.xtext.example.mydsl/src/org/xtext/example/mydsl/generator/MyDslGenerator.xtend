@@ -7,18 +7,50 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess
 
-/**
- * Generates code from your model files on save.
- * 
- * see http://www.eclipse.org/Xtext/documentation.html#TutorialCodeGeneration
- */
+import org.xtext.example.mydsl.myDsl.Rule
+import org.xtext.example.mydsl.myDsl.Model
+import org.xtext.example.mydsl.myDsl.Expression
+import org.xtext.example.mydsl.myDsl.Term
+import org.xtext.example.mydsl.myDsl.Element
+import org.xtext.example.mydsl.myDsl.RuleCall
+
 class MyDslGenerator implements IGenerator {
-	
+
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
-//		fsa.generateFile('greetings.txt', 'People to greet: ' + 
-//			resource.allContents
-//				.filter(typeof(Greeting))
-//				.map[name]
-//				.join(', '))
+		for (m : resource.allContents.toIterable.filter(Model)) {
+			fsa.generateFile("model.g", m.compile)
+		}
 	}
+
+	def compile(Model m) '''
+		grammar CSV;
+				
+		 «FOR r : m.rules»
+			«r.compile»
+		 «ENDFOR»
+	'''
+
+	def compile(Rule r) '''
+		«r.name» : «r.expression.compile» ;
+	'''
+
+	def compile(Expression exp) '''
+		«FOR e : exp.elements»«e.compile» | «ENDFOR»
+	'''
+
+	def compile(Element e) '''
+		«FOR t : e.terms»
+			«t.compile»
+		«ENDFOR»
+	'''
+
+	def compile(Term t) '''
+		«FOR r : t.RCall»
+			«r.compile»
+		«ENDFOR»
+	'''
+
+	def compile(RuleCall r) '''
+		«r.ref.name»
+	'''
 }

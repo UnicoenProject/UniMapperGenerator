@@ -3,29 +3,26 @@ grammar org.xtext.example.mydsl.MyDsl with org.eclipse.xtext.common.Terminals
 generate myDsl "http://www.xtext.org/example/mydsl/MyDsl"
 
 Model:
-	Grammar rules+=Rule*;
-
-Grammar:
-	"grammar" gram=ID ";";
+	(rules+=Rule)+;
 
 Rule:
-	name=ID ":" exp=Expression ";";
+	"<" name=ID ">" "::=" expression=Expression;
 
 Expression:
-	elements+=Element ("|"
-	elements+=Element)*;
+	elements+=Element ("|" elements+=Element)*;
 
 Element:
 	(terms+=Term)+;
 
 Term:
-	rcall=RuleCall | bexp=BracketsExp | kword=Keyword;
+	kConstr+=KeyConstr | rCall+=RuleCall;
 
-BracketsExp:
-	("(" Expression ")" | "[" Expression "]") ("+" | "*")?;
+KeyConstr:
+	kWord+=Keyword (".." kWord+=Keyword)?;
 
 Keyword:
-	text=STRING "?"?;
+	text=STRING;
 
 RuleCall:
-	ref=[Rule|ID] ("+" | "*")?;
+	"<" ref=[Rule|ID] ">";
+

@@ -2,6 +2,8 @@
  */
 package org.xtext.example.mydsl.myDsl;
 
+import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -12,9 +14,8 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.xtext.example.mydsl.myDsl.Term#getRcall <em>Rcall</em>}</li>
- *   <li>{@link org.xtext.example.mydsl.myDsl.Term#getBexp <em>Bexp</em>}</li>
- *   <li>{@link org.xtext.example.mydsl.myDsl.Term#getKword <em>Kword</em>}</li>
+ *   <li>{@link org.xtext.example.mydsl.myDsl.Term#getKConstr <em>KConstr</em>}</li>
+ *   <li>{@link org.xtext.example.mydsl.myDsl.Term#getRCall <em>RCall</em>}</li>
  * </ul>
  * </p>
  *
@@ -25,81 +26,35 @@ import org.eclipse.emf.ecore.EObject;
 public interface Term extends EObject
 {
   /**
-   * Returns the value of the '<em><b>Rcall</b></em>' containment reference.
+   * Returns the value of the '<em><b>KConstr</b></em>' containment reference list.
+   * The list contents are of type {@link org.xtext.example.mydsl.myDsl.KeyConstr}.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Rcall</em>' containment reference isn't clear,
+   * If the meaning of the '<em>KConstr</em>' containment reference list isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Rcall</em>' containment reference.
-   * @see #setRcall(RuleCall)
-   * @see org.xtext.example.mydsl.myDsl.MyDslPackage#getTerm_Rcall()
+   * @return the value of the '<em>KConstr</em>' containment reference list.
+   * @see org.xtext.example.mydsl.myDsl.MyDslPackage#getTerm_KConstr()
    * @model containment="true"
    * @generated
    */
-  RuleCall getRcall();
+  EList<KeyConstr> getKConstr();
 
   /**
-   * Sets the value of the '{@link org.xtext.example.mydsl.myDsl.Term#getRcall <em>Rcall</em>}' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Rcall</em>' containment reference.
-   * @see #getRcall()
-   * @generated
-   */
-  void setRcall(RuleCall value);
-
-  /**
-   * Returns the value of the '<em><b>Bexp</b></em>' containment reference.
+   * Returns the value of the '<em><b>RCall</b></em>' containment reference list.
+   * The list contents are of type {@link org.xtext.example.mydsl.myDsl.RuleCall}.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Bexp</em>' containment reference isn't clear,
+   * If the meaning of the '<em>RCall</em>' containment reference list isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Bexp</em>' containment reference.
-   * @see #setBexp(BracketsExp)
-   * @see org.xtext.example.mydsl.myDsl.MyDslPackage#getTerm_Bexp()
+   * @return the value of the '<em>RCall</em>' containment reference list.
+   * @see org.xtext.example.mydsl.myDsl.MyDslPackage#getTerm_RCall()
    * @model containment="true"
    * @generated
    */
-  BracketsExp getBexp();
-
-  /**
-   * Sets the value of the '{@link org.xtext.example.mydsl.myDsl.Term#getBexp <em>Bexp</em>}' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Bexp</em>' containment reference.
-   * @see #getBexp()
-   * @generated
-   */
-  void setBexp(BracketsExp value);
-
-  /**
-   * Returns the value of the '<em><b>Kword</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Kword</em>' containment reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Kword</em>' containment reference.
-   * @see #setKword(Keyword)
-   * @see org.xtext.example.mydsl.myDsl.MyDslPackage#getTerm_Kword()
-   * @model containment="true"
-   * @generated
-   */
-  Keyword getKword();
-
-  /**
-   * Sets the value of the '{@link org.xtext.example.mydsl.myDsl.Term#getKword <em>Kword</em>}' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Kword</em>' containment reference.
-   * @see #getKword()
-   * @generated
-   */
-  void setKword(Keyword value);
+  EList<RuleCall> getRCall();
 
 } // Term

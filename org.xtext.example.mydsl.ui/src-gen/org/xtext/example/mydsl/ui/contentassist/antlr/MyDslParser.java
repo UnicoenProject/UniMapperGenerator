@@ -38,31 +38,24 @@ public class MyDslParser extends AbstractContentAssistParser {
 				private static final long serialVersionUID = 1L;
 				{
 					put(grammarAccess.getTermAccess().getAlternatives(), "rule__Term__Alternatives");
-					put(grammarAccess.getBracketsExpAccess().getAlternatives_0(), "rule__BracketsExp__Alternatives_0");
-					put(grammarAccess.getBracketsExpAccess().getAlternatives_1(), "rule__BracketsExp__Alternatives_1");
-					put(grammarAccess.getRuleCallAccess().getAlternatives_1(), "rule__RuleCall__Alternatives_1");
-					put(grammarAccess.getModelAccess().getGroup(), "rule__Model__Group__0");
-					put(grammarAccess.getGrammarAccess().getGroup(), "rule__Grammar__Group__0");
 					put(grammarAccess.getRuleAccess().getGroup(), "rule__Rule__Group__0");
 					put(grammarAccess.getExpressionAccess().getGroup(), "rule__Expression__Group__0");
 					put(grammarAccess.getExpressionAccess().getGroup_1(), "rule__Expression__Group_1__0");
-					put(grammarAccess.getBracketsExpAccess().getGroup(), "rule__BracketsExp__Group__0");
-					put(grammarAccess.getBracketsExpAccess().getGroup_0_0(), "rule__BracketsExp__Group_0_0__0");
-					put(grammarAccess.getBracketsExpAccess().getGroup_0_1(), "rule__BracketsExp__Group_0_1__0");
-					put(grammarAccess.getKeywordAccess().getGroup(), "rule__Keyword__Group__0");
+					put(grammarAccess.getKeyConstrAccess().getGroup(), "rule__KeyConstr__Group__0");
+					put(grammarAccess.getKeyConstrAccess().getGroup_1(), "rule__KeyConstr__Group_1__0");
 					put(grammarAccess.getRuleCallAccess().getGroup(), "rule__RuleCall__Group__0");
-					put(grammarAccess.getModelAccess().getRulesAssignment_1(), "rule__Model__RulesAssignment_1");
-					put(grammarAccess.getGrammarAccess().getGramAssignment_1(), "rule__Grammar__GramAssignment_1");
-					put(grammarAccess.getRuleAccess().getNameAssignment_0(), "rule__Rule__NameAssignment_0");
-					put(grammarAccess.getRuleAccess().getExpAssignment_2(), "rule__Rule__ExpAssignment_2");
+					put(grammarAccess.getModelAccess().getRulesAssignment(), "rule__Model__RulesAssignment");
+					put(grammarAccess.getRuleAccess().getNameAssignment_1(), "rule__Rule__NameAssignment_1");
+					put(grammarAccess.getRuleAccess().getExpressionAssignment_4(), "rule__Rule__ExpressionAssignment_4");
 					put(grammarAccess.getExpressionAccess().getElementsAssignment_0(), "rule__Expression__ElementsAssignment_0");
 					put(grammarAccess.getExpressionAccess().getElementsAssignment_1_1(), "rule__Expression__ElementsAssignment_1_1");
 					put(grammarAccess.getElementAccess().getTermsAssignment(), "rule__Element__TermsAssignment");
-					put(grammarAccess.getTermAccess().getRcallAssignment_0(), "rule__Term__RcallAssignment_0");
-					put(grammarAccess.getTermAccess().getBexpAssignment_1(), "rule__Term__BexpAssignment_1");
-					put(grammarAccess.getTermAccess().getKwordAssignment_2(), "rule__Term__KwordAssignment_2");
-					put(grammarAccess.getKeywordAccess().getTextAssignment_0(), "rule__Keyword__TextAssignment_0");
-					put(grammarAccess.getRuleCallAccess().getRefAssignment_0(), "rule__RuleCall__RefAssignment_0");
+					put(grammarAccess.getTermAccess().getKConstrAssignment_0(), "rule__Term__KConstrAssignment_0");
+					put(grammarAccess.getTermAccess().getRCallAssignment_1(), "rule__Term__RCallAssignment_1");
+					put(grammarAccess.getKeyConstrAccess().getKWordAssignment_0(), "rule__KeyConstr__KWordAssignment_0");
+					put(grammarAccess.getKeyConstrAccess().getKWordAssignment_1_1(), "rule__KeyConstr__KWordAssignment_1_1");
+					put(grammarAccess.getKeywordAccess().getTextAssignment(), "rule__Keyword__TextAssignment");
+					put(grammarAccess.getRuleCallAccess().getRefAssignment_1(), "rule__RuleCall__RefAssignment_1");
 				}
 			};
 		}

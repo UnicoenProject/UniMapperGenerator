@@ -80,11 +80,6 @@ public class MyDslAdapterFactory extends AdapterFactoryImpl
         return createModelAdapter();
       }
       @Override
-      public Adapter caseGrammar(Grammar object)
-      {
-        return createGrammarAdapter();
-      }
-      @Override
       public Adapter caseRule(Rule object)
       {
         return createRuleAdapter();
@@ -105,9 +100,9 @@ public class MyDslAdapterFactory extends AdapterFactoryImpl
         return createTermAdapter();
       }
       @Override
-      public Adapter caseBracketsExp(BracketsExp object)
+      public Adapter caseKeyConstr(KeyConstr object)
       {
-        return createBracketsExpAdapter();
+        return createKeyConstrAdapter();
       }
       @Override
       public Adapter caseKeyword(Keyword object)
@@ -152,21 +147,6 @@ public class MyDslAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createModelAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.xtext.example.mydsl.myDsl.Grammar <em>Grammar</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.xtext.example.mydsl.myDsl.Grammar
-   * @generated
-   */
-  public Adapter createGrammarAdapter()
   {
     return null;
   }
@@ -232,16 +212,16 @@ public class MyDslAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
-   * Creates a new adapter for an object of class '{@link org.xtext.example.mydsl.myDsl.BracketsExp <em>Brackets Exp</em>}'.
+   * Creates a new adapter for an object of class '{@link org.xtext.example.mydsl.myDsl.KeyConstr <em>Key Constr</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
    * it's useful to ignore a case when inheritance will catch all the cases anyway.
    * <!-- end-user-doc -->
    * @return the new adapter.
-   * @see org.xtext.example.mydsl.myDsl.BracketsExp
+   * @see org.xtext.example.mydsl.myDsl.KeyConstr
    * @generated
    */
-  public Adapter createBracketsExpAdapter()
+  public Adapter createKeyConstrAdapter()
   {
     return null;
   }

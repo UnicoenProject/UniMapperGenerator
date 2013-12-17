@@ -23,7 +23,7 @@ import org.xtext.example.mydsl.myDsl.Rule;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.xtext.example.mydsl.myDsl.impl.RuleImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.xtext.example.mydsl.myDsl.impl.RuleImpl#getExp <em>Exp</em>}</li>
+ *   <li>{@link org.xtext.example.mydsl.myDsl.impl.RuleImpl#getExpression <em>Expression</em>}</li>
  * </ul>
  * </p>
  *
@@ -52,14 +52,14 @@ public class RuleImpl extends MinimalEObjectImpl.Container implements Rule
   protected String name = NAME_EDEFAULT;
 
   /**
-   * The cached value of the '{@link #getExp() <em>Exp</em>}' containment reference.
+   * The cached value of the '{@link #getExpression() <em>Expression</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getExp()
+   * @see #getExpression()
    * @generated
    * @ordered
    */
-  protected Expression exp;
+  protected Expression expression;
 
   /**
    * <!-- begin-user-doc -->
@@ -110,9 +110,9 @@ public class RuleImpl extends MinimalEObjectImpl.Container implements Rule
    * <!-- end-user-doc -->
    * @generated
    */
-  public Expression getExp()
+  public Expression getExpression()
   {
-    return exp;
+    return expression;
   }
 
   /**
@@ -120,13 +120,13 @@ public class RuleImpl extends MinimalEObjectImpl.Container implements Rule
    * <!-- end-user-doc -->
    * @generated
    */
-  public NotificationChain basicSetExp(Expression newExp, NotificationChain msgs)
+  public NotificationChain basicSetExpression(Expression newExpression, NotificationChain msgs)
   {
-    Expression oldExp = exp;
-    exp = newExp;
+    Expression oldExpression = expression;
+    expression = newExpression;
     if (eNotificationRequired())
     {
-      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, MyDslPackage.RULE__EXP, oldExp, newExp);
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, MyDslPackage.RULE__EXPRESSION, oldExpression, newExpression);
       if (msgs == null) msgs = notification; else msgs.add(notification);
     }
     return msgs;
@@ -137,20 +137,20 @@ public class RuleImpl extends MinimalEObjectImpl.Container implements Rule
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setExp(Expression newExp)
+  public void setExpression(Expression newExpression)
   {
-    if (newExp != exp)
+    if (newExpression != expression)
     {
       NotificationChain msgs = null;
-      if (exp != null)
-        msgs = ((InternalEObject)exp).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - MyDslPackage.RULE__EXP, null, msgs);
-      if (newExp != null)
-        msgs = ((InternalEObject)newExp).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - MyDslPackage.RULE__EXP, null, msgs);
-      msgs = basicSetExp(newExp, msgs);
+      if (expression != null)
+        msgs = ((InternalEObject)expression).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - MyDslPackage.RULE__EXPRESSION, null, msgs);
+      if (newExpression != null)
+        msgs = ((InternalEObject)newExpression).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - MyDslPackage.RULE__EXPRESSION, null, msgs);
+      msgs = basicSetExpression(newExpression, msgs);
       if (msgs != null) msgs.dispatch();
     }
     else if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, MyDslPackage.RULE__EXP, newExp, newExp));
+      eNotify(new ENotificationImpl(this, Notification.SET, MyDslPackage.RULE__EXPRESSION, newExpression, newExpression));
   }
 
   /**
@@ -163,8 +163,8 @@ public class RuleImpl extends MinimalEObjectImpl.Container implements Rule
   {
     switch (featureID)
     {
-      case MyDslPackage.RULE__EXP:
-        return basicSetExp(null, msgs);
+      case MyDslPackage.RULE__EXPRESSION:
+        return basicSetExpression(null, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -181,8 +181,8 @@ public class RuleImpl extends MinimalEObjectImpl.Container implements Rule
     {
       case MyDslPackage.RULE__NAME:
         return getName();
-      case MyDslPackage.RULE__EXP:
-        return getExp();
+      case MyDslPackage.RULE__EXPRESSION:
+        return getExpression();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -200,8 +200,8 @@ public class RuleImpl extends MinimalEObjectImpl.Container implements Rule
       case MyDslPackage.RULE__NAME:
         setName((String)newValue);
         return;
-      case MyDslPackage.RULE__EXP:
-        setExp((Expression)newValue);
+      case MyDslPackage.RULE__EXPRESSION:
+        setExpression((Expression)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -220,8 +220,8 @@ public class RuleImpl extends MinimalEObjectImpl.Container implements Rule
       case MyDslPackage.RULE__NAME:
         setName(NAME_EDEFAULT);
         return;
-      case MyDslPackage.RULE__EXP:
-        setExp((Expression)null);
+      case MyDslPackage.RULE__EXPRESSION:
+        setExpression((Expression)null);
         return;
     }
     super.eUnset(featureID);
@@ -239,8 +239,8 @@ public class RuleImpl extends MinimalEObjectImpl.Container implements Rule
     {
       case MyDslPackage.RULE__NAME:
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-      case MyDslPackage.RULE__EXP:
-        return exp != null;
+      case MyDslPackage.RULE__EXPRESSION:
+        return expression != null;
     }
     return super.eIsSet(featureID);
   }

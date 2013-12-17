@@ -32,15 +32,6 @@ public interface MyDslFactory extends EFactory
   Model createModel();
 
   /**
-   * Returns a new object of class '<em>Grammar</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Grammar</em>'.
-   * @generated
-   */
-  Grammar createGrammar();
-
-  /**
    * Returns a new object of class '<em>Rule</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -77,13 +68,13 @@ public interface MyDslFactory extends EFactory
   Term createTerm();
 
   /**
-   * Returns a new object of class '<em>Brackets Exp</em>'.
+   * Returns a new object of class '<em>Key Constr</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Brackets Exp</em>'.
+   * @return a new object of class '<em>Key Constr</em>'.
    * @generated
    */
-  BracketsExp createBracketsExp();
+  KeyConstr createKeyConstr();
 
   /**
    * Returns a new object of class '<em>Keyword</em>'.

@@ -15,8 +15,9 @@ import org.eclipse.xtext.serializer.sequencer.ITransientValueService;
 import org.eclipse.xtext.serializer.sequencer.ITransientValueService.ValueTransient;
 import org.xtext.example.mydsl.myDsl.Element;
 import org.xtext.example.mydsl.myDsl.Expression;
-import org.xtext.example.mydsl.myDsl.Grammar;
+import org.xtext.example.mydsl.myDsl.KeyConstr;
 import org.xtext.example.mydsl.myDsl.Keyword;
+import org.xtext.example.mydsl.myDsl.Model;
 import org.xtext.example.mydsl.myDsl.MyDslPackage;
 import org.xtext.example.mydsl.myDsl.Rule;
 import org.xtext.example.mydsl.myDsl.RuleCall;
@@ -38,25 +39,26 @@ public class MyDslSemanticSequencer extends AbstractDelegatingSemanticSequencer 
 				}
 				else break;
 			case MyDslPackage.EXPRESSION:
-				if(context == grammarAccess.getBracketsExpRule() ||
-				   context == grammarAccess.getExpressionRule()) {
+				if(context == grammarAccess.getExpressionRule()) {
 					sequence_Expression(context, (Expression) semanticObject); 
 					return; 
 				}
 				else break;
-			case MyDslPackage.GRAMMAR:
-				if(context == grammarAccess.getGrammarRule()) {
-					sequence_Grammar(context, (Grammar) semanticObject); 
-					return; 
-				}
-				else if(context == grammarAccess.getModelRule()) {
-					sequence_Grammar_Model(context, (Grammar) semanticObject); 
+			case MyDslPackage.KEY_CONSTR:
+				if(context == grammarAccess.getKeyConstrRule()) {
+					sequence_KeyConstr(context, (KeyConstr) semanticObject); 
 					return; 
 				}
 				else break;
 			case MyDslPackage.KEYWORD:
 				if(context == grammarAccess.getKeywordRule()) {
 					sequence_Keyword(context, (Keyword) semanticObject); 
+					return; 
+				}
+				else break;
+			case MyDslPackage.MODEL:
+				if(context == grammarAccess.getModelRule()) {
+					sequence_Model(context, (Model) semanticObject); 
 					return; 
 				}
 				else break;
@@ -102,18 +104,9 @@ public class MyDslSemanticSequencer extends AbstractDelegatingSemanticSequencer 
 	
 	/**
 	 * Constraint:
-	 *     gram=ID
+	 *     (kWord+=Keyword kWord+=Keyword?)
 	 */
-	protected void sequence_Grammar(EObject context, Grammar semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (gram=ID rules+=Rule*)
-	 */
-	protected void sequence_Grammar_Model(EObject context, Grammar semanticObject) {
+	protected void sequence_KeyConstr(EObject context, KeyConstr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -129,8 +122,17 @@ public class MyDslSemanticSequencer extends AbstractDelegatingSemanticSequencer 
 		}
 		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
 		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
-		feeder.accept(grammarAccess.getKeywordAccess().getTextSTRINGTerminalRuleCall_0_0(), semanticObject.getText());
+		feeder.accept(grammarAccess.getKeywordAccess().getTextSTRINGTerminalRuleCall_0(), semanticObject.getText());
 		feeder.finish();
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     rules+=Rule+
+	 */
+	protected void sequence_Model(EObject context, Model semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -145,33 +147,33 @@ public class MyDslSemanticSequencer extends AbstractDelegatingSemanticSequencer 
 		}
 		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
 		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
-		feeder.accept(grammarAccess.getRuleCallAccess().getRefRuleIDTerminalRuleCall_0_0_1(), semanticObject.getRef());
+		feeder.accept(grammarAccess.getRuleCallAccess().getRefRuleIDTerminalRuleCall_1_0_1(), semanticObject.getRef());
 		feeder.finish();
 	}
 	
 	
 	/**
 	 * Constraint:
-	 *     (name=ID exp=Expression)
+	 *     (name=ID expression=Expression)
 	 */
 	protected void sequence_Rule(EObject context, Rule semanticObject) {
 		if(errorAcceptor != null) {
 			if(transientValues.isValueTransient(semanticObject, MyDslPackage.Literals.RULE__NAME) == ValueTransient.YES)
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, MyDslPackage.Literals.RULE__NAME));
-			if(transientValues.isValueTransient(semanticObject, MyDslPackage.Literals.RULE__EXP) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, MyDslPackage.Literals.RULE__EXP));
+			if(transientValues.isValueTransient(semanticObject, MyDslPackage.Literals.RULE__EXPRESSION) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, MyDslPackage.Literals.RULE__EXPRESSION));
 		}
 		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
 		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
-		feeder.accept(grammarAccess.getRuleAccess().getNameIDTerminalRuleCall_0_0(), semanticObject.getName());
-		feeder.accept(grammarAccess.getRuleAccess().getExpExpressionParserRuleCall_2_0(), semanticObject.getExp());
+		feeder.accept(grammarAccess.getRuleAccess().getNameIDTerminalRuleCall_1_0(), semanticObject.getName());
+		feeder.accept(grammarAccess.getRuleAccess().getExpressionExpressionParserRuleCall_4_0(), semanticObject.getExpression());
 		feeder.finish();
 	}
 	
 	
 	/**
 	 * Constraint:
-	 *     (rcall=RuleCall | bexp=BracketsExp | kword=Keyword)
+	 *     (kConstr+=KeyConstr | rCall+=RuleCall)
 	 */
 	protected void sequence_Term(EObject context, Term semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

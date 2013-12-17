@@ -17,52 +17,40 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.xtext.example.mydsl.myDsl.KeyConstr;
+import org.xtext.example.mydsl.myDsl.Keyword;
 import org.xtext.example.mydsl.myDsl.MyDslPackage;
-import org.xtext.example.mydsl.myDsl.RuleCall;
-import org.xtext.example.mydsl.myDsl.Term;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Term</b></em>'.
+ * An implementation of the model object '<em><b>Key Constr</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.xtext.example.mydsl.myDsl.impl.TermImpl#getKConstr <em>KConstr</em>}</li>
- *   <li>{@link org.xtext.example.mydsl.myDsl.impl.TermImpl#getRCall <em>RCall</em>}</li>
+ *   <li>{@link org.xtext.example.mydsl.myDsl.impl.KeyConstrImpl#getKWord <em>KWord</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class TermImpl extends MinimalEObjectImpl.Container implements Term
+public class KeyConstrImpl extends MinimalEObjectImpl.Container implements KeyConstr
 {
   /**
-   * The cached value of the '{@link #getKConstr() <em>KConstr</em>}' containment reference list.
+   * The cached value of the '{@link #getKWord() <em>KWord</em>}' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getKConstr()
+   * @see #getKWord()
    * @generated
    * @ordered
    */
-  protected EList<KeyConstr> kConstr;
-
-  /**
-   * The cached value of the '{@link #getRCall() <em>RCall</em>}' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getRCall()
-   * @generated
-   * @ordered
-   */
-  protected EList<RuleCall> rCall;
+  protected EList<Keyword> kWord;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  protected TermImpl()
+  protected KeyConstrImpl()
   {
     super();
   }
@@ -75,7 +63,7 @@ public class TermImpl extends MinimalEObjectImpl.Container implements Term
   @Override
   protected EClass eStaticClass()
   {
-    return MyDslPackage.Literals.TERM;
+    return MyDslPackage.Literals.KEY_CONSTR;
   }
 
   /**
@@ -83,27 +71,13 @@ public class TermImpl extends MinimalEObjectImpl.Container implements Term
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<KeyConstr> getKConstr()
+  public EList<Keyword> getKWord()
   {
-    if (kConstr == null)
+    if (kWord == null)
     {
-      kConstr = new EObjectContainmentEList<KeyConstr>(KeyConstr.class, this, MyDslPackage.TERM__KCONSTR);
+      kWord = new EObjectContainmentEList<Keyword>(Keyword.class, this, MyDslPackage.KEY_CONSTR__KWORD);
     }
-    return kConstr;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EList<RuleCall> getRCall()
-  {
-    if (rCall == null)
-    {
-      rCall = new EObjectContainmentEList<RuleCall>(RuleCall.class, this, MyDslPackage.TERM__RCALL);
-    }
-    return rCall;
+    return kWord;
   }
 
   /**
@@ -116,10 +90,8 @@ public class TermImpl extends MinimalEObjectImpl.Container implements Term
   {
     switch (featureID)
     {
-      case MyDslPackage.TERM__KCONSTR:
-        return ((InternalEList<?>)getKConstr()).basicRemove(otherEnd, msgs);
-      case MyDslPackage.TERM__RCALL:
-        return ((InternalEList<?>)getRCall()).basicRemove(otherEnd, msgs);
+      case MyDslPackage.KEY_CONSTR__KWORD:
+        return ((InternalEList<?>)getKWord()).basicRemove(otherEnd, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -134,10 +106,8 @@ public class TermImpl extends MinimalEObjectImpl.Container implements Term
   {
     switch (featureID)
     {
-      case MyDslPackage.TERM__KCONSTR:
-        return getKConstr();
-      case MyDslPackage.TERM__RCALL:
-        return getRCall();
+      case MyDslPackage.KEY_CONSTR__KWORD:
+        return getKWord();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -153,13 +123,9 @@ public class TermImpl extends MinimalEObjectImpl.Container implements Term
   {
     switch (featureID)
     {
-      case MyDslPackage.TERM__KCONSTR:
-        getKConstr().clear();
-        getKConstr().addAll((Collection<? extends KeyConstr>)newValue);
-        return;
-      case MyDslPackage.TERM__RCALL:
-        getRCall().clear();
-        getRCall().addAll((Collection<? extends RuleCall>)newValue);
+      case MyDslPackage.KEY_CONSTR__KWORD:
+        getKWord().clear();
+        getKWord().addAll((Collection<? extends Keyword>)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -175,11 +141,8 @@ public class TermImpl extends MinimalEObjectImpl.Container implements Term
   {
     switch (featureID)
     {
-      case MyDslPackage.TERM__KCONSTR:
-        getKConstr().clear();
-        return;
-      case MyDslPackage.TERM__RCALL:
-        getRCall().clear();
+      case MyDslPackage.KEY_CONSTR__KWORD:
+        getKWord().clear();
         return;
     }
     super.eUnset(featureID);
@@ -195,12 +158,10 @@ public class TermImpl extends MinimalEObjectImpl.Container implements Term
   {
     switch (featureID)
     {
-      case MyDslPackage.TERM__KCONSTR:
-        return kConstr != null && !kConstr.isEmpty();
-      case MyDslPackage.TERM__RCALL:
-        return rCall != null && !rCall.isEmpty();
+      case MyDslPackage.KEY_CONSTR__KWORD:
+        return kWord != null && !kWord.isEmpty();
     }
     return super.eIsSet(featureID);
   }
 
-} //TermImpl
+} //KeyConstrImpl

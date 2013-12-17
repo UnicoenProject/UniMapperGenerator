@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="myDsl" nsURI="http://www.xtext.org/example/mydsl/MyDsl" nsPrefix="myDsl">
-  <eClassifiers xsi:type="ecore:EClass" name="Model"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Grammar" eSuperTypes="#//Model">
+  <eClassifiers xsi:type="ecore:EClass" name="Model">
     <eStructuralFeatures xsi:type="ecore:EReference" name="rules" upperBound="-1"
         eType="#//Rule" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="gram" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Rule">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="exp" eType="#//Expression"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expression" eType="#//Expression"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Expression" eSuperTypes="#//BracketsExp">
+  <eClassifiers xsi:type="ecore:EClass" name="Expression">
     <eStructuralFeatures xsi:type="ecore:EReference" name="elements" upperBound="-1"
         eType="#//Element" containment="true"/>
   </eClassifiers>
@@ -21,14 +19,15 @@
         eType="#//Term" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Term">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="rcall" eType="#//RuleCall"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="bexp" eType="#//BracketsExp"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="kword" eType="#//Keyword"
-        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="kConstr" upperBound="-1"
+        eType="#//KeyConstr" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rCall" upperBound="-1"
+        eType="#//RuleCall" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="BracketsExp"/>
+  <eClassifiers xsi:type="ecore:EClass" name="KeyConstr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="kWord" upperBound="-1"
+        eType="#//Keyword" containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Keyword">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
