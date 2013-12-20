@@ -346,16 +346,16 @@ ruleKeyConstr returns [EObject current=null]
 ((
 (
 		{ 
-	        newCompositeNode(grammarAccess.getKeyConstrAccess().getKWordKeywordParserRuleCall_0_0()); 
+	        newCompositeNode(grammarAccess.getKeyConstrAccess().getKwordKeywordParserRuleCall_0_0()); 
 	    }
-		lv_kWord_0_0=ruleKeyword		{
+		lv_kword_0_0=ruleKeyword		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getKeyConstrRule());
 	        }
        		add(
        			$current, 
-       			"kWord",
-        		lv_kWord_0_0, 
+       			"kword",
+        		lv_kword_0_0, 
         		"Keyword");
 	        afterParserOrEnumRuleCall();
 	    }
@@ -368,16 +368,16 @@ ruleKeyConstr returns [EObject current=null]
 (
 (
 		{ 
-	        newCompositeNode(grammarAccess.getKeyConstrAccess().getKWordKeywordParserRuleCall_1_1_0()); 
+	        newCompositeNode(grammarAccess.getKeyConstrAccess().getKwordKeywordParserRuleCall_1_1_0()); 
 	    }
-		lv_kWord_2_0=ruleKeyword		{
+		lv_kword_2_0=ruleKeyword		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getKeyConstrRule());
 	        }
        		add(
        			$current, 
-       			"kWord",
-        		lv_kWord_2_0, 
+       			"kword",
+        		lv_kword_2_0, 
         		"Keyword");
 	        afterParserOrEnumRuleCall();
 	    }

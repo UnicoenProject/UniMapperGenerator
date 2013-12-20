@@ -157,37 +157,37 @@ public class MyDslGrammarAccess extends AbstractGrammarElementFinder {
 	public class KeyConstrElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "KeyConstr");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Assignment cKWordAssignment_0 = (Assignment)cGroup.eContents().get(0);
-		private final RuleCall cKWordKeywordParserRuleCall_0_0 = (RuleCall)cKWordAssignment_0.eContents().get(0);
+		private final Assignment cKwordAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final RuleCall cKwordKeywordParserRuleCall_0_0 = (RuleCall)cKwordAssignment_0.eContents().get(0);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
 		private final Keyword cFullStopFullStopKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
-		private final Assignment cKWordAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
-		private final RuleCall cKWordKeywordParserRuleCall_1_1_0 = (RuleCall)cKWordAssignment_1_1.eContents().get(0);
+		private final Assignment cKwordAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
+		private final RuleCall cKwordKeywordParserRuleCall_1_1_0 = (RuleCall)cKwordAssignment_1_1.eContents().get(0);
 		
 		//KeyConstr:
-		//	kWord+=Keyword (".." kWord+=Keyword)?;
+		//	kword+=Keyword (".." kword+=Keyword)?;
 		public ParserRule getRule() { return rule; }
 
-		//kWord+=Keyword (".." kWord+=Keyword)?
+		//kword+=Keyword (".." kword+=Keyword)?
 		public Group getGroup() { return cGroup; }
 
-		//kWord+=Keyword
-		public Assignment getKWordAssignment_0() { return cKWordAssignment_0; }
+		//kword+=Keyword
+		public Assignment getKwordAssignment_0() { return cKwordAssignment_0; }
 
 		//Keyword
-		public RuleCall getKWordKeywordParserRuleCall_0_0() { return cKWordKeywordParserRuleCall_0_0; }
+		public RuleCall getKwordKeywordParserRuleCall_0_0() { return cKwordKeywordParserRuleCall_0_0; }
 
-		//(".." kWord+=Keyword)?
+		//(".." kword+=Keyword)?
 		public Group getGroup_1() { return cGroup_1; }
 
 		//".."
 		public Keyword getFullStopFullStopKeyword_1_0() { return cFullStopFullStopKeyword_1_0; }
 
-		//kWord+=Keyword
-		public Assignment getKWordAssignment_1_1() { return cKWordAssignment_1_1; }
+		//kword+=Keyword
+		public Assignment getKwordAssignment_1_1() { return cKwordAssignment_1_1; }
 
 		//Keyword
-		public RuleCall getKWordKeywordParserRuleCall_1_1_0() { return cKWordKeywordParserRuleCall_1_1_0; }
+		public RuleCall getKwordKeywordParserRuleCall_1_1_0() { return cKwordKeywordParserRuleCall_1_1_0; }
 	}
 
 	public class KeywordElements extends AbstractParserRuleElementFinder {
@@ -337,7 +337,7 @@ public class MyDslGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//KeyConstr:
-	//	kWord+=Keyword (".." kWord+=Keyword)?;
+	//	kword+=Keyword (".." kword+=Keyword)?;
 	public KeyConstrElements getKeyConstrAccess() {
 		return (pKeyConstr != null) ? pKeyConstr : (pKeyConstr = new KeyConstrElements());
 	}

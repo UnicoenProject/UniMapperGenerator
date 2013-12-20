@@ -18,7 +18,7 @@ Term:
 	kConstr+=KeyConstr | rCall+=RuleCall;
 
 KeyConstr:
-	kWord+=Keyword (".." kWord+=Keyword)?;
+	kword+=Keyword (".." kword+=Keyword)?;
 
 Keyword:
 	text=STRING;

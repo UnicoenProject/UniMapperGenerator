@@ -104,7 +104,7 @@ public class MyDslSemanticSequencer extends AbstractDelegatingSemanticSequencer 
 	
 	/**
 	 * Constraint:
-	 *     (kWord+=Keyword kWord+=Keyword?)
+	 *     (kword+=Keyword kword+=Keyword?)
 	 */
 	protected void sequence_KeyConstr(EObject context, KeyConstr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

@@ -25,7 +25,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MyDsl.ecore#//Term/rCall"/>
     </genClasses>
     <genClasses ecoreClass="MyDsl.ecore#//KeyConstr">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MyDsl.ecore#//KeyConstr/kWord"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MyDsl.ecore#//KeyConstr/kword"/>
     </genClasses>
     <genClasses ecoreClass="MyDsl.ecore#//Keyword">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MyDsl.ecore#//Keyword/text"/>

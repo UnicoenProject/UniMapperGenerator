@@ -850,36 +850,36 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleKeyConstr"
-    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:342:1: ruleKeyConstr returns [EObject current=null] : ( ( (lv_kWord_0_0= ruleKeyword ) ) (otherlv_1= '..' ( (lv_kWord_2_0= ruleKeyword ) ) )? ) ;
+    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:342:1: ruleKeyConstr returns [EObject current=null] : ( ( (lv_kword_0_0= ruleKeyword ) ) (otherlv_1= '..' ( (lv_kword_2_0= ruleKeyword ) ) )? ) ;
     public final EObject ruleKeyConstr() throws RecognitionException {
         EObject current = null;
 
         Token otherlv_1=null;
-        EObject lv_kWord_0_0 = null;
+        EObject lv_kword_0_0 = null;
 
-        EObject lv_kWord_2_0 = null;
+        EObject lv_kword_2_0 = null;
 
 
          enterRule(); 
             
         try {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:345:28: ( ( ( (lv_kWord_0_0= ruleKeyword ) ) (otherlv_1= '..' ( (lv_kWord_2_0= ruleKeyword ) ) )? ) )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:346:1: ( ( (lv_kWord_0_0= ruleKeyword ) ) (otherlv_1= '..' ( (lv_kWord_2_0= ruleKeyword ) ) )? )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:345:28: ( ( ( (lv_kword_0_0= ruleKeyword ) ) (otherlv_1= '..' ( (lv_kword_2_0= ruleKeyword ) ) )? ) )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:346:1: ( ( (lv_kword_0_0= ruleKeyword ) ) (otherlv_1= '..' ( (lv_kword_2_0= ruleKeyword ) ) )? )
             {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:346:1: ( ( (lv_kWord_0_0= ruleKeyword ) ) (otherlv_1= '..' ( (lv_kWord_2_0= ruleKeyword ) ) )? )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:346:2: ( (lv_kWord_0_0= ruleKeyword ) ) (otherlv_1= '..' ( (lv_kWord_2_0= ruleKeyword ) ) )?
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:346:1: ( ( (lv_kword_0_0= ruleKeyword ) ) (otherlv_1= '..' ( (lv_kword_2_0= ruleKeyword ) ) )? )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:346:2: ( (lv_kword_0_0= ruleKeyword ) ) (otherlv_1= '..' ( (lv_kword_2_0= ruleKeyword ) ) )?
             {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:346:2: ( (lv_kWord_0_0= ruleKeyword ) )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:347:1: (lv_kWord_0_0= ruleKeyword )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:346:2: ( (lv_kword_0_0= ruleKeyword ) )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:347:1: (lv_kword_0_0= ruleKeyword )
             {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:347:1: (lv_kWord_0_0= ruleKeyword )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:348:3: lv_kWord_0_0= ruleKeyword
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:347:1: (lv_kword_0_0= ruleKeyword )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:348:3: lv_kword_0_0= ruleKeyword
             {
              
-            	        newCompositeNode(grammarAccess.getKeyConstrAccess().getKWordKeywordParserRuleCall_0_0()); 
+            	        newCompositeNode(grammarAccess.getKeyConstrAccess().getKwordKeywordParserRuleCall_0_0()); 
             	    
             pushFollow(FOLLOW_ruleKeyword_in_ruleKeyConstr710);
-            lv_kWord_0_0=ruleKeyword();
+            lv_kword_0_0=ruleKeyword();
 
             state._fsp--;
 
@@ -889,8 +889,8 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
             	        }
                    		add(
                    			current, 
-                   			"kWord",
-                    		lv_kWord_0_0, 
+                   			"kword",
+                    		lv_kword_0_0, 
                     		"Keyword");
             	        afterParserOrEnumRuleCall();
             	    
@@ -900,7 +900,7 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:364:2: (otherlv_1= '..' ( (lv_kWord_2_0= ruleKeyword ) ) )?
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:364:2: (otherlv_1= '..' ( (lv_kword_2_0= ruleKeyword ) ) )?
             int alt5=2;
             int LA5_0 = input.LA(1);
 
@@ -909,23 +909,23 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
             }
             switch (alt5) {
                 case 1 :
-                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:364:4: otherlv_1= '..' ( (lv_kWord_2_0= ruleKeyword ) )
+                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:364:4: otherlv_1= '..' ( (lv_kword_2_0= ruleKeyword ) )
                     {
                     otherlv_1=(Token)match(input,15,FOLLOW_15_in_ruleKeyConstr723); 
 
                         	newLeafNode(otherlv_1, grammarAccess.getKeyConstrAccess().getFullStopFullStopKeyword_1_0());
                         
-                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:368:1: ( (lv_kWord_2_0= ruleKeyword ) )
-                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:369:1: (lv_kWord_2_0= ruleKeyword )
+                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:368:1: ( (lv_kword_2_0= ruleKeyword ) )
+                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:369:1: (lv_kword_2_0= ruleKeyword )
                     {
-                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:369:1: (lv_kWord_2_0= ruleKeyword )
-                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:370:3: lv_kWord_2_0= ruleKeyword
+                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:369:1: (lv_kword_2_0= ruleKeyword )
+                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:370:3: lv_kword_2_0= ruleKeyword
                     {
                      
-                    	        newCompositeNode(grammarAccess.getKeyConstrAccess().getKWordKeywordParserRuleCall_1_1_0()); 
+                    	        newCompositeNode(grammarAccess.getKeyConstrAccess().getKwordKeywordParserRuleCall_1_1_0()); 
                     	    
                     pushFollow(FOLLOW_ruleKeyword_in_ruleKeyConstr744);
-                    lv_kWord_2_0=ruleKeyword();
+                    lv_kword_2_0=ruleKeyword();
 
                     state._fsp--;
 
@@ -935,8 +935,8 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
                     	        }
                            		add(
                            			current, 
-                           			"kWord",
-                            		lv_kWord_2_0, 
+                           			"kword",
+                            		lv_kword_2_0, 
                             		"Keyword");
                     	        afterParserOrEnumRuleCall();
                     	    

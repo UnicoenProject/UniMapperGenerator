@@ -1656,31 +1656,31 @@ public class InternalMyDslParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__KeyConstr__Group__0__Impl"
-    // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:618:1: rule__KeyConstr__Group__0__Impl : ( ( rule__KeyConstr__KWordAssignment_0 ) ) ;
+    // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:618:1: rule__KeyConstr__Group__0__Impl : ( ( rule__KeyConstr__KwordAssignment_0 ) ) ;
     public final void rule__KeyConstr__Group__0__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:622:1: ( ( ( rule__KeyConstr__KWordAssignment_0 ) ) )
-            // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:623:1: ( ( rule__KeyConstr__KWordAssignment_0 ) )
+            // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:622:1: ( ( ( rule__KeyConstr__KwordAssignment_0 ) ) )
+            // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:623:1: ( ( rule__KeyConstr__KwordAssignment_0 ) )
             {
-            // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:623:1: ( ( rule__KeyConstr__KWordAssignment_0 ) )
-            // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:624:1: ( rule__KeyConstr__KWordAssignment_0 )
+            // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:623:1: ( ( rule__KeyConstr__KwordAssignment_0 ) )
+            // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:624:1: ( rule__KeyConstr__KwordAssignment_0 )
             {
-             before(grammarAccess.getKeyConstrAccess().getKWordAssignment_0()); 
-            // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:625:1: ( rule__KeyConstr__KWordAssignment_0 )
-            // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:625:2: rule__KeyConstr__KWordAssignment_0
+             before(grammarAccess.getKeyConstrAccess().getKwordAssignment_0()); 
+            // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:625:1: ( rule__KeyConstr__KwordAssignment_0 )
+            // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:625:2: rule__KeyConstr__KwordAssignment_0
             {
-            pushFollow(FOLLOW_rule__KeyConstr__KWordAssignment_0_in_rule__KeyConstr__Group__0__Impl1221);
-            rule__KeyConstr__KWordAssignment_0();
+            pushFollow(FOLLOW_rule__KeyConstr__KwordAssignment_0_in_rule__KeyConstr__Group__0__Impl1221);
+            rule__KeyConstr__KwordAssignment_0();
 
             state._fsp--;
 
 
             }
 
-             after(grammarAccess.getKeyConstrAccess().getKWordAssignment_0()); 
+             after(grammarAccess.getKeyConstrAccess().getKwordAssignment_0()); 
 
             }
 
@@ -1902,31 +1902,31 @@ public class InternalMyDslParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__KeyConstr__Group_1__1__Impl"
-    // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:709:1: rule__KeyConstr__Group_1__1__Impl : ( ( rule__KeyConstr__KWordAssignment_1_1 ) ) ;
+    // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:709:1: rule__KeyConstr__Group_1__1__Impl : ( ( rule__KeyConstr__KwordAssignment_1_1 ) ) ;
     public final void rule__KeyConstr__Group_1__1__Impl() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
         try {
-            // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:713:1: ( ( ( rule__KeyConstr__KWordAssignment_1_1 ) ) )
-            // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:714:1: ( ( rule__KeyConstr__KWordAssignment_1_1 ) )
+            // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:713:1: ( ( ( rule__KeyConstr__KwordAssignment_1_1 ) ) )
+            // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:714:1: ( ( rule__KeyConstr__KwordAssignment_1_1 ) )
             {
-            // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:714:1: ( ( rule__KeyConstr__KWordAssignment_1_1 ) )
-            // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:715:1: ( rule__KeyConstr__KWordAssignment_1_1 )
+            // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:714:1: ( ( rule__KeyConstr__KwordAssignment_1_1 ) )
+            // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:715:1: ( rule__KeyConstr__KwordAssignment_1_1 )
             {
-             before(grammarAccess.getKeyConstrAccess().getKWordAssignment_1_1()); 
-            // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:716:1: ( rule__KeyConstr__KWordAssignment_1_1 )
-            // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:716:2: rule__KeyConstr__KWordAssignment_1_1
+             before(grammarAccess.getKeyConstrAccess().getKwordAssignment_1_1()); 
+            // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:716:1: ( rule__KeyConstr__KwordAssignment_1_1 )
+            // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:716:2: rule__KeyConstr__KwordAssignment_1_1
             {
-            pushFollow(FOLLOW_rule__KeyConstr__KWordAssignment_1_1_in_rule__KeyConstr__Group_1__1__Impl1402);
-            rule__KeyConstr__KWordAssignment_1_1();
+            pushFollow(FOLLOW_rule__KeyConstr__KwordAssignment_1_1_in_rule__KeyConstr__Group_1__1__Impl1402);
+            rule__KeyConstr__KwordAssignment_1_1();
 
             state._fsp--;
 
 
             }
 
-             after(grammarAccess.getKeyConstrAccess().getKWordAssignment_1_1()); 
+             after(grammarAccess.getKeyConstrAccess().getKwordAssignment_1_1()); 
 
             }
 
@@ -2502,9 +2502,9 @@ public class InternalMyDslParser extends AbstractInternalContentAssistParser {
     // $ANTLR end "rule__Term__RCallAssignment_1"
 
 
-    // $ANTLR start "rule__KeyConstr__KWordAssignment_0"
-    // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:947:1: rule__KeyConstr__KWordAssignment_0 : ( ruleKeyword ) ;
-    public final void rule__KeyConstr__KWordAssignment_0() throws RecognitionException {
+    // $ANTLR start "rule__KeyConstr__KwordAssignment_0"
+    // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:947:1: rule__KeyConstr__KwordAssignment_0 : ( ruleKeyword ) ;
+    public final void rule__KeyConstr__KwordAssignment_0() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
@@ -2515,13 +2515,13 @@ public class InternalMyDslParser extends AbstractInternalContentAssistParser {
             // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:952:1: ( ruleKeyword )
             // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:953:1: ruleKeyword
             {
-             before(grammarAccess.getKeyConstrAccess().getKWordKeywordParserRuleCall_0_0()); 
-            pushFollow(FOLLOW_ruleKeyword_in_rule__KeyConstr__KWordAssignment_01876);
+             before(grammarAccess.getKeyConstrAccess().getKwordKeywordParserRuleCall_0_0()); 
+            pushFollow(FOLLOW_ruleKeyword_in_rule__KeyConstr__KwordAssignment_01876);
             ruleKeyword();
 
             state._fsp--;
 
-             after(grammarAccess.getKeyConstrAccess().getKWordKeywordParserRuleCall_0_0()); 
+             after(grammarAccess.getKeyConstrAccess().getKwordKeywordParserRuleCall_0_0()); 
 
             }
 
@@ -2540,12 +2540,12 @@ public class InternalMyDslParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__KeyConstr__KWordAssignment_0"
+    // $ANTLR end "rule__KeyConstr__KwordAssignment_0"
 
 
-    // $ANTLR start "rule__KeyConstr__KWordAssignment_1_1"
-    // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:962:1: rule__KeyConstr__KWordAssignment_1_1 : ( ruleKeyword ) ;
-    public final void rule__KeyConstr__KWordAssignment_1_1() throws RecognitionException {
+    // $ANTLR start "rule__KeyConstr__KwordAssignment_1_1"
+    // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:962:1: rule__KeyConstr__KwordAssignment_1_1 : ( ruleKeyword ) ;
+    public final void rule__KeyConstr__KwordAssignment_1_1() throws RecognitionException {
 
         		int stackSize = keepStackSize();
             
@@ -2556,13 +2556,13 @@ public class InternalMyDslParser extends AbstractInternalContentAssistParser {
             // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:967:1: ( ruleKeyword )
             // ../org.xtext.example.mydsl.ui/src-gen/org/xtext/example/mydsl/ui/contentassist/antlr/internal/InternalMyDsl.g:968:1: ruleKeyword
             {
-             before(grammarAccess.getKeyConstrAccess().getKWordKeywordParserRuleCall_1_1_0()); 
-            pushFollow(FOLLOW_ruleKeyword_in_rule__KeyConstr__KWordAssignment_1_11907);
+             before(grammarAccess.getKeyConstrAccess().getKwordKeywordParserRuleCall_1_1_0()); 
+            pushFollow(FOLLOW_ruleKeyword_in_rule__KeyConstr__KwordAssignment_1_11907);
             ruleKeyword();
 
             state._fsp--;
 
-             after(grammarAccess.getKeyConstrAccess().getKWordKeywordParserRuleCall_1_1_0()); 
+             after(grammarAccess.getKeyConstrAccess().getKwordKeywordParserRuleCall_1_1_0()); 
 
             }
 
@@ -2581,7 +2581,7 @@ public class InternalMyDslParser extends AbstractInternalContentAssistParser {
         }
         return ;
     }
-    // $ANTLR end "rule__KeyConstr__KWordAssignment_1_1"
+    // $ANTLR end "rule__KeyConstr__KwordAssignment_1_1"
 
 
     // $ANTLR start "rule__Keyword__TextAssignment"
@@ -2724,14 +2724,14 @@ public class InternalMyDslParser extends AbstractInternalContentAssistParser {
     public static final BitSet FOLLOW_rule__Expression__ElementsAssignment_1_1_in_rule__Expression__Group_1__1__Impl1157 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__KeyConstr__Group__0__Impl_in_rule__KeyConstr__Group__01191 = new BitSet(new long[]{0x0000000000008000L});
     public static final BitSet FOLLOW_rule__KeyConstr__Group__1_in_rule__KeyConstr__Group__01194 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_rule__KeyConstr__KWordAssignment_0_in_rule__KeyConstr__Group__0__Impl1221 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_rule__KeyConstr__KwordAssignment_0_in_rule__KeyConstr__Group__0__Impl1221 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__KeyConstr__Group__1__Impl_in_rule__KeyConstr__Group__11251 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__KeyConstr__Group_1__0_in_rule__KeyConstr__Group__1__Impl1278 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__KeyConstr__Group_1__0__Impl_in_rule__KeyConstr__Group_1__01313 = new BitSet(new long[]{0x0000000000000020L});
     public static final BitSet FOLLOW_rule__KeyConstr__Group_1__1_in_rule__KeyConstr__Group_1__01316 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_15_in_rule__KeyConstr__Group_1__0__Impl1344 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__KeyConstr__Group_1__1__Impl_in_rule__KeyConstr__Group_1__11375 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_rule__KeyConstr__KWordAssignment_1_1_in_rule__KeyConstr__Group_1__1__Impl1402 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_rule__KeyConstr__KwordAssignment_1_1_in_rule__KeyConstr__Group_1__1__Impl1402 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_rule__RuleCall__Group__0__Impl_in_rule__RuleCall__Group__01436 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_rule__RuleCall__Group__1_in_rule__RuleCall__Group__01439 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_11_in_rule__RuleCall__Group__0__Impl1467 = new BitSet(new long[]{0x0000000000000002L});
@@ -2748,8 +2748,8 @@ public class InternalMyDslParser extends AbstractInternalContentAssistParser {
     public static final BitSet FOLLOW_ruleTerm_in_rule__Element__TermsAssignment1783 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleKeyConstr_in_rule__Term__KConstrAssignment_01814 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleRuleCall_in_rule__Term__RCallAssignment_11845 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleKeyword_in_rule__KeyConstr__KWordAssignment_01876 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleKeyword_in_rule__KeyConstr__KWordAssignment_1_11907 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleKeyword_in_rule__KeyConstr__KwordAssignment_01876 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleKeyword_in_rule__KeyConstr__KwordAssignment_1_11907 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_RULE_STRING_in_rule__Keyword__TextAssignment1938 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_RULE_ID_in_rule__RuleCall__RefAssignment_11973 = new BitSet(new long[]{0x0000000000000002L});
 

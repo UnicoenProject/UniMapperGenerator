@@ -10,9 +10,6 @@ import org.eclipse.xtext.generator.IFileSystemAccess
 import org.xtext.example.mydsl.myDsl.Rule
 import org.xtext.example.mydsl.myDsl.Model
 import org.xtext.example.mydsl.myDsl.Expression
-import org.xtext.example.mydsl.myDsl.Term
-import org.xtext.example.mydsl.myDsl.Element
-import org.xtext.example.mydsl.myDsl.RuleCall
 
 class MyDslGenerator implements IGenerator {
 
@@ -23,34 +20,14 @@ class MyDslGenerator implements IGenerator {
 	}
 
 	def compile(Model m) '''
-		grammar CSV;
-				
-		 «FOR r : m.rules»
-			«r.compile»
-		 «ENDFOR»
+	grammar CSV;
+			
+	«FOR r : m.rules»«r.compile»«ENDFOR»'''
+
+	def compile(Rule r) '''«r.name»:
+	«r.expression.compile»;
 	'''
 
-	def compile(Rule r) '''
-		«r.name» : «r.expression.compile» ;
-	'''
-
-	def compile(Expression exp) '''
-		«FOR e : exp.elements»«e.compile» | «ENDFOR»
-	'''
-
-	def compile(Element e) '''
-		«FOR t : e.terms»
-			«t.compile»
-		«ENDFOR»
-	'''
-
-	def compile(Term t) '''
-		«FOR r : t.RCall»
-			«r.compile»
-		«ENDFOR»
-	'''
-
-	def compile(RuleCall r) '''
-		«r.ref.name»
-	'''
+	def compile(Expression exp) '''«FOR ele : exp.elements»«FOR t : ele.terms»«FOR r : t.RCall»«IF !exp.elements.head.
+		equals(ele) && ele.terms.head.equals(t)»| «ENDIF»«r.ref.name» «ENDFOR»«ENDFOR»«ENDFOR»'''
 }

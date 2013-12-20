@@ -621,9 +621,9 @@ rule__KeyConstr__Group__0__Impl
     }
 :
 (
-{ before(grammarAccess.getKeyConstrAccess().getKWordAssignment_0()); }
-(rule__KeyConstr__KWordAssignment_0)
-{ after(grammarAccess.getKeyConstrAccess().getKWordAssignment_0()); }
+{ before(grammarAccess.getKeyConstrAccess().getKwordAssignment_0()); }
+(rule__KeyConstr__KwordAssignment_0)
+{ after(grammarAccess.getKeyConstrAccess().getKwordAssignment_0()); }
 )
 
 ;
@@ -712,9 +712,9 @@ rule__KeyConstr__Group_1__1__Impl
     }
 :
 (
-{ before(grammarAccess.getKeyConstrAccess().getKWordAssignment_1_1()); }
-(rule__KeyConstr__KWordAssignment_1_1)
-{ after(grammarAccess.getKeyConstrAccess().getKWordAssignment_1_1()); }
+{ before(grammarAccess.getKeyConstrAccess().getKwordAssignment_1_1()); }
+(rule__KeyConstr__KwordAssignment_1_1)
+{ after(grammarAccess.getKeyConstrAccess().getKwordAssignment_1_1()); }
 )
 
 ;
@@ -944,14 +944,14 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__KeyConstr__KWordAssignment_0
+rule__KeyConstr__KwordAssignment_0
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getKeyConstrAccess().getKWordKeywordParserRuleCall_0_0()); }
-	ruleKeyword{ after(grammarAccess.getKeyConstrAccess().getKWordKeywordParserRuleCall_0_0()); }
+{ before(grammarAccess.getKeyConstrAccess().getKwordKeywordParserRuleCall_0_0()); }
+	ruleKeyword{ after(grammarAccess.getKeyConstrAccess().getKwordKeywordParserRuleCall_0_0()); }
 )
 
 ;
@@ -959,14 +959,14 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__KeyConstr__KWordAssignment_1_1
+rule__KeyConstr__KwordAssignment_1_1
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getKeyConstrAccess().getKWordKeywordParserRuleCall_1_1_0()); }
-	ruleKeyword{ after(grammarAccess.getKeyConstrAccess().getKWordKeywordParserRuleCall_1_1_0()); }
+{ before(grammarAccess.getKeyConstrAccess().getKwordKeywordParserRuleCall_1_1_0()); }
+	ruleKeyword{ after(grammarAccess.getKeyConstrAccess().getKwordKeywordParserRuleCall_1_1_0()); }
 )
 
 ;

@@ -27,7 +27,7 @@ import org.xtext.example.mydsl.myDsl.MyDslPackage;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.xtext.example.mydsl.myDsl.impl.KeyConstrImpl#getKWord <em>KWord</em>}</li>
+ *   <li>{@link org.xtext.example.mydsl.myDsl.impl.KeyConstrImpl#getKword <em>Kword</em>}</li>
  * </ul>
  * </p>
  *
@@ -36,14 +36,14 @@ import org.xtext.example.mydsl.myDsl.MyDslPackage;
 public class KeyConstrImpl extends MinimalEObjectImpl.Container implements KeyConstr
 {
   /**
-   * The cached value of the '{@link #getKWord() <em>KWord</em>}' containment reference list.
+   * The cached value of the '{@link #getKword() <em>Kword</em>}' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getKWord()
+   * @see #getKword()
    * @generated
    * @ordered
    */
-  protected EList<Keyword> kWord;
+  protected EList<Keyword> kword;
 
   /**
    * <!-- begin-user-doc -->
@@ -71,13 +71,13 @@ public class KeyConstrImpl extends MinimalEObjectImpl.Container implements KeyCo
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<Keyword> getKWord()
+  public EList<Keyword> getKword()
   {
-    if (kWord == null)
+    if (kword == null)
     {
-      kWord = new EObjectContainmentEList<Keyword>(Keyword.class, this, MyDslPackage.KEY_CONSTR__KWORD);
+      kword = new EObjectContainmentEList<Keyword>(Keyword.class, this, MyDslPackage.KEY_CONSTR__KWORD);
     }
-    return kWord;
+    return kword;
   }
 
   /**
@@ -91,7 +91,7 @@ public class KeyConstrImpl extends MinimalEObjectImpl.Container implements KeyCo
     switch (featureID)
     {
       case MyDslPackage.KEY_CONSTR__KWORD:
-        return ((InternalEList<?>)getKWord()).basicRemove(otherEnd, msgs);
+        return ((InternalEList<?>)getKword()).basicRemove(otherEnd, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -107,7 +107,7 @@ public class KeyConstrImpl extends MinimalEObjectImpl.Container implements KeyCo
     switch (featureID)
     {
       case MyDslPackage.KEY_CONSTR__KWORD:
-        return getKWord();
+        return getKword();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -124,8 +124,8 @@ public class KeyConstrImpl extends MinimalEObjectImpl.Container implements KeyCo
     switch (featureID)
     {
       case MyDslPackage.KEY_CONSTR__KWORD:
-        getKWord().clear();
-        getKWord().addAll((Collection<? extends Keyword>)newValue);
+        getKword().clear();
+        getKword().addAll((Collection<? extends Keyword>)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -142,7 +142,7 @@ public class KeyConstrImpl extends MinimalEObjectImpl.Container implements KeyCo
     switch (featureID)
     {
       case MyDslPackage.KEY_CONSTR__KWORD:
-        getKWord().clear();
+        getKword().clear();
         return;
     }
     super.eUnset(featureID);
@@ -159,7 +159,7 @@ public class KeyConstrImpl extends MinimalEObjectImpl.Container implements KeyCo
     switch (featureID)
     {
       case MyDslPackage.KEY_CONSTR__KWORD:
-        return kWord != null && !kWord.isEmpty();
+        return kword != null && !kword.isEmpty();
     }
     return super.eIsSet(featureID);
   }

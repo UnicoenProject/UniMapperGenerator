@@ -14,7 +14,7 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.xtext.example.mydsl.myDsl.KeyConstr#getKWord <em>KWord</em>}</li>
+ *   <li>{@link org.xtext.example.mydsl.myDsl.KeyConstr#getKword <em>Kword</em>}</li>
  * </ul>
  * </p>
  *
@@ -25,19 +25,19 @@ import org.eclipse.emf.ecore.EObject;
 public interface KeyConstr extends EObject
 {
   /**
-   * Returns the value of the '<em><b>KWord</b></em>' containment reference list.
+   * Returns the value of the '<em><b>Kword</b></em>' containment reference list.
    * The list contents are of type {@link org.xtext.example.mydsl.myDsl.Keyword}.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>KWord</em>' containment reference list isn't clear,
+   * If the meaning of the '<em>Kword</em>' containment reference list isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>KWord</em>' containment reference list.
-   * @see org.xtext.example.mydsl.myDsl.MyDslPackage#getKeyConstr_KWord()
+   * @return the value of the '<em>Kword</em>' containment reference list.
+   * @see org.xtext.example.mydsl.myDsl.MyDslPackage#getKeyConstr_Kword()
    * @model containment="true"
    * @generated
    */
-  EList<Keyword> getKWord();
+  EList<Keyword> getKword();
 
 } // KeyConstr

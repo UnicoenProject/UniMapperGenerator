@@ -11,6 +11,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.generator.IFileSystemAccess;
 import org.eclipse.xtext.generator.IGenerator;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 import org.xtext.example.mydsl.myDsl.Element;
 import org.xtext.example.mydsl.myDsl.Expression;
@@ -42,7 +43,6 @@ public class MyDslGenerator implements IGenerator {
       for(final Rule r : _rules) {
         CharSequence _compile = this.compile(r);
         _builder.append(_compile, "");
-        _builder.newLineIfNotEmpty();
       }
     }
     return _builder;
@@ -52,11 +52,13 @@ public class MyDslGenerator implements IGenerator {
     StringConcatenation _builder = new StringConcatenation();
     String _name = r.getName();
     _builder.append(_name, "");
-    _builder.append(" : ");
+    _builder.append(":");
+    _builder.newLineIfNotEmpty();
+    _builder.append("\t");
     Expression _expression = r.getExpression();
     CharSequence _compile = this.compile(_expression);
-    _builder.append(_compile, "");
-    _builder.append(" ;");
+    _builder.append(_compile, "	");
+    _builder.append(";");
     _builder.newLineIfNotEmpty();
     return _builder;
   }
@@ -65,48 +67,41 @@ public class MyDslGenerator implements IGenerator {
     StringConcatenation _builder = new StringConcatenation();
     {
       EList<Element> _elements = exp.getElements();
-      for(final Element e : _elements) {
-        CharSequence _compile = this.compile(e);
-        _builder.append(_compile, "");
-        _builder.append(" | ");
+      for(final Element ele : _elements) {
+        {
+          EList<Term> _terms = ele.getTerms();
+          for(final Term t : _terms) {
+            {
+              EList<RuleCall> _rCall = t.getRCall();
+              for(final RuleCall r : _rCall) {
+                {
+                  boolean _and = false;
+                  EList<Element> _elements_1 = exp.getElements();
+                  Element _head = IterableExtensions.<Element>head(_elements_1);
+                  boolean _equals = _head.equals(ele);
+                  boolean _not = (!_equals);
+                  if (!_not) {
+                    _and = false;
+                  } else {
+                    EList<Term> _terms_1 = ele.getTerms();
+                    Term _head_1 = IterableExtensions.<Term>head(_terms_1);
+                    boolean _equals_1 = _head_1.equals(t);
+                    _and = (_not && _equals_1);
+                  }
+                  if (_and) {
+                    _builder.append("| ");
+                  }
+                }
+                Rule _ref = r.getRef();
+                String _name = _ref.getName();
+                _builder.append(_name, "");
+                _builder.append(" ");
+              }
+            }
+          }
+        }
       }
     }
-    _builder.newLineIfNotEmpty();
-    return _builder;
-  }
-  
-  public CharSequence compile(final Element e) {
-    StringConcatenation _builder = new StringConcatenation();
-    {
-      EList<Term> _terms = e.getTerms();
-      for(final Term t : _terms) {
-        CharSequence _compile = this.compile(t);
-        _builder.append(_compile, "");
-        _builder.newLineIfNotEmpty();
-      }
-    }
-    return _builder;
-  }
-  
-  public CharSequence compile(final Term t) {
-    StringConcatenation _builder = new StringConcatenation();
-    {
-      EList<RuleCall> _rCall = t.getRCall();
-      for(final RuleCall r : _rCall) {
-        CharSequence _compile = this.compile(r);
-        _builder.append(_compile, "");
-        _builder.newLineIfNotEmpty();
-      }
-    }
-    return _builder;
-  }
-  
-  public CharSequence compile(final RuleCall r) {
-    StringConcatenation _builder = new StringConcatenation();
-    Rule _ref = r.getRef();
-    String _name = _ref.getName();
-    _builder.append(_name, "");
-    _builder.newLineIfNotEmpty();
     return _builder;
   }
 }

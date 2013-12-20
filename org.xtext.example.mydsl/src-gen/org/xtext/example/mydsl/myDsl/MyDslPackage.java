@@ -225,7 +225,7 @@ public interface MyDslPackage extends EPackage
   int KEY_CONSTR = 5;
 
   /**
-   * The feature id for the '<em><b>KWord</b></em>' containment reference list.
+   * The feature id for the '<em><b>Kword</b></em>' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
@@ -437,15 +437,15 @@ public interface MyDslPackage extends EPackage
   EClass getKeyConstr();
 
   /**
-   * Returns the meta object for the containment reference list '{@link org.xtext.example.mydsl.myDsl.KeyConstr#getKWord <em>KWord</em>}'.
+   * Returns the meta object for the containment reference list '{@link org.xtext.example.mydsl.myDsl.KeyConstr#getKword <em>Kword</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the containment reference list '<em>KWord</em>'.
-   * @see org.xtext.example.mydsl.myDsl.KeyConstr#getKWord()
+   * @return the meta object for the containment reference list '<em>Kword</em>'.
+   * @see org.xtext.example.mydsl.myDsl.KeyConstr#getKword()
    * @see #getKeyConstr()
    * @generated
    */
-  EReference getKeyConstr_KWord();
+  EReference getKeyConstr_Kword();
 
   /**
    * Returns the meta object for class '{@link org.xtext.example.mydsl.myDsl.Keyword <em>Keyword</em>}'.
@@ -629,12 +629,12 @@ public interface MyDslPackage extends EPackage
     EClass KEY_CONSTR = eINSTANCE.getKeyConstr();
 
     /**
-     * The meta object literal for the '<em><b>KWord</b></em>' containment reference list feature.
+     * The meta object literal for the '<em><b>Kword</b></em>' containment reference list feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference KEY_CONSTR__KWORD = eINSTANCE.getKeyConstr_KWord();
+    EReference KEY_CONSTR__KWORD = eINSTANCE.getKeyConstr_Kword();
 
     /**
      * The meta object literal for the '{@link org.xtext.example.mydsl.myDsl.impl.KeywordImpl <em>Keyword</em>}' class.
