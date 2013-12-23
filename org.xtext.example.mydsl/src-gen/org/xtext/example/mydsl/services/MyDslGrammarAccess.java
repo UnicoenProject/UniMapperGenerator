@@ -20,18 +20,54 @@ public class MyDslGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public class ModelElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "Model");
-		private final Assignment cRulesAssignment = (Assignment)rule.eContents().get(1);
-		private final RuleCall cRulesRuleParserRuleCall_0 = (RuleCall)cRulesAssignment.eContents().get(0);
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Assignment cGramAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final RuleCall cGramGrammarParserRuleCall_0_0 = (RuleCall)cGramAssignment_0.eContents().get(0);
+		private final Assignment cRulesAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cRulesRuleParserRuleCall_1_0 = (RuleCall)cRulesAssignment_1.eContents().get(0);
 		
 		//Model:
-		//	rules+=Rule+;
+		//	gram=Grammar rules+=Rule+;
 		public ParserRule getRule() { return rule; }
 
+		//gram=Grammar rules+=Rule+
+		public Group getGroup() { return cGroup; }
+
+		//gram=Grammar
+		public Assignment getGramAssignment_0() { return cGramAssignment_0; }
+
+		//Grammar
+		public RuleCall getGramGrammarParserRuleCall_0_0() { return cGramGrammarParserRuleCall_0_0; }
+
 		//rules+=Rule+
-		public Assignment getRulesAssignment() { return cRulesAssignment; }
+		public Assignment getRulesAssignment_1() { return cRulesAssignment_1; }
 
 		//Rule
-		public RuleCall getRulesRuleParserRuleCall_0() { return cRulesRuleParserRuleCall_0; }
+		public RuleCall getRulesRuleParserRuleCall_1_0() { return cRulesRuleParserRuleCall_1_0; }
+	}
+
+	public class GrammarElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "Grammar");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Keyword cGrammarKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Assignment cGnameAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cGnameIDTerminalRuleCall_1_0 = (RuleCall)cGnameAssignment_1.eContents().get(0);
+		
+		//Grammar:
+		//	"grammar" gname=ID;
+		public ParserRule getRule() { return rule; }
+
+		//"grammar" gname=ID
+		public Group getGroup() { return cGroup; }
+
+		//"grammar"
+		public Keyword getGrammarKeyword_0() { return cGrammarKeyword_0; }
+
+		//gname=ID
+		public Assignment getGnameAssignment_1() { return cGnameAssignment_1; }
+
+		//ID
+		public RuleCall getGnameIDTerminalRuleCall_1_0() { return cGnameIDTerminalRuleCall_1_0; }
 	}
 
 	public class RuleElements extends AbstractParserRuleElementFinder {
@@ -240,6 +276,7 @@ public class MyDslGrammarAccess extends AbstractGrammarElementFinder {
 	
 	
 	private ModelElements pModel;
+	private GrammarElements pGrammar;
 	private RuleElements pRule;
 	private ExpressionElements pExpression;
 	private ElementElements pElement;
@@ -287,13 +324,23 @@ public class MyDslGrammarAccess extends AbstractGrammarElementFinder {
 
 	
 	//Model:
-	//	rules+=Rule+;
+	//	gram=Grammar rules+=Rule+;
 	public ModelElements getModelAccess() {
 		return (pModel != null) ? pModel : (pModel = new ModelElements());
 	}
 	
 	public ParserRule getModelRule() {
 		return getModelAccess().getRule();
+	}
+
+	//Grammar:
+	//	"grammar" gname=ID;
+	public GrammarElements getGrammarAccess() {
+		return (pGrammar != null) ? pGrammar : (pGrammar = new GrammarElements());
+	}
+	
+	public ParserRule getGrammarRule() {
+		return getGrammarAccess().getRule();
 	}
 
 	//Rule:

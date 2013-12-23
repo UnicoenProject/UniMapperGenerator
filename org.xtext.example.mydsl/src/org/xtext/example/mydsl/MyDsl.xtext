@@ -3,7 +3,10 @@ grammar org.xtext.example.mydsl.MyDsl with org.eclipse.xtext.common.Terminals
 generate myDsl "http://www.xtext.org/example/mydsl/MyDsl"
 
 Model:
-	(rules+=Rule)+;
+	gram=Grammar (rules+=Rule)+;
+
+Grammar:
+	"grammar" gname=ID;
 
 Rule:
 	"<" name=ID ">" "::=" expression=Expression;

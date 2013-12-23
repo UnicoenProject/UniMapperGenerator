@@ -15,6 +15,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 import org.xtext.example.mydsl.myDsl.Element;
 import org.xtext.example.mydsl.myDsl.Expression;
+import org.xtext.example.mydsl.myDsl.Grammar;
 import org.xtext.example.mydsl.myDsl.Model;
 import org.xtext.example.mydsl.myDsl.Rule;
 import org.xtext.example.mydsl.myDsl.RuleCall;
@@ -27,22 +28,39 @@ public class MyDslGenerator implements IGenerator {
     Iterable<EObject> _iterable = IteratorExtensions.<EObject>toIterable(_allContents);
     Iterable<Model> _filter = Iterables.<Model>filter(_iterable, Model.class);
     for (final Model m : _filter) {
-      CharSequence _compile = this.compile(m);
-      fsa.generateFile("model.g", _compile);
+      {
+        Grammar _gram = m.getGram();
+        String _gname = _gram.getGname();
+        String _plus = (_gname + ".g4");
+        CharSequence _compile = this.compile(m);
+        fsa.generateFile(_plus, _compile);
+        fsa.generateFile("antlr.java", "public");
+      }
     }
   }
   
   public CharSequence compile(final Model m) {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append("grammar CSV;");
-    _builder.newLine();
+    _builder.append("grammar ");
+    Grammar _gram = m.getGram();
+    String _gname = _gram.getGname();
+    _builder.append(_gname, "");
+    _builder.append(";");
+    _builder.newLineIfNotEmpty();
     _builder.append("\t\t");
     _builder.newLine();
     {
       EList<Rule> _rules = m.getRules();
       for(final Rule r : _rules) {
-        CharSequence _compile = this.compile(r);
-        _builder.append(_compile, "");
+        {
+          String _name = r.getName();
+          char _charAt = _name.charAt(0);
+          boolean _isLowerCase = Character.isLowerCase(_charAt);
+          if (_isLowerCase) {
+            CharSequence _compile = this.compile(r);
+            _builder.append(_compile, "");
+          }
+        }
       }
     }
     return _builder;

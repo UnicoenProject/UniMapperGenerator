@@ -65,6 +65,7 @@ public class MyDslFactoryImpl extends EFactoryImpl implements MyDslFactory
     switch (eClass.getClassifierID())
     {
       case MyDslPackage.MODEL: return createModel();
+      case MyDslPackage.GRAMMAR: return createGrammar();
       case MyDslPackage.RULE: return createRule();
       case MyDslPackage.EXPRESSION: return createExpression();
       case MyDslPackage.ELEMENT: return createElement();
@@ -86,6 +87,17 @@ public class MyDslFactoryImpl extends EFactoryImpl implements MyDslFactory
   {
     ModelImpl model = new ModelImpl();
     return model;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Grammar createGrammar()
+  {
+    GrammarImpl grammar = new GrammarImpl();
+    return grammar;
   }
 
   /**

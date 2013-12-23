@@ -38,13 +38,17 @@ public class MyDslParser extends AbstractContentAssistParser {
 				private static final long serialVersionUID = 1L;
 				{
 					put(grammarAccess.getTermAccess().getAlternatives(), "rule__Term__Alternatives");
+					put(grammarAccess.getModelAccess().getGroup(), "rule__Model__Group__0");
+					put(grammarAccess.getGrammarAccess().getGroup(), "rule__Grammar__Group__0");
 					put(grammarAccess.getRuleAccess().getGroup(), "rule__Rule__Group__0");
 					put(grammarAccess.getExpressionAccess().getGroup(), "rule__Expression__Group__0");
 					put(grammarAccess.getExpressionAccess().getGroup_1(), "rule__Expression__Group_1__0");
 					put(grammarAccess.getKeyConstrAccess().getGroup(), "rule__KeyConstr__Group__0");
 					put(grammarAccess.getKeyConstrAccess().getGroup_1(), "rule__KeyConstr__Group_1__0");
 					put(grammarAccess.getRuleCallAccess().getGroup(), "rule__RuleCall__Group__0");
-					put(grammarAccess.getModelAccess().getRulesAssignment(), "rule__Model__RulesAssignment");
+					put(grammarAccess.getModelAccess().getGramAssignment_0(), "rule__Model__GramAssignment_0");
+					put(grammarAccess.getModelAccess().getRulesAssignment_1(), "rule__Model__RulesAssignment_1");
+					put(grammarAccess.getGrammarAccess().getGnameAssignment_1(), "rule__Grammar__GnameAssignment_1");
 					put(grammarAccess.getRuleAccess().getNameAssignment_1(), "rule__Rule__NameAssignment_1");
 					put(grammarAccess.getRuleAccess().getExpressionAssignment_4(), "rule__Rule__ExpressionAssignment_4");
 					put(grammarAccess.getExpressionAccess().getElementsAssignment_0(), "rule__Expression__ElementsAssignment_0");

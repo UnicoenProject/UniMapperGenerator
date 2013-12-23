@@ -15,14 +15,15 @@ class MyDslGenerator implements IGenerator {
 
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
 		for (m : resource.allContents.toIterable.filter(Model)) {
-			fsa.generateFile("model.g", m.compile)
+			fsa.generateFile(m.gram.gname+".g4", m.compile)
+			fsa.generateFile("antlr.java", "public")
 		}
 	}
 
 	def compile(Model m) '''
-	grammar CSV;
+	grammar «m.gram.gname»;
 			
-	«FOR r : m.rules»«r.compile»«ENDFOR»'''
+	«FOR r : m.rules»«IF Character.isLowerCase(r.name.charAt(0))»«r.compile»«ENDIF»«ENDFOR»'''
 
 	def compile(Rule r) '''«r.name»:
 	«r.expression.compile»;

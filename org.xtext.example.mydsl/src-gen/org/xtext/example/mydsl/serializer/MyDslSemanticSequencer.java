@@ -15,6 +15,7 @@ import org.eclipse.xtext.serializer.sequencer.ITransientValueService;
 import org.eclipse.xtext.serializer.sequencer.ITransientValueService.ValueTransient;
 import org.xtext.example.mydsl.myDsl.Element;
 import org.xtext.example.mydsl.myDsl.Expression;
+import org.xtext.example.mydsl.myDsl.Grammar;
 import org.xtext.example.mydsl.myDsl.KeyConstr;
 import org.xtext.example.mydsl.myDsl.Keyword;
 import org.xtext.example.mydsl.myDsl.Model;
@@ -41,6 +42,12 @@ public class MyDslSemanticSequencer extends AbstractDelegatingSemanticSequencer 
 			case MyDslPackage.EXPRESSION:
 				if(context == grammarAccess.getExpressionRule()) {
 					sequence_Expression(context, (Expression) semanticObject); 
+					return; 
+				}
+				else break;
+			case MyDslPackage.GRAMMAR:
+				if(context == grammarAccess.getGrammarRule()) {
+					sequence_Grammar(context, (Grammar) semanticObject); 
 					return; 
 				}
 				else break;
@@ -104,6 +111,22 @@ public class MyDslSemanticSequencer extends AbstractDelegatingSemanticSequencer 
 	
 	/**
 	 * Constraint:
+	 *     gname=ID
+	 */
+	protected void sequence_Grammar(EObject context, Grammar semanticObject) {
+		if(errorAcceptor != null) {
+			if(transientValues.isValueTransient(semanticObject, MyDslPackage.Literals.GRAMMAR__GNAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, MyDslPackage.Literals.GRAMMAR__GNAME));
+		}
+		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
+		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
+		feeder.accept(grammarAccess.getGrammarAccess().getGnameIDTerminalRuleCall_1_0(), semanticObject.getGname());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Constraint:
 	 *     (kword+=Keyword kword+=Keyword?)
 	 */
 	protected void sequence_KeyConstr(EObject context, KeyConstr semanticObject) {
@@ -129,7 +152,7 @@ public class MyDslSemanticSequencer extends AbstractDelegatingSemanticSequencer 
 	
 	/**
 	 * Constraint:
-	 *     rules+=Rule+
+	 *     (gram=Grammar rules+=Rule+)
 	 */
 	protected void sequence_Model(EObject context, Model semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
