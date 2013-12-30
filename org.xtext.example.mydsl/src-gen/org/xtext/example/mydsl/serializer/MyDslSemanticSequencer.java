@@ -17,7 +17,6 @@ import org.xtext.example.mydsl.myDsl.Element;
 import org.xtext.example.mydsl.myDsl.Expression;
 import org.xtext.example.mydsl.myDsl.Grammar;
 import org.xtext.example.mydsl.myDsl.KeyConstr;
-import org.xtext.example.mydsl.myDsl.Keyword;
 import org.xtext.example.mydsl.myDsl.Model;
 import org.xtext.example.mydsl.myDsl.MyDslPackage;
 import org.xtext.example.mydsl.myDsl.Rule;
@@ -54,12 +53,6 @@ public class MyDslSemanticSequencer extends AbstractDelegatingSemanticSequencer 
 			case MyDslPackage.KEY_CONSTR:
 				if(context == grammarAccess.getKeyConstrRule()) {
 					sequence_KeyConstr(context, (KeyConstr) semanticObject); 
-					return; 
-				}
-				else break;
-			case MyDslPackage.KEYWORD:
-				if(context == grammarAccess.getKeywordRule()) {
-					sequence_Keyword(context, (Keyword) semanticObject); 
 					return; 
 				}
 				else break;
@@ -127,26 +120,10 @@ public class MyDslSemanticSequencer extends AbstractDelegatingSemanticSequencer 
 	
 	/**
 	 * Constraint:
-	 *     (kword+=Keyword kword+=Keyword?)
+	 *     (SChar=STRING EChar=STRING?)
 	 */
 	protected void sequence_KeyConstr(EObject context, KeyConstr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     text=STRING
-	 */
-	protected void sequence_Keyword(EObject context, Keyword semanticObject) {
-		if(errorAcceptor != null) {
-			if(transientValues.isValueTransient(semanticObject, MyDslPackage.Literals.KEYWORD__TEXT) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, MyDslPackage.Literals.KEYWORD__TEXT));
-		}
-		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
-		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
-		feeder.accept(grammarAccess.getKeywordAccess().getTextSTRINGTerminalRuleCall_0(), semanticObject.getText());
-		feeder.finish();
 	}
 	
 	

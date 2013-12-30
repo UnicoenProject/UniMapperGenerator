@@ -406,19 +406,19 @@ ruleKeyConstr returns [EObject current=null]
     @after { leaveRule(); }:
 ((
 (
-		{ 
-	        newCompositeNode(grammarAccess.getKeyConstrAccess().getKwordKeywordParserRuleCall_0_0()); 
-	    }
-		lv_kword_0_0=ruleKeyword		{
+		lv_SChar_0_0=RULE_STRING
+		{
+			newLeafNode(lv_SChar_0_0, grammarAccess.getKeyConstrAccess().getSCharSTRINGTerminalRuleCall_0_0()); 
+		}
+		{
 	        if ($current==null) {
-	            $current = createModelElementForParent(grammarAccess.getKeyConstrRule());
+	            $current = createModelElement(grammarAccess.getKeyConstrRule());
 	        }
-       		add(
+       		setWithLastConsumed(
        			$current, 
-       			"kword",
-        		lv_kword_0_0, 
-        		"Keyword");
-	        afterParserOrEnumRuleCall();
+       			"SChar",
+        		lv_SChar_0_0, 
+        		"STRING");
 	    }
 
 )
@@ -428,62 +428,23 @@ ruleKeyConstr returns [EObject current=null]
     }
 (
 (
-		{ 
-	        newCompositeNode(grammarAccess.getKeyConstrAccess().getKwordKeywordParserRuleCall_1_1_0()); 
-	    }
-		lv_kword_2_0=ruleKeyword		{
-	        if ($current==null) {
-	            $current = createModelElementForParent(grammarAccess.getKeyConstrRule());
-	        }
-       		add(
-       			$current, 
-       			"kword",
-        		lv_kword_2_0, 
-        		"Keyword");
-	        afterParserOrEnumRuleCall();
-	    }
-
-)
-))?)
-;
-
-
-
-
-
-// Entry rule entryRuleKeyword
-entryRuleKeyword returns [EObject current=null] 
-	:
-	{ newCompositeNode(grammarAccess.getKeywordRule()); }
-	 iv_ruleKeyword=ruleKeyword 
-	 { $current=$iv_ruleKeyword.current; } 
-	 EOF 
-;
-
-// Rule Keyword
-ruleKeyword returns [EObject current=null] 
-    @init { enterRule(); 
-    }
-    @after { leaveRule(); }:
-(
-(
-		lv_text_0_0=RULE_STRING
+		lv_EChar_2_0=RULE_STRING
 		{
-			newLeafNode(lv_text_0_0, grammarAccess.getKeywordAccess().getTextSTRINGTerminalRuleCall_0()); 
+			newLeafNode(lv_EChar_2_0, grammarAccess.getKeyConstrAccess().getECharSTRINGTerminalRuleCall_1_1_0()); 
 		}
 		{
 	        if ($current==null) {
-	            $current = createModelElement(grammarAccess.getKeywordRule());
+	            $current = createModelElement(grammarAccess.getKeyConstrRule());
 	        }
        		setWithLastConsumed(
        			$current, 
-       			"text",
-        		lv_text_0_0, 
+       			"EChar",
+        		lv_EChar_2_0, 
         		"STRING");
 	    }
 
 )
-)
+))?)
 ;
 
 

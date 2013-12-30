@@ -2,22 +2,14 @@
  */
 package org.xtext.example.mydsl.myDsl.impl;
 
-import java.util.Collection;
-
-import org.eclipse.emf.common.notify.NotificationChain;
-
-import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
 
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.InternalEList;
-
 import org.xtext.example.mydsl.myDsl.KeyConstr;
-import org.xtext.example.mydsl.myDsl.Keyword;
 import org.xtext.example.mydsl.myDsl.MyDslPackage;
 
 /**
@@ -27,7 +19,8 @@ import org.xtext.example.mydsl.myDsl.MyDslPackage;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.xtext.example.mydsl.myDsl.impl.KeyConstrImpl#getKword <em>Kword</em>}</li>
+ *   <li>{@link org.xtext.example.mydsl.myDsl.impl.KeyConstrImpl#getSChar <em>SChar</em>}</li>
+ *   <li>{@link org.xtext.example.mydsl.myDsl.impl.KeyConstrImpl#getEChar <em>EChar</em>}</li>
  * </ul>
  * </p>
  *
@@ -36,14 +29,44 @@ import org.xtext.example.mydsl.myDsl.MyDslPackage;
 public class KeyConstrImpl extends MinimalEObjectImpl.Container implements KeyConstr
 {
   /**
-   * The cached value of the '{@link #getKword() <em>Kword</em>}' containment reference list.
+   * The default value of the '{@link #getSChar() <em>SChar</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getKword()
+   * @see #getSChar()
    * @generated
    * @ordered
    */
-  protected EList<Keyword> kword;
+  protected static final String SCHAR_EDEFAULT = null;
+
+  /**
+   * The cached value of the '{@link #getSChar() <em>SChar</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getSChar()
+   * @generated
+   * @ordered
+   */
+  protected String sChar = SCHAR_EDEFAULT;
+
+  /**
+   * The default value of the '{@link #getEChar() <em>EChar</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getEChar()
+   * @generated
+   * @ordered
+   */
+  protected static final String ECHAR_EDEFAULT = null;
+
+  /**
+   * The cached value of the '{@link #getEChar() <em>EChar</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getEChar()
+   * @generated
+   * @ordered
+   */
+  protected String eChar = ECHAR_EDEFAULT;
 
   /**
    * <!-- begin-user-doc -->
@@ -71,13 +94,9 @@ public class KeyConstrImpl extends MinimalEObjectImpl.Container implements KeyCo
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<Keyword> getKword()
+  public String getSChar()
   {
-    if (kword == null)
-    {
-      kword = new EObjectContainmentEList<Keyword>(Keyword.class, this, MyDslPackage.KEY_CONSTR__KWORD);
-    }
-    return kword;
+    return sChar;
   }
 
   /**
@@ -85,15 +104,35 @@ public class KeyConstrImpl extends MinimalEObjectImpl.Container implements KeyCo
    * <!-- end-user-doc -->
    * @generated
    */
-  @Override
-  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
+  public void setSChar(String newSChar)
   {
-    switch (featureID)
-    {
-      case MyDslPackage.KEY_CONSTR__KWORD:
-        return ((InternalEList<?>)getKword()).basicRemove(otherEnd, msgs);
-    }
-    return super.eInverseRemove(otherEnd, featureID, msgs);
+    String oldSChar = sChar;
+    sChar = newSChar;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, MyDslPackage.KEY_CONSTR__SCHAR, oldSChar, sChar));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public String getEChar()
+  {
+    return eChar;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setEChar(String newEChar)
+  {
+    String oldEChar = eChar;
+    eChar = newEChar;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, MyDslPackage.KEY_CONSTR__ECHAR, oldEChar, eChar));
   }
 
   /**
@@ -106,8 +145,10 @@ public class KeyConstrImpl extends MinimalEObjectImpl.Container implements KeyCo
   {
     switch (featureID)
     {
-      case MyDslPackage.KEY_CONSTR__KWORD:
-        return getKword();
+      case MyDslPackage.KEY_CONSTR__SCHAR:
+        return getSChar();
+      case MyDslPackage.KEY_CONSTR__ECHAR:
+        return getEChar();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -117,15 +158,16 @@ public class KeyConstrImpl extends MinimalEObjectImpl.Container implements KeyCo
    * <!-- end-user-doc -->
    * @generated
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void eSet(int featureID, Object newValue)
   {
     switch (featureID)
     {
-      case MyDslPackage.KEY_CONSTR__KWORD:
-        getKword().clear();
-        getKword().addAll((Collection<? extends Keyword>)newValue);
+      case MyDslPackage.KEY_CONSTR__SCHAR:
+        setSChar((String)newValue);
+        return;
+      case MyDslPackage.KEY_CONSTR__ECHAR:
+        setEChar((String)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -141,8 +183,11 @@ public class KeyConstrImpl extends MinimalEObjectImpl.Container implements KeyCo
   {
     switch (featureID)
     {
-      case MyDslPackage.KEY_CONSTR__KWORD:
-        getKword().clear();
+      case MyDslPackage.KEY_CONSTR__SCHAR:
+        setSChar(SCHAR_EDEFAULT);
+        return;
+      case MyDslPackage.KEY_CONSTR__ECHAR:
+        setEChar(ECHAR_EDEFAULT);
         return;
     }
     super.eUnset(featureID);
@@ -158,10 +203,31 @@ public class KeyConstrImpl extends MinimalEObjectImpl.Container implements KeyCo
   {
     switch (featureID)
     {
-      case MyDslPackage.KEY_CONSTR__KWORD:
-        return kword != null && !kword.isEmpty();
+      case MyDslPackage.KEY_CONSTR__SCHAR:
+        return SCHAR_EDEFAULT == null ? sChar != null : !SCHAR_EDEFAULT.equals(sChar);
+      case MyDslPackage.KEY_CONSTR__ECHAR:
+        return ECHAR_EDEFAULT == null ? eChar != null : !ECHAR_EDEFAULT.equals(eChar);
     }
     return super.eIsSet(featureID);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public String toString()
+  {
+    if (eIsProxy()) return super.toString();
+
+    StringBuffer result = new StringBuffer(super.toString());
+    result.append(" (SChar: ");
+    result.append(sChar);
+    result.append(", EChar: ");
+    result.append(eChar);
+    result.append(')');
+    return result.toString();
   }
 
 } //KeyConstrImpl

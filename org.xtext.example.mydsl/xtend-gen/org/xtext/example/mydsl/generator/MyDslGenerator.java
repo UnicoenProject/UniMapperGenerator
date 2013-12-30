@@ -47,7 +47,6 @@ public class MyDslGenerator implements IGenerator {
     _builder.append(_gname, "");
     _builder.append(";");
     _builder.newLineIfNotEmpty();
-    _builder.append("\t\t");
     _builder.newLine();
     {
       EList<Rule> _rules = m.getRules();
@@ -63,6 +62,12 @@ public class MyDslGenerator implements IGenerator {
         }
       }
     }
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("Whitespace:");
+    _builder.newLine();
+    _builder.append("\t");
+    _builder.append("[ \\r\\n\\t] -> skip;");
     return _builder;
   }
   

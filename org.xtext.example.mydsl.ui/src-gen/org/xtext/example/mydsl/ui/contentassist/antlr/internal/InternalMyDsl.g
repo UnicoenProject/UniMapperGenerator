@@ -259,34 +259,6 @@ finally {
 
 
 
-// Entry rule entryRuleKeyword
-entryRuleKeyword 
-:
-{ before(grammarAccess.getKeywordRule()); }
-	 ruleKeyword
-{ after(grammarAccess.getKeywordRule()); } 
-	 EOF 
-;
-
-// Rule Keyword
-ruleKeyword
-    @init {
-		int stackSize = keepStackSize();
-    }
-	:
-(
-{ before(grammarAccess.getKeywordAccess().getTextAssignment()); }
-(rule__Keyword__TextAssignment)
-{ after(grammarAccess.getKeywordAccess().getTextAssignment()); }
-)
-
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-
-
 // Entry rule entryRuleRuleCall
 entryRuleRuleCall 
 :
@@ -773,9 +745,9 @@ rule__KeyConstr__Group__0__Impl
     }
 :
 (
-{ before(grammarAccess.getKeyConstrAccess().getKwordAssignment_0()); }
-(rule__KeyConstr__KwordAssignment_0)
-{ after(grammarAccess.getKeyConstrAccess().getKwordAssignment_0()); }
+{ before(grammarAccess.getKeyConstrAccess().getSCharAssignment_0()); }
+(rule__KeyConstr__SCharAssignment_0)
+{ after(grammarAccess.getKeyConstrAccess().getSCharAssignment_0()); }
 )
 
 ;
@@ -864,9 +836,9 @@ rule__KeyConstr__Group_1__1__Impl
     }
 :
 (
-{ before(grammarAccess.getKeyConstrAccess().getKwordAssignment_1_1()); }
-(rule__KeyConstr__KwordAssignment_1_1)
-{ after(grammarAccess.getKeyConstrAccess().getKwordAssignment_1_1()); }
+{ before(grammarAccess.getKeyConstrAccess().getECharAssignment_1_1()); }
+(rule__KeyConstr__ECharAssignment_1_1)
+{ after(grammarAccess.getKeyConstrAccess().getECharAssignment_1_1()); }
 )
 
 ;
@@ -1126,14 +1098,14 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__KeyConstr__KwordAssignment_0
+rule__KeyConstr__SCharAssignment_0
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getKeyConstrAccess().getKwordKeywordParserRuleCall_0_0()); }
-	ruleKeyword{ after(grammarAccess.getKeyConstrAccess().getKwordKeywordParserRuleCall_0_0()); }
+{ before(grammarAccess.getKeyConstrAccess().getSCharSTRINGTerminalRuleCall_0_0()); }
+	RULE_STRING{ after(grammarAccess.getKeyConstrAccess().getSCharSTRINGTerminalRuleCall_0_0()); }
 )
 
 ;
@@ -1141,29 +1113,14 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__KeyConstr__KwordAssignment_1_1
+rule__KeyConstr__ECharAssignment_1_1
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getKeyConstrAccess().getKwordKeywordParserRuleCall_1_1_0()); }
-	ruleKeyword{ after(grammarAccess.getKeyConstrAccess().getKwordKeywordParserRuleCall_1_1_0()); }
-)
-
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__Keyword__TextAssignment
-    @init {
-		int stackSize = keepStackSize();
-    }
-:
-(
-{ before(grammarAccess.getKeywordAccess().getTextSTRINGTerminalRuleCall_0()); }
-	RULE_STRING{ after(grammarAccess.getKeywordAccess().getTextSTRINGTerminalRuleCall_0()); }
+{ before(grammarAccess.getKeyConstrAccess().getECharSTRINGTerminalRuleCall_1_1_0()); }
+	RULE_STRING{ after(grammarAccess.getKeyConstrAccess().getECharSTRINGTerminalRuleCall_1_1_0()); }
 )
 
 ;

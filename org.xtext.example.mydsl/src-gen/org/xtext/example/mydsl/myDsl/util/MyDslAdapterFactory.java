@@ -110,11 +110,6 @@ public class MyDslAdapterFactory extends AdapterFactoryImpl
         return createKeyConstrAdapter();
       }
       @Override
-      public Adapter caseKeyword(Keyword object)
-      {
-        return createKeywordAdapter();
-      }
-      @Override
       public Adapter caseRuleCall(RuleCall object)
       {
         return createRuleCallAdapter();
@@ -242,21 +237,6 @@ public class MyDslAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createKeyConstrAdapter()
-  {
-    return null;
-  }
-
-  /**
-   * Creates a new adapter for an object of class '{@link org.xtext.example.mydsl.myDsl.Keyword <em>Keyword</em>}'.
-   * <!-- begin-user-doc -->
-   * This default implementation returns null so that we can easily ignore cases;
-   * it's useful to ignore a case when inheritance will catch all the cases anyway.
-   * <!-- end-user-doc -->
-   * @return the new adapter.
-   * @see org.xtext.example.mydsl.myDsl.Keyword
-   * @generated
-   */
-  public Adapter createKeywordAdapter()
   {
     return null;
   }

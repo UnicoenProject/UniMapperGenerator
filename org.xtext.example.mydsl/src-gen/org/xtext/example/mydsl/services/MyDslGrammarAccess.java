@@ -193,53 +193,37 @@ public class MyDslGrammarAccess extends AbstractGrammarElementFinder {
 	public class KeyConstrElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "KeyConstr");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Assignment cKwordAssignment_0 = (Assignment)cGroup.eContents().get(0);
-		private final RuleCall cKwordKeywordParserRuleCall_0_0 = (RuleCall)cKwordAssignment_0.eContents().get(0);
+		private final Assignment cSCharAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final RuleCall cSCharSTRINGTerminalRuleCall_0_0 = (RuleCall)cSCharAssignment_0.eContents().get(0);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
 		private final Keyword cFullStopFullStopKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
-		private final Assignment cKwordAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
-		private final RuleCall cKwordKeywordParserRuleCall_1_1_0 = (RuleCall)cKwordAssignment_1_1.eContents().get(0);
+		private final Assignment cECharAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
+		private final RuleCall cECharSTRINGTerminalRuleCall_1_1_0 = (RuleCall)cECharAssignment_1_1.eContents().get(0);
 		
 		//KeyConstr:
-		//	kword+=Keyword (".." kword+=Keyword)?;
+		//	SChar=STRING (".." EChar=STRING)?;
 		public ParserRule getRule() { return rule; }
 
-		//kword+=Keyword (".." kword+=Keyword)?
+		//SChar=STRING (".." EChar=STRING)?
 		public Group getGroup() { return cGroup; }
 
-		//kword+=Keyword
-		public Assignment getKwordAssignment_0() { return cKwordAssignment_0; }
+		//SChar=STRING
+		public Assignment getSCharAssignment_0() { return cSCharAssignment_0; }
 
-		//Keyword
-		public RuleCall getKwordKeywordParserRuleCall_0_0() { return cKwordKeywordParserRuleCall_0_0; }
+		//STRING
+		public RuleCall getSCharSTRINGTerminalRuleCall_0_0() { return cSCharSTRINGTerminalRuleCall_0_0; }
 
-		//(".." kword+=Keyword)?
+		//(".." EChar=STRING)?
 		public Group getGroup_1() { return cGroup_1; }
 
 		//".."
 		public Keyword getFullStopFullStopKeyword_1_0() { return cFullStopFullStopKeyword_1_0; }
 
-		//kword+=Keyword
-		public Assignment getKwordAssignment_1_1() { return cKwordAssignment_1_1; }
-
-		//Keyword
-		public RuleCall getKwordKeywordParserRuleCall_1_1_0() { return cKwordKeywordParserRuleCall_1_1_0; }
-	}
-
-	public class KeywordElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "Keyword");
-		private final Assignment cTextAssignment = (Assignment)rule.eContents().get(1);
-		private final RuleCall cTextSTRINGTerminalRuleCall_0 = (RuleCall)cTextAssignment.eContents().get(0);
-		
-		//Keyword:
-		//	text=STRING;
-		public ParserRule getRule() { return rule; }
-
-		//text=STRING
-		public Assignment getTextAssignment() { return cTextAssignment; }
+		//EChar=STRING
+		public Assignment getECharAssignment_1_1() { return cECharAssignment_1_1; }
 
 		//STRING
-		public RuleCall getTextSTRINGTerminalRuleCall_0() { return cTextSTRINGTerminalRuleCall_0; }
+		public RuleCall getECharSTRINGTerminalRuleCall_1_1_0() { return cECharSTRINGTerminalRuleCall_1_1_0; }
 	}
 
 	public class RuleCallElements extends AbstractParserRuleElementFinder {
@@ -282,7 +266,6 @@ public class MyDslGrammarAccess extends AbstractGrammarElementFinder {
 	private ElementElements pElement;
 	private TermElements pTerm;
 	private KeyConstrElements pKeyConstr;
-	private KeywordElements pKeyword;
 	private RuleCallElements pRuleCall;
 	
 	private final Grammar grammar;
@@ -384,23 +367,13 @@ public class MyDslGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//KeyConstr:
-	//	kword+=Keyword (".." kword+=Keyword)?;
+	//	SChar=STRING (".." EChar=STRING)?;
 	public KeyConstrElements getKeyConstrAccess() {
 		return (pKeyConstr != null) ? pKeyConstr : (pKeyConstr = new KeyConstrElements());
 	}
 	
 	public ParserRule getKeyConstrRule() {
 		return getKeyConstrAccess().getRule();
-	}
-
-	//Keyword:
-	//	text=STRING;
-	public KeywordElements getKeywordAccess() {
-		return (pKeyword != null) ? pKeyword : (pKeyword = new KeywordElements());
-	}
-	
-	public ParserRule getKeywordRule() {
-		return getKeywordAccess().getRule();
 	}
 
 	//RuleCall:

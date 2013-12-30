@@ -21,11 +21,7 @@ Term:
 	kConstr+=KeyConstr | rCall+=RuleCall;
 
 KeyConstr:
-	kword+=Keyword (".." kword+=Keyword)?;
-
-Keyword:
-	text=STRING;
+	SChar=STRING (".." EChar=STRING)?;
 
 RuleCall:
 	"<" ref=[Rule|ID] ">";
-

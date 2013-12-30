@@ -2,8 +2,6 @@
  */
 package org.xtext.example.mydsl.myDsl;
 
-import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -14,7 +12,8 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.xtext.example.mydsl.myDsl.KeyConstr#getKword <em>Kword</em>}</li>
+ *   <li>{@link org.xtext.example.mydsl.myDsl.KeyConstr#getSChar <em>SChar</em>}</li>
+ *   <li>{@link org.xtext.example.mydsl.myDsl.KeyConstr#getEChar <em>EChar</em>}</li>
  * </ul>
  * </p>
  *
@@ -25,19 +24,55 @@ import org.eclipse.emf.ecore.EObject;
 public interface KeyConstr extends EObject
 {
   /**
-   * Returns the value of the '<em><b>Kword</b></em>' containment reference list.
-   * The list contents are of type {@link org.xtext.example.mydsl.myDsl.Keyword}.
+   * Returns the value of the '<em><b>SChar</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Kword</em>' containment reference list isn't clear,
+   * If the meaning of the '<em>SChar</em>' attribute isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Kword</em>' containment reference list.
-   * @see org.xtext.example.mydsl.myDsl.MyDslPackage#getKeyConstr_Kword()
-   * @model containment="true"
+   * @return the value of the '<em>SChar</em>' attribute.
+   * @see #setSChar(String)
+   * @see org.xtext.example.mydsl.myDsl.MyDslPackage#getKeyConstr_SChar()
+   * @model
    * @generated
    */
-  EList<Keyword> getKword();
+  String getSChar();
+
+  /**
+   * Sets the value of the '{@link org.xtext.example.mydsl.myDsl.KeyConstr#getSChar <em>SChar</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>SChar</em>' attribute.
+   * @see #getSChar()
+   * @generated
+   */
+  void setSChar(String value);
+
+  /**
+   * Returns the value of the '<em><b>EChar</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>EChar</em>' attribute isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>EChar</em>' attribute.
+   * @see #setEChar(String)
+   * @see org.xtext.example.mydsl.myDsl.MyDslPackage#getKeyConstr_EChar()
+   * @model
+   * @generated
+   */
+  String getEChar();
+
+  /**
+   * Sets the value of the '{@link org.xtext.example.mydsl.myDsl.KeyConstr#getEChar <em>EChar</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>EChar</em>' attribute.
+   * @see #getEChar()
+   * @generated
+   */
+  void setEChar(String value);
 
 } // KeyConstr

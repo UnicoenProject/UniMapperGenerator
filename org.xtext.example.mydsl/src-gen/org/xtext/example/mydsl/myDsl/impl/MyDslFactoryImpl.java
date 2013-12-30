@@ -71,7 +71,6 @@ public class MyDslFactoryImpl extends EFactoryImpl implements MyDslFactory
       case MyDslPackage.ELEMENT: return createElement();
       case MyDslPackage.TERM: return createTerm();
       case MyDslPackage.KEY_CONSTR: return createKeyConstr();
-      case MyDslPackage.KEYWORD: return createKeyword();
       case MyDslPackage.RULE_CALL: return createRuleCall();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
@@ -153,17 +152,6 @@ public class MyDslFactoryImpl extends EFactoryImpl implements MyDslFactory
   {
     KeyConstrImpl keyConstr = new KeyConstrImpl();
     return keyConstr;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public Keyword createKeyword()
-  {
-    KeywordImpl keyword = new KeywordImpl();
-    return keyword;
   }
 
   /**

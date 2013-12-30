@@ -86,15 +86,6 @@ public interface MyDslFactory extends EFactory
   KeyConstr createKeyConstr();
 
   /**
-   * Returns a new object of class '<em>Keyword</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Keyword</em>'.
-   * @generated
-   */
-  Keyword createKeyword();
-
-  /**
    * Returns a new object of class '<em>Rule Call</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

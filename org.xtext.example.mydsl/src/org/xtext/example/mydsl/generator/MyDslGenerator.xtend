@@ -22,8 +22,11 @@ class MyDslGenerator implements IGenerator {
 
 	def compile(Model m) '''
 	grammar «m.gram.gname»;
-			
-	«FOR r : m.rules»«IF Character.isLowerCase(r.name.charAt(0))»«r.compile»«ENDIF»«ENDFOR»'''
+	
+	«FOR r : m.rules»«IF Character.isLowerCase(r.name.charAt(0))»«r.compile»«ENDIF»«ENDFOR»
+	
+	Whitespace:
+		[ \r\n\t] -> skip;'''
 
 	def compile(Rule r) '''«r.name»:
 	«r.expression.compile»;

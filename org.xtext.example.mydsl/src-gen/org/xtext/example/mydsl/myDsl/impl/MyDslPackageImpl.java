@@ -13,7 +13,6 @@ import org.xtext.example.mydsl.myDsl.Element;
 import org.xtext.example.mydsl.myDsl.Expression;
 import org.xtext.example.mydsl.myDsl.Grammar;
 import org.xtext.example.mydsl.myDsl.KeyConstr;
-import org.xtext.example.mydsl.myDsl.Keyword;
 import org.xtext.example.mydsl.myDsl.Model;
 import org.xtext.example.mydsl.myDsl.MyDslFactory;
 import org.xtext.example.mydsl.myDsl.MyDslPackage;
@@ -77,13 +76,6 @@ public class MyDslPackageImpl extends EPackageImpl implements MyDslPackage
    * @generated
    */
   private EClass keyConstrEClass = null;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  private EClass keywordEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -320,9 +312,9 @@ public class MyDslPackageImpl extends EPackageImpl implements MyDslPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getKeyConstr_Kword()
+  public EAttribute getKeyConstr_SChar()
   {
-    return (EReference)keyConstrEClass.getEStructuralFeatures().get(0);
+    return (EAttribute)keyConstrEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -330,19 +322,9 @@ public class MyDslPackageImpl extends EPackageImpl implements MyDslPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getKeyword()
+  public EAttribute getKeyConstr_EChar()
   {
-    return keywordEClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getKeyword_Text()
-  {
-    return (EAttribute)keywordEClass.getEStructuralFeatures().get(0);
+    return (EAttribute)keyConstrEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -417,10 +399,8 @@ public class MyDslPackageImpl extends EPackageImpl implements MyDslPackage
     createEReference(termEClass, TERM__RCALL);
 
     keyConstrEClass = createEClass(KEY_CONSTR);
-    createEReference(keyConstrEClass, KEY_CONSTR__KWORD);
-
-    keywordEClass = createEClass(KEYWORD);
-    createEAttribute(keywordEClass, KEYWORD__TEXT);
+    createEAttribute(keyConstrEClass, KEY_CONSTR__SCHAR);
+    createEAttribute(keyConstrEClass, KEY_CONSTR__ECHAR);
 
     ruleCallEClass = createEClass(RULE_CALL);
     createEReference(ruleCallEClass, RULE_CALL__REF);
@@ -479,10 +459,8 @@ public class MyDslPackageImpl extends EPackageImpl implements MyDslPackage
     initEReference(getTerm_RCall(), this.getRuleCall(), null, "rCall", null, 0, -1, Term.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(keyConstrEClass, KeyConstr.class, "KeyConstr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getKeyConstr_Kword(), this.getKeyword(), null, "kword", null, 0, -1, KeyConstr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(keywordEClass, Keyword.class, "Keyword", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getKeyword_Text(), ecorePackage.getEString(), "text", null, 0, 1, Keyword.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getKeyConstr_SChar(), ecorePackage.getEString(), "SChar", null, 0, 1, KeyConstr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getKeyConstr_EChar(), ecorePackage.getEString(), "EChar", null, 0, 1, KeyConstr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(ruleCallEClass, RuleCall.class, "RuleCall", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getRuleCall_Ref(), this.getRule(), null, "ref", null, 0, 1, RuleCall.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -262,13 +262,22 @@ public interface MyDslPackage extends EPackage
   int KEY_CONSTR = 6;
 
   /**
-   * The feature id for the '<em><b>Kword</b></em>' containment reference list.
+   * The feature id for the '<em><b>SChar</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int KEY_CONSTR__KWORD = 0;
+  int KEY_CONSTR__SCHAR = 0;
+
+  /**
+   * The feature id for the '<em><b>EChar</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int KEY_CONSTR__ECHAR = 1;
 
   /**
    * The number of structural features of the '<em>Key Constr</em>' class.
@@ -277,35 +286,7 @@ public interface MyDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int KEY_CONSTR_FEATURE_COUNT = 1;
-
-  /**
-   * The meta object id for the '{@link org.xtext.example.mydsl.myDsl.impl.KeywordImpl <em>Keyword</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see org.xtext.example.mydsl.myDsl.impl.KeywordImpl
-   * @see org.xtext.example.mydsl.myDsl.impl.MyDslPackageImpl#getKeyword()
-   * @generated
-   */
-  int KEYWORD = 7;
-
-  /**
-   * The feature id for the '<em><b>Text</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int KEYWORD__TEXT = 0;
-
-  /**
-   * The number of structural features of the '<em>Keyword</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int KEYWORD_FEATURE_COUNT = 1;
+  int KEY_CONSTR_FEATURE_COUNT = 2;
 
   /**
    * The meta object id for the '{@link org.xtext.example.mydsl.myDsl.impl.RuleCallImpl <em>Rule Call</em>}' class.
@@ -315,7 +296,7 @@ public interface MyDslPackage extends EPackage
    * @see org.xtext.example.mydsl.myDsl.impl.MyDslPackageImpl#getRuleCall()
    * @generated
    */
-  int RULE_CALL = 8;
+  int RULE_CALL = 7;
 
   /**
    * The feature id for the '<em><b>Ref</b></em>' reference.
@@ -506,36 +487,26 @@ public interface MyDslPackage extends EPackage
   EClass getKeyConstr();
 
   /**
-   * Returns the meta object for the containment reference list '{@link org.xtext.example.mydsl.myDsl.KeyConstr#getKword <em>Kword</em>}'.
+   * Returns the meta object for the attribute '{@link org.xtext.example.mydsl.myDsl.KeyConstr#getSChar <em>SChar</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the containment reference list '<em>Kword</em>'.
-   * @see org.xtext.example.mydsl.myDsl.KeyConstr#getKword()
+   * @return the meta object for the attribute '<em>SChar</em>'.
+   * @see org.xtext.example.mydsl.myDsl.KeyConstr#getSChar()
    * @see #getKeyConstr()
    * @generated
    */
-  EReference getKeyConstr_Kword();
+  EAttribute getKeyConstr_SChar();
 
   /**
-   * Returns the meta object for class '{@link org.xtext.example.mydsl.myDsl.Keyword <em>Keyword</em>}'.
+   * Returns the meta object for the attribute '{@link org.xtext.example.mydsl.myDsl.KeyConstr#getEChar <em>EChar</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Keyword</em>'.
-   * @see org.xtext.example.mydsl.myDsl.Keyword
+   * @return the meta object for the attribute '<em>EChar</em>'.
+   * @see org.xtext.example.mydsl.myDsl.KeyConstr#getEChar()
+   * @see #getKeyConstr()
    * @generated
    */
-  EClass getKeyword();
-
-  /**
-   * Returns the meta object for the attribute '{@link org.xtext.example.mydsl.myDsl.Keyword#getText <em>Text</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Text</em>'.
-   * @see org.xtext.example.mydsl.myDsl.Keyword#getText()
-   * @see #getKeyword()
-   * @generated
-   */
-  EAttribute getKeyword_Text();
+  EAttribute getKeyConstr_EChar();
 
   /**
    * Returns the meta object for class '{@link org.xtext.example.mydsl.myDsl.RuleCall <em>Rule Call</em>}'.
@@ -724,30 +695,20 @@ public interface MyDslPackage extends EPackage
     EClass KEY_CONSTR = eINSTANCE.getKeyConstr();
 
     /**
-     * The meta object literal for the '<em><b>Kword</b></em>' containment reference list feature.
+     * The meta object literal for the '<em><b>SChar</b></em>' attribute feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EReference KEY_CONSTR__KWORD = eINSTANCE.getKeyConstr_Kword();
+    EAttribute KEY_CONSTR__SCHAR = eINSTANCE.getKeyConstr_SChar();
 
     /**
-     * The meta object literal for the '{@link org.xtext.example.mydsl.myDsl.impl.KeywordImpl <em>Keyword</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see org.xtext.example.mydsl.myDsl.impl.KeywordImpl
-     * @see org.xtext.example.mydsl.myDsl.impl.MyDslPackageImpl#getKeyword()
-     * @generated
-     */
-    EClass KEYWORD = eINSTANCE.getKeyword();
-
-    /**
-     * The meta object literal for the '<em><b>Text</b></em>' attribute feature.
+     * The meta object literal for the '<em><b>EChar</b></em>' attribute feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute KEYWORD__TEXT = eINSTANCE.getKeyword_Text();
+    EAttribute KEY_CONSTR__ECHAR = eINSTANCE.getKeyConstr_EChar();
 
     /**
      * The meta object literal for the '{@link org.xtext.example.mydsl.myDsl.impl.RuleCallImpl <em>Rule Call</em>}' class.
