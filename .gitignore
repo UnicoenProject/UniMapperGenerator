@@ -1,1 +1,13 @@
+OperatorCounter/.classpath
+OperatorCounter/.project
+OperatorCounter/.settings
+
+# for Maven
+target
 bin
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
