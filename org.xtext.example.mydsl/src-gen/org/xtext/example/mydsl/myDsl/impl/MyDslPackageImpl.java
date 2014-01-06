@@ -222,9 +222,19 @@ public class MyDslPackageImpl extends EPackageImpl implements MyDslPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EAttribute getRule_Count()
+  {
+    return (EAttribute)ruleEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EReference getRule_Expression()
   {
-    return (EReference)ruleEClass.getEStructuralFeatures().get(1);
+    return (EReference)ruleEClass.getEStructuralFeatures().get(2);
   }
 
   /**
@@ -386,6 +396,7 @@ public class MyDslPackageImpl extends EPackageImpl implements MyDslPackage
 
     ruleEClass = createEClass(RULE);
     createEAttribute(ruleEClass, RULE__NAME);
+    createEAttribute(ruleEClass, RULE__COUNT);
     createEReference(ruleEClass, RULE__EXPRESSION);
 
     expressionEClass = createEClass(EXPRESSION);
@@ -446,6 +457,7 @@ public class MyDslPackageImpl extends EPackageImpl implements MyDslPackage
 
     initEClass(ruleEClass, Rule.class, "Rule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getRule_Name(), ecorePackage.getEString(), "name", null, 0, 1, Rule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getRule_Count(), ecorePackage.getEString(), "count", null, 0, 1, Rule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getRule_Expression(), this.getExpression(), null, "expression", null, 0, 1, Rule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(expressionEClass, Expression.class, "Expression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

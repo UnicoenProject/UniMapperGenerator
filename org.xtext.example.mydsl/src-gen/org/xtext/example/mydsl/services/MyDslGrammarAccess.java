@@ -76,16 +76,18 @@ public class MyDslGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cLessThanSignKeyword_0 = (Keyword)cGroup.eContents().get(0);
 		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final RuleCall cNameIDTerminalRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
-		private final Keyword cGreaterThanSignKeyword_2 = (Keyword)cGroup.eContents().get(2);
-		private final Keyword cColonColonEqualsSignKeyword_3 = (Keyword)cGroup.eContents().get(3);
-		private final Assignment cExpressionAssignment_4 = (Assignment)cGroup.eContents().get(4);
-		private final RuleCall cExpressionExpressionParserRuleCall_4_0 = (RuleCall)cExpressionAssignment_4.eContents().get(0);
+		private final Assignment cCountAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final Keyword cCountAsteriskKeyword_2_0 = (Keyword)cCountAssignment_2.eContents().get(0);
+		private final Keyword cGreaterThanSignKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		private final Keyword cColonColonEqualsSignKeyword_4 = (Keyword)cGroup.eContents().get(4);
+		private final Assignment cExpressionAssignment_5 = (Assignment)cGroup.eContents().get(5);
+		private final RuleCall cExpressionExpressionParserRuleCall_5_0 = (RuleCall)cExpressionAssignment_5.eContents().get(0);
 		
 		//Rule:
-		//	"<" name=ID ">" "::=" expression=Expression;
+		//	"<" name=ID count="*"? ">" "::=" expression=Expression;
 		public ParserRule getRule() { return rule; }
 
-		//"<" name=ID ">" "::=" expression=Expression
+		//"<" name=ID count="*"? ">" "::=" expression=Expression
 		public Group getGroup() { return cGroup; }
 
 		//"<"
@@ -97,17 +99,23 @@ public class MyDslGrammarAccess extends AbstractGrammarElementFinder {
 		//ID
 		public RuleCall getNameIDTerminalRuleCall_1_0() { return cNameIDTerminalRuleCall_1_0; }
 
+		//count="*"?
+		public Assignment getCountAssignment_2() { return cCountAssignment_2; }
+
+		//"*"
+		public Keyword getCountAsteriskKeyword_2_0() { return cCountAsteriskKeyword_2_0; }
+
 		//">"
-		public Keyword getGreaterThanSignKeyword_2() { return cGreaterThanSignKeyword_2; }
+		public Keyword getGreaterThanSignKeyword_3() { return cGreaterThanSignKeyword_3; }
 
 		//"::="
-		public Keyword getColonColonEqualsSignKeyword_3() { return cColonColonEqualsSignKeyword_3; }
+		public Keyword getColonColonEqualsSignKeyword_4() { return cColonColonEqualsSignKeyword_4; }
 
 		//expression=Expression
-		public Assignment getExpressionAssignment_4() { return cExpressionAssignment_4; }
+		public Assignment getExpressionAssignment_5() { return cExpressionAssignment_5; }
 
 		//Expression
-		public RuleCall getExpressionExpressionParserRuleCall_4_0() { return cExpressionExpressionParserRuleCall_4_0; }
+		public RuleCall getExpressionExpressionParserRuleCall_5_0() { return cExpressionExpressionParserRuleCall_5_0; }
 	}
 
 	public class ExpressionElements extends AbstractParserRuleElementFinder {
@@ -327,7 +335,7 @@ public class MyDslGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//Rule:
-	//	"<" name=ID ">" "::=" expression=Expression;
+	//	"<" name=ID count="*"? ">" "::=" expression=Expression;
 	public RuleElements getRuleAccess() {
 		return (pRule != null) ? pRule : (pRule = new RuleElements());
 	}

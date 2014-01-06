@@ -9,7 +9,7 @@ Grammar:
 	"grammar" gname=ID;
 
 Rule:
-	"<" name=ID ">" "::=" expression=Expression;
+	"<" name=ID (count="*")? ">" "::=" expression=Expression;
 
 Expression:
 	elements+=Element ("|" elements+=Element)*;

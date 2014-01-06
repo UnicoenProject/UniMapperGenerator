@@ -23,6 +23,7 @@ import org.xtext.example.mydsl.myDsl.Rule;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.xtext.example.mydsl.myDsl.impl.RuleImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.xtext.example.mydsl.myDsl.impl.RuleImpl#getCount <em>Count</em>}</li>
  *   <li>{@link org.xtext.example.mydsl.myDsl.impl.RuleImpl#getExpression <em>Expression</em>}</li>
  * </ul>
  * </p>
@@ -50,6 +51,26 @@ public class RuleImpl extends MinimalEObjectImpl.Container implements Rule
    * @ordered
    */
   protected String name = NAME_EDEFAULT;
+
+  /**
+   * The default value of the '{@link #getCount() <em>Count</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getCount()
+   * @generated
+   * @ordered
+   */
+  protected static final String COUNT_EDEFAULT = null;
+
+  /**
+   * The cached value of the '{@link #getCount() <em>Count</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getCount()
+   * @generated
+   * @ordered
+   */
+  protected String count = COUNT_EDEFAULT;
 
   /**
    * The cached value of the '{@link #getExpression() <em>Expression</em>}' containment reference.
@@ -103,6 +124,29 @@ public class RuleImpl extends MinimalEObjectImpl.Container implements Rule
     name = newName;
     if (eNotificationRequired())
       eNotify(new ENotificationImpl(this, Notification.SET, MyDslPackage.RULE__NAME, oldName, name));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public String getCount()
+  {
+    return count;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setCount(String newCount)
+  {
+    String oldCount = count;
+    count = newCount;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, MyDslPackage.RULE__COUNT, oldCount, count));
   }
 
   /**
@@ -181,6 +225,8 @@ public class RuleImpl extends MinimalEObjectImpl.Container implements Rule
     {
       case MyDslPackage.RULE__NAME:
         return getName();
+      case MyDslPackage.RULE__COUNT:
+        return getCount();
       case MyDslPackage.RULE__EXPRESSION:
         return getExpression();
     }
@@ -199,6 +245,9 @@ public class RuleImpl extends MinimalEObjectImpl.Container implements Rule
     {
       case MyDslPackage.RULE__NAME:
         setName((String)newValue);
+        return;
+      case MyDslPackage.RULE__COUNT:
+        setCount((String)newValue);
         return;
       case MyDslPackage.RULE__EXPRESSION:
         setExpression((Expression)newValue);
@@ -220,6 +269,9 @@ public class RuleImpl extends MinimalEObjectImpl.Container implements Rule
       case MyDslPackage.RULE__NAME:
         setName(NAME_EDEFAULT);
         return;
+      case MyDslPackage.RULE__COUNT:
+        setCount(COUNT_EDEFAULT);
+        return;
       case MyDslPackage.RULE__EXPRESSION:
         setExpression((Expression)null);
         return;
@@ -239,6 +291,8 @@ public class RuleImpl extends MinimalEObjectImpl.Container implements Rule
     {
       case MyDslPackage.RULE__NAME:
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+      case MyDslPackage.RULE__COUNT:
+        return COUNT_EDEFAULT == null ? count != null : !COUNT_EDEFAULT.equals(count);
       case MyDslPackage.RULE__EXPRESSION:
         return expression != null;
     }
@@ -258,6 +312,8 @@ public class RuleImpl extends MinimalEObjectImpl.Container implements Rule
     StringBuffer result = new StringBuffer(super.toString());
     result.append(" (name: ");
     result.append(name);
+    result.append(", count: ");
+    result.append(count);
     result.append(')');
     return result.toString();
   }

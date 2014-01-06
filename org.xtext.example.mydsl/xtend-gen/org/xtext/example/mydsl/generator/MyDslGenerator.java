@@ -13,9 +13,11 @@ import org.eclipse.xtext.generator.IFileSystemAccess;
 import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
+import org.eclipse.xtext.xbase.lib.StringExtensions;
 import org.xtext.example.mydsl.myDsl.Element;
 import org.xtext.example.mydsl.myDsl.Expression;
 import org.xtext.example.mydsl.myDsl.Grammar;
+import org.xtext.example.mydsl.myDsl.KeyConstr;
 import org.xtext.example.mydsl.myDsl.Model;
 import org.xtext.example.mydsl.myDsl.Rule;
 import org.xtext.example.mydsl.myDsl.RuleCall;
@@ -28,14 +30,18 @@ public class MyDslGenerator implements IGenerator {
     Iterable<EObject> _iterable = IteratorExtensions.<EObject>toIterable(_allContents);
     Iterable<Model> _filter = Iterables.<Model>filter(_iterable, Model.class);
     for (final Model m : _filter) {
-      {
-        Grammar _gram = m.getGram();
-        String _gname = _gram.getGname();
-        String _plus = (_gname + ".g4");
-        CharSequence _compile = this.compile(m);
-        fsa.generateFile(_plus, _compile);
-        fsa.generateFile("antlr.java", "public");
-      }
+      Grammar _gram = m.getGram();
+      String _gname = _gram.getGname();
+      String _substring = _gname.substring(0, 1);
+      String _upperCase = _substring.toUpperCase();
+      Grammar _gram_1 = m.getGram();
+      String _gname_1 = _gram_1.getGname();
+      String _substring_1 = _gname_1.substring(1);
+      String _lowerCase = _substring_1.toLowerCase();
+      String _plus = (_upperCase + _lowerCase);
+      String _plus_1 = (_plus + ".g4");
+      CharSequence _compile = this.compile(m);
+      fsa.generateFile(_plus_1, _compile);
     }
   }
   
@@ -56,8 +62,24 @@ public class MyDslGenerator implements IGenerator {
           char _charAt = _name.charAt(0);
           boolean _isLowerCase = Character.isLowerCase(_charAt);
           if (_isLowerCase) {
-            CharSequence _compile = this.compile(r);
-            _builder.append(_compile, "");
+            CharSequence _acompile = this.acompile(r);
+            _builder.append(_acompile, "");
+          }
+        }
+      }
+    }
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    {
+      EList<Rule> _rules_1 = m.getRules();
+      for(final Rule r_1 : _rules_1) {
+        {
+          String _name_1 = r_1.getName();
+          char _charAt_1 = _name_1.charAt(0);
+          boolean _isUpperCase = Character.isUpperCase(_charAt_1);
+          if (_isUpperCase) {
+            CharSequence _bcompile = this.bcompile(r_1);
+            _builder.append(_bcompile, "");
           }
         }
       }
@@ -71,7 +93,7 @@ public class MyDslGenerator implements IGenerator {
     return _builder;
   }
   
-  public CharSequence compile(final Rule r) {
+  public CharSequence acompile(final Rule r) {
     StringConcatenation _builder = new StringConcatenation();
     String _name = r.getName();
     _builder.append(_name, "");
@@ -79,14 +101,14 @@ public class MyDslGenerator implements IGenerator {
     _builder.newLineIfNotEmpty();
     _builder.append("\t");
     Expression _expression = r.getExpression();
-    CharSequence _compile = this.compile(_expression);
-    _builder.append(_compile, "	");
+    CharSequence _acompile = this.acompile(_expression);
+    _builder.append(_acompile, "	");
     _builder.append(";");
     _builder.newLineIfNotEmpty();
     return _builder;
   }
   
-  public CharSequence compile(final Expression exp) {
+  public CharSequence acompile(final Expression exp) {
     StringConcatenation _builder = new StringConcatenation();
     {
       EList<Element> _elements = exp.getElements();
@@ -119,6 +141,74 @@ public class MyDslGenerator implements IGenerator {
                 String _name = _ref.getName();
                 _builder.append(_name, "");
                 _builder.append(" ");
+              }
+            }
+          }
+        }
+      }
+    }
+    return _builder;
+  }
+  
+  public CharSequence bcompile(final Rule r) {
+    StringConcatenation _builder = new StringConcatenation();
+    String _name = r.getName();
+    _builder.append(_name, "");
+    _builder.append(":");
+    _builder.newLineIfNotEmpty();
+    _builder.append("\t");
+    Expression _expression = r.getExpression();
+    CharSequence _bcompile = this.bcompile(_expression);
+    _builder.append(_bcompile, "	");
+    _builder.append(";");
+    _builder.newLineIfNotEmpty();
+    return _builder;
+  }
+  
+  public CharSequence bcompile(final Expression exp) {
+    StringConcatenation _builder = new StringConcatenation();
+    {
+      EList<Element> _elements = exp.getElements();
+      for(final Element ele : _elements) {
+        {
+          EList<Term> _terms = ele.getTerms();
+          for(final Term t : _terms) {
+            {
+              EList<KeyConstr> _kConstr = t.getKConstr();
+              for(final KeyConstr k : _kConstr) {
+                {
+                  boolean _and = false;
+                  EList<Element> _elements_1 = exp.getElements();
+                  Element _head = IterableExtensions.<Element>head(_elements_1);
+                  boolean _equals = _head.equals(ele);
+                  boolean _not = (!_equals);
+                  if (!_not) {
+                    _and = false;
+                  } else {
+                    EList<Term> _terms_1 = ele.getTerms();
+                    Term _head_1 = IterableExtensions.<Term>head(_terms_1);
+                    boolean _equals_1 = _head_1.equals(t);
+                    _and = (_not && _equals_1);
+                  }
+                  if (_and) {
+                    _builder.append("| ");
+                  }
+                }
+                _builder.append("\'");
+                String _sChar = k.getSChar();
+                _builder.append(_sChar, "");
+                _builder.append("\' ");
+                {
+                  String _eChar = k.getEChar();
+                  boolean _isNullOrEmpty = StringExtensions.isNullOrEmpty(_eChar);
+                  boolean _not_1 = (!_isNullOrEmpty);
+                  if (_not_1) {
+                    _builder.append(".. \'");
+                    String _eChar_1 = k.getEChar();
+                    _builder.append(_eChar_1, "");
+                    _builder.append("\' ");
+                  }
+                }
               }
             }
           }

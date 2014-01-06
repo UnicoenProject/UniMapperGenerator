@@ -16,6 +16,7 @@
     </genClasses>
     <genClasses ecoreClass="MyDsl.ecore#//Rule">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MyDsl.ecore#//Rule/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MyDsl.ecore#//Rule/count"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MyDsl.ecore#//Rule/expression"/>
     </genClasses>
     <genClasses ecoreClass="MyDsl.ecore#//Expression">

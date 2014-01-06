@@ -141,13 +141,22 @@ public interface MyDslPackage extends EPackage
   int RULE__NAME = 0;
 
   /**
+   * The feature id for the '<em><b>Count</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RULE__COUNT = 1;
+
+  /**
    * The feature id for the '<em><b>Expression</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int RULE__EXPRESSION = 1;
+  int RULE__EXPRESSION = 2;
 
   /**
    * The number of structural features of the '<em>Rule</em>' class.
@@ -156,7 +165,7 @@ public interface MyDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int RULE_FEATURE_COUNT = 2;
+  int RULE_FEATURE_COUNT = 3;
 
   /**
    * The meta object id for the '{@link org.xtext.example.mydsl.myDsl.impl.ExpressionImpl <em>Expression</em>}' class.
@@ -392,6 +401,17 @@ public interface MyDslPackage extends EPackage
   EAttribute getRule_Name();
 
   /**
+   * Returns the meta object for the attribute '{@link org.xtext.example.mydsl.myDsl.Rule#getCount <em>Count</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Count</em>'.
+   * @see org.xtext.example.mydsl.myDsl.Rule#getCount()
+   * @see #getRule()
+   * @generated
+   */
+  EAttribute getRule_Count();
+
+  /**
    * Returns the meta object for the containment reference '{@link org.xtext.example.mydsl.myDsl.Rule#getExpression <em>Expression</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -613,6 +633,14 @@ public interface MyDslPackage extends EPackage
      * @generated
      */
     EAttribute RULE__NAME = eINSTANCE.getRule_Name();
+
+    /**
+     * The meta object literal for the '<em><b>Count</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute RULE__COUNT = eINSTANCE.getRule_Count();
 
     /**
      * The meta object literal for the '<em><b>Expression</b></em>' containment reference feature.

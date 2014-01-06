@@ -2,7 +2,7 @@ grammar Expression;
 
 expression:
 	term
-	| term PM expression {System.out.println($PM);};
+	| term PM expression;
 term:
 	atom | atom matom ;
 matom:
