@@ -30,18 +30,22 @@ public class MyDslGenerator implements IGenerator {
     Iterable<EObject> _iterable = IteratorExtensions.<EObject>toIterable(_allContents);
     Iterable<Model> _filter = Iterables.<Model>filter(_iterable, Model.class);
     for (final Model m : _filter) {
-      Grammar _gram = m.getGram();
-      String _gname = _gram.getGname();
-      String _substring = _gname.substring(0, 1);
-      String _upperCase = _substring.toUpperCase();
-      Grammar _gram_1 = m.getGram();
-      String _gname_1 = _gram_1.getGname();
-      String _substring_1 = _gname_1.substring(1);
-      String _lowerCase = _substring_1.toLowerCase();
-      String _plus = (_upperCase + _lowerCase);
-      String _plus_1 = (_plus + ".g4");
-      CharSequence _compile = this.compile(m);
-      fsa.generateFile(_plus_1, _compile);
+      {
+        Grammar _gram = m.getGram();
+        String _gname = _gram.getGname();
+        String _substring = _gname.substring(0, 1);
+        String _upperCase = _substring.toUpperCase();
+        Grammar _gram_1 = m.getGram();
+        String _gname_1 = _gram_1.getGname();
+        String _substring_1 = _gname_1.substring(1);
+        String _lowerCase = _substring_1.toLowerCase();
+        String _plus = (_upperCase + _lowerCase);
+        String _plus_1 = (_plus + ".g4");
+        CharSequence _compile = this.compile(m);
+        fsa.generateFile(_plus_1, _compile);
+        CharSequence _exportCountElements = this.exportCountElements(m);
+        fsa.generateFile("CountElements.dat", _exportCountElements);
+      }
     }
   }
   
@@ -211,6 +215,26 @@ public class MyDslGenerator implements IGenerator {
                 }
               }
             }
+          }
+        }
+      }
+    }
+    return _builder;
+  }
+  
+  public CharSequence exportCountElements(final Model m) {
+    StringConcatenation _builder = new StringConcatenation();
+    {
+      EList<Rule> _rules = m.getRules();
+      for(final Rule r : _rules) {
+        {
+          String _count = r.getCount();
+          boolean _isNullOrEmpty = StringExtensions.isNullOrEmpty(_count);
+          boolean _not = (!_isNullOrEmpty);
+          if (_not) {
+            String _name = r.getName();
+            _builder.append(_name, "");
+            _builder.newLineIfNotEmpty();
           }
         }
       }

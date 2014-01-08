@@ -18,6 +18,7 @@ class MyDslGenerator implements IGenerator {
 			fsa.generateFile(
 				m.gram.gname.substring(0, 1).toUpperCase() + m.gram.gname.substring(1).toLowerCase() + ".g4",
 				m.compile)
+			fsa.generateFile("CountElements.dat", m.exportCountElements);
 		}
 	}
 
@@ -44,4 +45,7 @@ class MyDslGenerator implements IGenerator {
 
 	def bcompile(Expression exp) '''«FOR ele : exp.elements»«FOR t : ele.terms»«FOR k : t.KConstr»«IF !exp.elements.head.
 		equals(ele) && ele.terms.head.equals(t)»| «ENDIF»'«k.SChar»' «IF !k.EChar.nullOrEmpty».. '«k.EChar»' «ENDIF»«ENDFOR»«ENDFOR»«ENDFOR»'''
+
+	def exportCountElements(Model m) '''«FOR r : m.rules»«IF !r.count.nullOrEmpty»«r.name»
+«ENDIF»«ENDFOR»'''
 }
