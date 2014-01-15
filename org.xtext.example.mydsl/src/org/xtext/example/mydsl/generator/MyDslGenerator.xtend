@@ -18,7 +18,7 @@ class MyDslGenerator implements IGenerator {
 			fsa.generateFile(
 				m.gram.gname.substring(0, 1).toUpperCase() + m.gram.gname.substring(1).toLowerCase() + ".g4",
 				m.compile)
-			fsa.generateFile("CountElements.dat", m.exportCountElements);
+			fsa.generateFile("CountElements.dat", m.exportCountElements)
 		}
 	}
 
