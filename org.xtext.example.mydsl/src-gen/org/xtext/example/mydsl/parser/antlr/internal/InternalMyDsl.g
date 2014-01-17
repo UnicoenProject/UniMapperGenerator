@@ -177,15 +177,11 @@ ruleRule returns [EObject current=null]
     @init { enterRule(); 
     }
     @after { leaveRule(); }:
-(	otherlv_0='<' 
-    {
-    	newLeafNode(otherlv_0, grammarAccess.getRuleAccess().getLessThanSignKeyword_0());
-    }
+((
 (
-(
-		lv_name_1_0=RULE_ID
+		lv_name_0_0=RULE_ID
 		{
-			newLeafNode(lv_name_1_0, grammarAccess.getRuleAccess().getNameIDTerminalRuleCall_1_0()); 
+			newLeafNode(lv_name_0_0, grammarAccess.getRuleAccess().getNameIDTerminalRuleCall_0_0()); 
 		}
 		{
 	        if ($current==null) {
@@ -194,47 +190,43 @@ ruleRule returns [EObject current=null]
        		setWithLastConsumed(
        			$current, 
        			"name",
-        		lv_name_1_0, 
+        		lv_name_0_0, 
         		"ID");
 	    }
 
 )
 )(
 (
-		lv_count_2_0=	'*' 
+		lv_count_1_0=	'*' 
     {
-        newLeafNode(lv_count_2_0, grammarAccess.getRuleAccess().getCountAsteriskKeyword_2_0());
+        newLeafNode(lv_count_1_0, grammarAccess.getRuleAccess().getCountAsteriskKeyword_1_0());
     }
  
 	    {
 	        if ($current==null) {
 	            $current = createModelElement(grammarAccess.getRuleRule());
 	        }
-       		setWithLastConsumed($current, "count", lv_count_2_0, "*");
+       		setWithLastConsumed($current, "count", lv_count_1_0, "*");
 	    }
 
 )
-)?	otherlv_3='>' 
+)?	otherlv_2='::=' 
     {
-    	newLeafNode(otherlv_3, grammarAccess.getRuleAccess().getGreaterThanSignKeyword_3());
-    }
-	otherlv_4='::=' 
-    {
-    	newLeafNode(otherlv_4, grammarAccess.getRuleAccess().getColonColonEqualsSignKeyword_4());
+    	newLeafNode(otherlv_2, grammarAccess.getRuleAccess().getColonColonEqualsSignKeyword_2());
     }
 (
 (
 		{ 
-	        newCompositeNode(grammarAccess.getRuleAccess().getExpressionExpressionParserRuleCall_5_0()); 
+	        newCompositeNode(grammarAccess.getRuleAccess().getExpressionExpressionParserRuleCall_3_0()); 
 	    }
-		lv_expression_5_0=ruleExpression		{
+		lv_expression_3_0=ruleExpression		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getRuleRule());
 	        }
        		set(
        			$current, 
        			"expression",
-        		lv_expression_5_0, 
+        		lv_expression_3_0, 
         		"Expression");
 	        afterParserOrEnumRuleCall();
 	    }
@@ -480,10 +472,6 @@ ruleRuleCall returns [EObject current=null]
     @init { enterRule(); 
     }
     @after { leaveRule(); }:
-(	otherlv_0='<' 
-    {
-    	newLeafNode(otherlv_0, grammarAccess.getRuleCallAccess().getLessThanSignKeyword_0());
-    }
 (
 (
 		{
@@ -491,16 +479,12 @@ ruleRuleCall returns [EObject current=null]
 	            $current = createModelElement(grammarAccess.getRuleCallRule());
 	        }
         }
-	otherlv_1=RULE_ID
+	otherlv_0=RULE_ID
 	{
-		newLeafNode(otherlv_1, grammarAccess.getRuleCallAccess().getRefRuleCrossReference_1_0()); 
+		newLeafNode(otherlv_0, grammarAccess.getRuleCallAccess().getRefRuleCrossReference_0()); 
 	}
 
 )
-)	otherlv_2='>' 
-    {
-    	newLeafNode(otherlv_2, grammarAccess.getRuleCallAccess().getGreaterThanSignKeyword_2());
-    }
 )
 ;
 

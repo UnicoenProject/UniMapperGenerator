@@ -73,49 +73,41 @@ public class MyDslGrammarAccess extends AbstractGrammarElementFinder {
 	public class RuleElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "Rule");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Keyword cLessThanSignKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cNameIDTerminalRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
-		private final Assignment cCountAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final Keyword cCountAsteriskKeyword_2_0 = (Keyword)cCountAssignment_2.eContents().get(0);
-		private final Keyword cGreaterThanSignKeyword_3 = (Keyword)cGroup.eContents().get(3);
-		private final Keyword cColonColonEqualsSignKeyword_4 = (Keyword)cGroup.eContents().get(4);
-		private final Assignment cExpressionAssignment_5 = (Assignment)cGroup.eContents().get(5);
-		private final RuleCall cExpressionExpressionParserRuleCall_5_0 = (RuleCall)cExpressionAssignment_5.eContents().get(0);
+		private final Assignment cNameAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final RuleCall cNameIDTerminalRuleCall_0_0 = (RuleCall)cNameAssignment_0.eContents().get(0);
+		private final Assignment cCountAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final Keyword cCountAsteriskKeyword_1_0 = (Keyword)cCountAssignment_1.eContents().get(0);
+		private final Keyword cColonColonEqualsSignKeyword_2 = (Keyword)cGroup.eContents().get(2);
+		private final Assignment cExpressionAssignment_3 = (Assignment)cGroup.eContents().get(3);
+		private final RuleCall cExpressionExpressionParserRuleCall_3_0 = (RuleCall)cExpressionAssignment_3.eContents().get(0);
 		
 		//Rule:
-		//	"<" name=ID count="*"? ">" "::=" expression=Expression;
+		//	name=ID count="*"? "::=" expression=Expression;
 		public ParserRule getRule() { return rule; }
 
-		//"<" name=ID count="*"? ">" "::=" expression=Expression
+		//name=ID count="*"? "::=" expression=Expression
 		public Group getGroup() { return cGroup; }
 
-		//"<"
-		public Keyword getLessThanSignKeyword_0() { return cLessThanSignKeyword_0; }
-
 		//name=ID
-		public Assignment getNameAssignment_1() { return cNameAssignment_1; }
+		public Assignment getNameAssignment_0() { return cNameAssignment_0; }
 
 		//ID
-		public RuleCall getNameIDTerminalRuleCall_1_0() { return cNameIDTerminalRuleCall_1_0; }
+		public RuleCall getNameIDTerminalRuleCall_0_0() { return cNameIDTerminalRuleCall_0_0; }
 
 		//count="*"?
-		public Assignment getCountAssignment_2() { return cCountAssignment_2; }
+		public Assignment getCountAssignment_1() { return cCountAssignment_1; }
 
 		//"*"
-		public Keyword getCountAsteriskKeyword_2_0() { return cCountAsteriskKeyword_2_0; }
-
-		//">"
-		public Keyword getGreaterThanSignKeyword_3() { return cGreaterThanSignKeyword_3; }
+		public Keyword getCountAsteriskKeyword_1_0() { return cCountAsteriskKeyword_1_0; }
 
 		//"::="
-		public Keyword getColonColonEqualsSignKeyword_4() { return cColonColonEqualsSignKeyword_4; }
+		public Keyword getColonColonEqualsSignKeyword_2() { return cColonColonEqualsSignKeyword_2; }
 
 		//expression=Expression
-		public Assignment getExpressionAssignment_5() { return cExpressionAssignment_5; }
+		public Assignment getExpressionAssignment_3() { return cExpressionAssignment_3; }
 
 		//Expression
-		public RuleCall getExpressionExpressionParserRuleCall_5_0() { return cExpressionExpressionParserRuleCall_5_0; }
+		public RuleCall getExpressionExpressionParserRuleCall_3_0() { return cExpressionExpressionParserRuleCall_3_0; }
 	}
 
 	public class ExpressionElements extends AbstractParserRuleElementFinder {
@@ -236,34 +228,22 @@ public class MyDslGrammarAccess extends AbstractGrammarElementFinder {
 
 	public class RuleCallElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "RuleCall");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Keyword cLessThanSignKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final Assignment cRefAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final CrossReference cRefRuleCrossReference_1_0 = (CrossReference)cRefAssignment_1.eContents().get(0);
-		private final RuleCall cRefRuleIDTerminalRuleCall_1_0_1 = (RuleCall)cRefRuleCrossReference_1_0.eContents().get(1);
-		private final Keyword cGreaterThanSignKeyword_2 = (Keyword)cGroup.eContents().get(2);
+		private final Assignment cRefAssignment = (Assignment)rule.eContents().get(1);
+		private final CrossReference cRefRuleCrossReference_0 = (CrossReference)cRefAssignment.eContents().get(0);
+		private final RuleCall cRefRuleIDTerminalRuleCall_0_1 = (RuleCall)cRefRuleCrossReference_0.eContents().get(1);
 		
 		//RuleCall:
-		//	"<" ref=[Rule] ">";
+		//	ref=[Rule];
 		public ParserRule getRule() { return rule; }
 
-		//"<" ref=[Rule] ">"
-		public Group getGroup() { return cGroup; }
-
-		//"<"
-		public Keyword getLessThanSignKeyword_0() { return cLessThanSignKeyword_0; }
-
 		//ref=[Rule]
-		public Assignment getRefAssignment_1() { return cRefAssignment_1; }
+		public Assignment getRefAssignment() { return cRefAssignment; }
 
 		//[Rule]
-		public CrossReference getRefRuleCrossReference_1_0() { return cRefRuleCrossReference_1_0; }
+		public CrossReference getRefRuleCrossReference_0() { return cRefRuleCrossReference_0; }
 
 		//ID
-		public RuleCall getRefRuleIDTerminalRuleCall_1_0_1() { return cRefRuleIDTerminalRuleCall_1_0_1; }
-
-		//">"
-		public Keyword getGreaterThanSignKeyword_2() { return cGreaterThanSignKeyword_2; }
+		public RuleCall getRefRuleIDTerminalRuleCall_0_1() { return cRefRuleIDTerminalRuleCall_0_1; }
 	}
 	
 	
@@ -335,7 +315,7 @@ public class MyDslGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//Rule:
-	//	"<" name=ID count="*"? ">" "::=" expression=Expression;
+	//	name=ID count="*"? "::=" expression=Expression;
 	public RuleElements getRuleAccess() {
 		return (pRule != null) ? pRule : (pRule = new RuleElements());
 	}
@@ -385,7 +365,7 @@ public class MyDslGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//RuleCall:
-	//	"<" ref=[Rule] ">";
+	//	ref=[Rule];
 	public RuleCallElements getRuleCallAccess() {
 		return (pRuleCall != null) ? pRuleCall : (pRuleCall = new RuleCallElements());
 	}

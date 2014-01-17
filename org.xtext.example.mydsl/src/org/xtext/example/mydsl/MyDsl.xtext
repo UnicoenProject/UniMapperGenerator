@@ -9,7 +9,7 @@ Grammar:
 	"grammar" gname=ID;
 
 Rule:
-	"<" name=ID (count="*")? ">" "::=" expression=Expression;
+	name=ID (count="*")? "::=" expression=Expression;
 
 Expression:
 	elements+=Element ("|" elements+=Element)*;
@@ -24,4 +24,4 @@ KeyConstr:
 	SChar=STRING (".." EChar=STRING)?;
 
 RuleCall:
-	"<" ref=[Rule|ID] ">";
+	ref=[Rule|ID];

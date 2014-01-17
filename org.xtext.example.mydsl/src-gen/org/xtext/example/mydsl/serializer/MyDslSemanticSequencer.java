@@ -147,7 +147,7 @@ public class MyDslSemanticSequencer extends AbstractDelegatingSemanticSequencer 
 		}
 		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
 		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
-		feeder.accept(grammarAccess.getRuleCallAccess().getRefRuleIDTerminalRuleCall_1_0_1(), semanticObject.getRef());
+		feeder.accept(grammarAccess.getRuleCallAccess().getRefRuleIDTerminalRuleCall_0_1(), semanticObject.getRef());
 		feeder.finish();
 	}
 	

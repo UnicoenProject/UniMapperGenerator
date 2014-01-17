@@ -45,13 +45,12 @@ public class MyDslParser extends AbstractContentAssistParser {
 					put(grammarAccess.getExpressionAccess().getGroup_1(), "rule__Expression__Group_1__0");
 					put(grammarAccess.getKeyConstrAccess().getGroup(), "rule__KeyConstr__Group__0");
 					put(grammarAccess.getKeyConstrAccess().getGroup_1(), "rule__KeyConstr__Group_1__0");
-					put(grammarAccess.getRuleCallAccess().getGroup(), "rule__RuleCall__Group__0");
 					put(grammarAccess.getModelAccess().getGramAssignment_0(), "rule__Model__GramAssignment_0");
 					put(grammarAccess.getModelAccess().getRulesAssignment_1(), "rule__Model__RulesAssignment_1");
 					put(grammarAccess.getGrammarAccess().getGnameAssignment_1(), "rule__Grammar__GnameAssignment_1");
-					put(grammarAccess.getRuleAccess().getNameAssignment_1(), "rule__Rule__NameAssignment_1");
-					put(grammarAccess.getRuleAccess().getCountAssignment_2(), "rule__Rule__CountAssignment_2");
-					put(grammarAccess.getRuleAccess().getExpressionAssignment_5(), "rule__Rule__ExpressionAssignment_5");
+					put(grammarAccess.getRuleAccess().getNameAssignment_0(), "rule__Rule__NameAssignment_0");
+					put(grammarAccess.getRuleAccess().getCountAssignment_1(), "rule__Rule__CountAssignment_1");
+					put(grammarAccess.getRuleAccess().getExpressionAssignment_3(), "rule__Rule__ExpressionAssignment_3");
 					put(grammarAccess.getExpressionAccess().getElementsAssignment_0(), "rule__Expression__ElementsAssignment_0");
 					put(grammarAccess.getExpressionAccess().getElementsAssignment_1_1(), "rule__Expression__ElementsAssignment_1_1");
 					put(grammarAccess.getElementAccess().getTermsAssignment(), "rule__Element__TermsAssignment");
@@ -59,7 +58,7 @@ public class MyDslParser extends AbstractContentAssistParser {
 					put(grammarAccess.getTermAccess().getRCallAssignment_1(), "rule__Term__RCallAssignment_1");
 					put(grammarAccess.getKeyConstrAccess().getSCharAssignment_0(), "rule__KeyConstr__SCharAssignment_0");
 					put(grammarAccess.getKeyConstrAccess().getECharAssignment_1_1(), "rule__KeyConstr__ECharAssignment_1_1");
-					put(grammarAccess.getRuleCallAccess().getRefAssignment_1(), "rule__RuleCall__RefAssignment_1");
+					put(grammarAccess.getRuleCallAccess().getRefAssignment(), "rule__RuleCall__RefAssignment");
 				}
 			};
 		}
