@@ -8,8 +8,8 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
-import parser.ExpressionLexer;
-import parser.ExpressionParser;
+import parser.CgrammarLexer;
+import parser.CgrammarParser;
 
 public class Main {
 
@@ -17,16 +17,16 @@ public class Main {
    * @param args
    */
   public static void main(String[] args) {
-    String code = "(1 + 2 + 3) * 4";
+    String code = "int m(v){}";
     CharStream input = new ANTLRInputStream(code);
-    ExpressionLexer lexer = new ExpressionLexer(input);
+    CgrammarLexer lexer = new CgrammarLexer(input);
     CommonTokenStream tokens = new CommonTokenStream(lexer);
-    ExpressionParser parser = new ExpressionParser(tokens);
+    CgrammarParser parser = new CgrammarParser(tokens);
     ParseTreeWalker walker = new ParseTreeWalker(); // create standard walker
-    MyExpressionListener myListener = new MyExpressionListener(parser);
+    MyCgrammarListener myListener = new MyCgrammarListener(parser);
 
     // Parse code and generate a parse tree
-    ParserRuleContext tree = parser.expression();
+    ParserRuleContext tree = parser.translation_unit();
 
     // Scan the parse tree
     walker.walk(myListener, tree);
@@ -35,6 +35,6 @@ public class Main {
     myListener.showTokenCounts();
 
     // Show parse tree
-    System.out.println(tree.toStringTree(Arrays.asList(ExpressionParser.ruleNames)));
+    System.out.println(tree.toStringTree(Arrays.asList(CgrammarParser.ruleNames)));
   }
 }

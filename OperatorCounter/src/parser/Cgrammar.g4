@@ -1,4 +1,4 @@
-grammar cgrammar;
+grammar Cgrammar;
 
 translation_unit:
 	external_declaration ;

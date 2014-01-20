@@ -15,15 +15,13 @@ class MyDslGenerator implements IGenerator {
 
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
 		for (m : resource.allContents.toIterable.filter(Model)) {
-			fsa.generateFile(
-				m.gram.gname.substring(0, 1).toUpperCase() + m.gram.gname.substring(1).toLowerCase() + ".g4",
-				m.compile)
+			fsa.generateFile(m.gram.gname.toUpperCaseOnlyFirst + ".g4", m.compile)
 			fsa.generateFile("CountElements.dat", m.exportCountElements)
 		}
 	}
 
 	def compile(Model m) '''
-	grammar «m.gram.gname»;
+	grammar «m.gram.gname.toUpperCaseOnlyFirst»;
 	
 	«FOR r : m.rules»«IF Character.isLowerCase(r.name.charAt(0))»«r.acompile»«ENDIF»«ENDFOR»
 	
@@ -48,4 +46,8 @@ class MyDslGenerator implements IGenerator {
 
 	def exportCountElements(Model m) '''«FOR r : m.rules»«IF !r.count.nullOrEmpty»«r.name»
 «ENDIF»«ENDFOR»'''
+
+	def toUpperCaseOnlyFirst(String s) {
+		s.substring(0, 1).toUpperCase + s.substring(1).toLowerCase;
+	}
 }

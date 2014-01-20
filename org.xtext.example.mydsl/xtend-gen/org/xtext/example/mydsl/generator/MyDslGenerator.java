@@ -33,16 +33,10 @@ public class MyDslGenerator implements IGenerator {
       {
         Grammar _gram = m.getGram();
         String _gname = _gram.getGname();
-        String _substring = _gname.substring(0, 1);
-        String _upperCase = _substring.toUpperCase();
-        Grammar _gram_1 = m.getGram();
-        String _gname_1 = _gram_1.getGname();
-        String _substring_1 = _gname_1.substring(1);
-        String _lowerCase = _substring_1.toLowerCase();
-        String _plus = (_upperCase + _lowerCase);
-        String _plus_1 = (_plus + ".g4");
+        String _upperCaseOnlyFirst = this.toUpperCaseOnlyFirst(_gname);
+        String _plus = (_upperCaseOnlyFirst + ".g4");
         CharSequence _compile = this.compile(m);
-        fsa.generateFile(_plus_1, _compile);
+        fsa.generateFile(_plus, _compile);
         CharSequence _exportCountElements = this.exportCountElements(m);
         fsa.generateFile("CountElements.dat", _exportCountElements);
       }
@@ -54,7 +48,8 @@ public class MyDslGenerator implements IGenerator {
     _builder.append("grammar ");
     Grammar _gram = m.getGram();
     String _gname = _gram.getGname();
-    _builder.append(_gname, "");
+    String _upperCaseOnlyFirst = this.toUpperCaseOnlyFirst(_gname);
+    _builder.append(_upperCaseOnlyFirst, "");
     _builder.append(";");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
@@ -240,5 +235,14 @@ public class MyDslGenerator implements IGenerator {
       }
     }
     return _builder;
+  }
+  
+  public String toUpperCaseOnlyFirst(final String s) {
+    String _substring = s.substring(0, 1);
+    String _upperCase = _substring.toUpperCase();
+    String _substring_1 = s.substring(1);
+    String _lowerCase = _substring_1.toLowerCase();
+    String _plus = (_upperCase + _lowerCase);
+    return _plus;
   }
 }
