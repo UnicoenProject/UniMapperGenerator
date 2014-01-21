@@ -16,7 +16,7 @@ class MyDslGenerator implements IGenerator {
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
 		for (m : resource.allContents.toIterable.filter(Model)) {
 			fsa.generateFile(m.gram.gname.toUpperCaseOnlyFirst + ".g4", m.compile)
-			fsa.generateFile("CountElements.dat", m.exportCountElements)
+			fsa.generateFile("CountElements" + m.gram.gname.toLowerCase + ".dat", m.exportCountElements)
 		}
 	}
 

@@ -13,28 +13,30 @@ import parser.CgrammarParser;
 
 public class Main {
 
-  /**
-   * @param args
-   */
-  public static void main(String[] args) {
-    String code = "int m(v){}";
-    CharStream input = new ANTLRInputStream(code);
-    CgrammarLexer lexer = new CgrammarLexer(input);
-    CommonTokenStream tokens = new CommonTokenStream(lexer);
-    CgrammarParser parser = new CgrammarParser(tokens);
-    ParseTreeWalker walker = new ParseTreeWalker(); // create standard walker
-    MyCgrammarListener myListener = new MyCgrammarListener(parser);
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		String code = "int m(v){int a = 0;}";
+		CharStream input = new ANTLRInputStream(code);
+		CgrammarLexer lexer = new CgrammarLexer(input);
+		CommonTokenStream tokens = new CommonTokenStream(lexer);
+		CgrammarParser parser = new CgrammarParser(tokens);
+		ParseTreeWalker walker = new ParseTreeWalker(); // create standard
+														// walker
+		MyCgrammarListener myListener = new MyCgrammarListener(parser);
 
-    // Parse code and generate a parse tree
-    ParserRuleContext tree = parser.translation_unit();
+		// Parse code and generate a parse tree
+		ParserRuleContext tree = parser.translation_unit();
 
-    // Scan the parse tree
-    walker.walk(myListener, tree);
+		// Scan the parse tree
+		walker.walk(myListener, tree);
 
-    // Show PM counts
-    myListener.showTokenCounts();
+		// Show PM counts
+		myListener.showTokenCounts();
 
-    // Show parse tree
-    System.out.println(tree.toStringTree(Arrays.asList(CgrammarParser.ruleNames)));
-  }
+		// Show parse tree
+		System.out.println(tree.toStringTree(Arrays
+				.asList(CgrammarParser.ruleNames)));
+	}
 }

@@ -37,8 +37,13 @@ public class MyDslGenerator implements IGenerator {
         String _plus = (_upperCaseOnlyFirst + ".g4");
         CharSequence _compile = this.compile(m);
         fsa.generateFile(_plus, _compile);
+        Grammar _gram_1 = m.getGram();
+        String _gname_1 = _gram_1.getGname();
+        String _lowerCase = _gname_1.toLowerCase();
+        String _plus_1 = ("CountElements" + _lowerCase);
+        String _plus_2 = (_plus_1 + ".dat");
         CharSequence _exportCountElements = this.exportCountElements(m);
-        fsa.generateFile("CountElements.dat", _exportCountElements);
+        fsa.generateFile(_plus_2, _exportCountElements);
       }
     }
   }
