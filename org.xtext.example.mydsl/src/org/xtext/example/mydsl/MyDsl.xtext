@@ -3,13 +3,16 @@ grammar org.xtext.example.mydsl.MyDsl with org.eclipse.xtext.common.Terminals
 generate myDsl "http://www.xtext.org/example/mydsl/MyDsl"
 
 Model:
-	gram=Grammar (rules+=Rule)+;
+	gram=Grammar gen=Generate (rules+=Rule)+;
 
 Grammar:
 	"grammar" gname=ID;
 
+Generate:
+	"generate" genetool=ID;
+
 Rule:
-	name=ID (count="*")? "::=" expression=Expression;
+	name=ID ("[" count=ID "]")? "::=" expression=Expression;
 
 Expression:
 	elements+=Element ("|" elements+=Element)*;

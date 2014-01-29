@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.xtext.example.mydsl.myDsl.Generate;
 import org.xtext.example.mydsl.myDsl.Grammar;
 import org.xtext.example.mydsl.myDsl.Model;
 import org.xtext.example.mydsl.myDsl.MyDslPackage;
@@ -31,6 +32,7 @@ import org.xtext.example.mydsl.myDsl.Rule;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.xtext.example.mydsl.myDsl.impl.ModelImpl#getGram <em>Gram</em>}</li>
+ *   <li>{@link org.xtext.example.mydsl.myDsl.impl.ModelImpl#getGen <em>Gen</em>}</li>
  *   <li>{@link org.xtext.example.mydsl.myDsl.impl.ModelImpl#getRules <em>Rules</em>}</li>
  * </ul>
  * </p>
@@ -48,6 +50,16 @@ public class ModelImpl extends MinimalEObjectImpl.Container implements Model
    * @ordered
    */
   protected Grammar gram;
+
+  /**
+   * The cached value of the '{@link #getGen() <em>Gen</em>}' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getGen()
+   * @generated
+   * @ordered
+   */
+  protected Generate gen;
 
   /**
    * The cached value of the '{@link #getRules() <em>Rules</em>}' containment reference list.
@@ -133,6 +145,54 @@ public class ModelImpl extends MinimalEObjectImpl.Container implements Model
    * <!-- end-user-doc -->
    * @generated
    */
+  public Generate getGen()
+  {
+    return gen;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NotificationChain basicSetGen(Generate newGen, NotificationChain msgs)
+  {
+    Generate oldGen = gen;
+    gen = newGen;
+    if (eNotificationRequired())
+    {
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, MyDslPackage.MODEL__GEN, oldGen, newGen);
+      if (msgs == null) msgs = notification; else msgs.add(notification);
+    }
+    return msgs;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setGen(Generate newGen)
+  {
+    if (newGen != gen)
+    {
+      NotificationChain msgs = null;
+      if (gen != null)
+        msgs = ((InternalEObject)gen).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - MyDslPackage.MODEL__GEN, null, msgs);
+      if (newGen != null)
+        msgs = ((InternalEObject)newGen).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - MyDslPackage.MODEL__GEN, null, msgs);
+      msgs = basicSetGen(newGen, msgs);
+      if (msgs != null) msgs.dispatch();
+    }
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, MyDslPackage.MODEL__GEN, newGen, newGen));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EList<Rule> getRules()
   {
     if (rules == null)
@@ -154,6 +214,8 @@ public class ModelImpl extends MinimalEObjectImpl.Container implements Model
     {
       case MyDslPackage.MODEL__GRAM:
         return basicSetGram(null, msgs);
+      case MyDslPackage.MODEL__GEN:
+        return basicSetGen(null, msgs);
       case MyDslPackage.MODEL__RULES:
         return ((InternalEList<?>)getRules()).basicRemove(otherEnd, msgs);
     }
@@ -172,6 +234,8 @@ public class ModelImpl extends MinimalEObjectImpl.Container implements Model
     {
       case MyDslPackage.MODEL__GRAM:
         return getGram();
+      case MyDslPackage.MODEL__GEN:
+        return getGen();
       case MyDslPackage.MODEL__RULES:
         return getRules();
     }
@@ -191,6 +255,9 @@ public class ModelImpl extends MinimalEObjectImpl.Container implements Model
     {
       case MyDslPackage.MODEL__GRAM:
         setGram((Grammar)newValue);
+        return;
+      case MyDslPackage.MODEL__GEN:
+        setGen((Generate)newValue);
         return;
       case MyDslPackage.MODEL__RULES:
         getRules().clear();
@@ -213,6 +280,9 @@ public class ModelImpl extends MinimalEObjectImpl.Container implements Model
       case MyDslPackage.MODEL__GRAM:
         setGram((Grammar)null);
         return;
+      case MyDslPackage.MODEL__GEN:
+        setGen((Generate)null);
+        return;
       case MyDslPackage.MODEL__RULES:
         getRules().clear();
         return;
@@ -232,6 +302,8 @@ public class ModelImpl extends MinimalEObjectImpl.Container implements Model
     {
       case MyDslPackage.MODEL__GRAM:
         return gram != null;
+      case MyDslPackage.MODEL__GEN:
+        return gen != null;
       case MyDslPackage.MODEL__RULES:
         return rules != null && !rules.isEmpty();
     }

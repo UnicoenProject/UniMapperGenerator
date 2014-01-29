@@ -15,23 +15,18 @@ import parser.CgrammarParser;
 public class MyCgrammarListener extends CgrammarBaseListener {
 	private CgrammarParser _parser;
 	private HashMap<String, Integer> _map;
-	private Set<String> ruleElementSet;
-	private Set<String> terminalElementSet;
+	private Set<String> extractElementSet;
 
 	public MyCgrammarListener(CgrammarParser parser) {
 		_parser = parser;
 		_map = new HashMap<String, Integer>();
-		ruleElementSet = new HashSet<String>();
-		terminalElementSet = new HashSet<String>();
-		File countElementsFile = new File("dat\\CountElements.dat");
+		extractElementSet = new HashSet<String>();
+		File countElementsFile = new File("dat\\CountElementsCgrammar.dat");
 		try {
 			Scanner scanner = new Scanner(countElementsFile);
 			while (scanner.hasNext()) {
 				String element = scanner.next();
-				if (Character.isLowerCase(element.charAt(0)))
-					ruleElementSet.add(element);
-				if (Character.isUpperCase(element.charAt(0)))
-					terminalElementSet.add(element);
+				extractElementSet.add(element);
 			}
 			scanner.close();
 		} catch (FileNotFoundException e) {
@@ -48,11 +43,20 @@ public class MyCgrammarListener extends CgrammarBaseListener {
 		}
 	}
 
+	public void showCyclomaticComplexity() {
+		System.out.println("*** showCyclomaticComplexity ***");
+		int result = 1;
+		for (Entry<String, Integer> nameAndCount : _map.entrySet()) {
+			result += nameAndCount.getValue();
+		}
+		System.out.println("Cyclomatic Complexity : " + result);
+	}
+
 	@Override
 	public void visitTerminal(TerminalNode node) {
 		Token token = node.getSymbol();
 		String tokenName = CgrammarLexer.ruleNames[token.getType() - 1];
-		if (terminalElementSet.contains(tokenName)) {
+		if (extractElementSet.contains(tokenName)) {
 			System.out.println("*** visitTerminal ***");
 			System.out.println(tokenName + ": " + token.getText());
 
@@ -66,7 +70,7 @@ public class MyCgrammarListener extends CgrammarBaseListener {
 	@Override
 	public void enterEveryRule(ParserRuleContext ctx) {
 		String ruleName = CgrammarParser.ruleNames[ctx.getRuleIndex()];
-		if (ruleElementSet.contains(ruleName)) {
+		if (extractElementSet.contains(ruleName)) {
 			System.out.println("*** visitRule ***");
 			System.out.println(ruleName + ": " + ctx.getText());
 
@@ -76,3 +80,4 @@ public class MyCgrammarListener extends CgrammarBaseListener {
 		}
 	}
 }
+	

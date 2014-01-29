@@ -7,7 +7,7 @@ external_declaration:
 function_definition:
 	declaration_specifiers declarator declaration_list compound_statement | declaration_specifiers declarator compound_statement | declarator declaration_list compound_statement | declarator compound_statement ;
 primary_expression:
-	IDENTIFIER | CONSTANT | LPAREN expression RPAREN ;
+	identifier | CONSTANT | LPAREN expression RPAREN ;
 postfix_expression:
 	primary_expression | postfix_expression INCORDEC ;
 unary_expression:
@@ -49,7 +49,7 @@ init_declarator:
 declarator:
 	direct_declarator ;
 direct_declarator:
-	IDENTIFIER | LPAREN declarator RPAREN | direct_declarator LPAREN parameter_type_list RPAREN | direct_declarator LPAREN identifier_list RPAREN | direct_declarator LPAREN RPAREN ;
+	identifier | LPAREN declarator RPAREN | direct_declarator LPAREN parameter_type_list RPAREN | direct_declarator LPAREN identifier_list RPAREN | direct_declarator LPAREN RPAREN ;
 parameter_type_list:
 	parameter_list ;
 parameter_list:
@@ -57,7 +57,7 @@ parameter_list:
 parameter_declaration:
 	declaration_specifiers declarator | declaration_specifiers ;
 identifier_list:
-	IDENTIFIER | identifier_list COMMA IDENTIFIER ;
+	identifier | identifier_list COMMA identifier ;
 initializer:
 	assignment_expression | LBRACKET initializer_list RBRACKET | LBRACKET initializer_list COMMA RBRACKET ;
 initializer_list:
@@ -76,6 +76,8 @@ selection_statement:
 	IF LPAREN expression RPAREN statement | IF LPAREN expression RPAREN statement ELSE statement ;
 iteration_statement:
 	WHILE LPAREN expression RPAREN statement | DO statement WHILE LPAREN expression RPAREN SEMICOLON | FOR LPAREN expression_statement expression_statement expression RPAREN statement ;
+identifier:
+	CHARACTERS | CHARACTERS identifier ;
 
 LPAREN:
 	'(' ;
@@ -108,7 +110,7 @@ COMMA:
 SEMICOLON:
 	';' ;
 TYPE_SPECIFIER:
-	'int' ;
+	'int' | 'long' | 'float' | 'double' | 'void' ;
 IF:
 	'if' ;
 ELSE:
@@ -119,8 +121,8 @@ DO:
 	'do' ;
 FOR:
 	'for' ;
-IDENTIFIER:
-	'a' .. 'z' ;
+CHARACTERS:
+	'a' .. 'z' | 'A' .. 'Z' ;
 CONSTANT:
 	'0' .. '9' ;
 

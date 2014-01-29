@@ -17,13 +17,13 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		String code = "int m(v){int a = 0;}";
+		String code = "int main(void){int a = 0; if(i==0) a++;}";
 		CharStream input = new ANTLRInputStream(code);
 		CgrammarLexer lexer = new CgrammarLexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		CgrammarParser parser = new CgrammarParser(tokens);
-		ParseTreeWalker walker = new ParseTreeWalker(); // create standard
-														// walker
+		ParseTreeWalker walker = new ParseTreeWalker();
+
 		MyCgrammarListener myListener = new MyCgrammarListener(parser);
 
 		// Parse code and generate a parse tree
@@ -35,8 +35,8 @@ public class Main {
 		// Show PM counts
 		myListener.showTokenCounts();
 
-		// Show parse tree
-		System.out.println(tree.toStringTree(Arrays
-				.asList(CgrammarParser.ruleNames)));
+		// Show Complexity
+		myListener.showCyclomaticComplexity();
 	}
 }
+	

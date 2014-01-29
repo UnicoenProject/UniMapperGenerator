@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.xtext.example.mydsl.myDsl.Model#getGram <em>Gram</em>}</li>
+ *   <li>{@link org.xtext.example.mydsl.myDsl.Model#getGen <em>Gen</em>}</li>
  *   <li>{@link org.xtext.example.mydsl.myDsl.Model#getRules <em>Rules</em>}</li>
  * </ul>
  * </p>
@@ -50,6 +51,32 @@ public interface Model extends EObject
    * @generated
    */
   void setGram(Grammar value);
+
+  /**
+   * Returns the value of the '<em><b>Gen</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Gen</em>' containment reference isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Gen</em>' containment reference.
+   * @see #setGen(Generate)
+   * @see org.xtext.example.mydsl.myDsl.MyDslPackage#getModel_Gen()
+   * @model containment="true"
+   * @generated
+   */
+  Generate getGen();
+
+  /**
+   * Sets the value of the '{@link org.xtext.example.mydsl.myDsl.Model#getGen <em>Gen</em>}' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Gen</em>' containment reference.
+   * @see #getGen()
+   * @generated
+   */
+  void setGen(Generate value);
 
   /**
    * Returns the value of the '<em><b>Rules</b></em>' containment reference list.

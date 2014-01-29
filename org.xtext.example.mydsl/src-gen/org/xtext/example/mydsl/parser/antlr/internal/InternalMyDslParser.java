@@ -21,11 +21,13 @@ import java.util.ArrayList;
 @SuppressWarnings("all")
 public class InternalMyDslParser extends AbstractInternalAntlrParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_ID", "RULE_STRING", "RULE_INT", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_WS", "RULE_ANY_OTHER", "'grammar'", "'*'", "'::='", "'|'", "'..'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_ID", "RULE_STRING", "RULE_INT", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_WS", "RULE_ANY_OTHER", "'grammar'", "'generate'", "'['", "']'", "'::='", "'|'", "'..'"
     };
     public static final int RULE_ID=4;
     public static final int RULE_STRING=5;
+    public static final int T__16=16;
     public static final int T__15=15;
+    public static final int T__17=17;
     public static final int T__12=12;
     public static final int T__11=11;
     public static final int T__14=14;
@@ -112,23 +114,25 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleModel"
-    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:76:1: ruleModel returns [EObject current=null] : ( ( (lv_gram_0_0= ruleGrammar ) ) ( (lv_rules_1_0= ruleRule ) )+ ) ;
+    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:76:1: ruleModel returns [EObject current=null] : ( ( (lv_gram_0_0= ruleGrammar ) ) ( (lv_gen_1_0= ruleGenerate ) ) ( (lv_rules_2_0= ruleRule ) )+ ) ;
     public final EObject ruleModel() throws RecognitionException {
         EObject current = null;
 
         EObject lv_gram_0_0 = null;
 
-        EObject lv_rules_1_0 = null;
+        EObject lv_gen_1_0 = null;
+
+        EObject lv_rules_2_0 = null;
 
 
          enterRule(); 
             
         try {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:79:28: ( ( ( (lv_gram_0_0= ruleGrammar ) ) ( (lv_rules_1_0= ruleRule ) )+ ) )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:80:1: ( ( (lv_gram_0_0= ruleGrammar ) ) ( (lv_rules_1_0= ruleRule ) )+ )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:79:28: ( ( ( (lv_gram_0_0= ruleGrammar ) ) ( (lv_gen_1_0= ruleGenerate ) ) ( (lv_rules_2_0= ruleRule ) )+ ) )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:80:1: ( ( (lv_gram_0_0= ruleGrammar ) ) ( (lv_gen_1_0= ruleGenerate ) ) ( (lv_rules_2_0= ruleRule ) )+ )
             {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:80:1: ( ( (lv_gram_0_0= ruleGrammar ) ) ( (lv_rules_1_0= ruleRule ) )+ )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:80:2: ( (lv_gram_0_0= ruleGrammar ) ) ( (lv_rules_1_0= ruleRule ) )+
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:80:1: ( ( (lv_gram_0_0= ruleGrammar ) ) ( (lv_gen_1_0= ruleGenerate ) ) ( (lv_rules_2_0= ruleRule ) )+ )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:80:2: ( (lv_gram_0_0= ruleGrammar ) ) ( (lv_gen_1_0= ruleGenerate ) ) ( (lv_rules_2_0= ruleRule ) )+
             {
             // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:80:2: ( (lv_gram_0_0= ruleGrammar ) )
             // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:81:1: (lv_gram_0_0= ruleGrammar )
@@ -161,7 +165,38 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:98:2: ( (lv_rules_1_0= ruleRule ) )+
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:98:2: ( (lv_gen_1_0= ruleGenerate ) )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:99:1: (lv_gen_1_0= ruleGenerate )
+            {
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:99:1: (lv_gen_1_0= ruleGenerate )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:100:3: lv_gen_1_0= ruleGenerate
+            {
+             
+            	        newCompositeNode(grammarAccess.getModelAccess().getGenGenerateParserRuleCall_1_0()); 
+            	    
+            pushFollow(FOLLOW_ruleGenerate_in_ruleModel152);
+            lv_gen_1_0=ruleGenerate();
+
+            state._fsp--;
+
+
+            	        if (current==null) {
+            	            current = createModelElementForParent(grammarAccess.getModelRule());
+            	        }
+                   		set(
+                   			current, 
+                   			"gen",
+                    		lv_gen_1_0, 
+                    		"Generate");
+            	        afterParserOrEnumRuleCall();
+            	    
+
+            }
+
+
+            }
+
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:116:2: ( (lv_rules_2_0= ruleRule ) )+
             int cnt1=0;
             loop1:
             do {
@@ -175,16 +210,16 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
                 switch (alt1) {
             	case 1 :
-            	    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:99:1: (lv_rules_1_0= ruleRule )
+            	    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:117:1: (lv_rules_2_0= ruleRule )
             	    {
-            	    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:99:1: (lv_rules_1_0= ruleRule )
-            	    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:100:3: lv_rules_1_0= ruleRule
+            	    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:117:1: (lv_rules_2_0= ruleRule )
+            	    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:118:3: lv_rules_2_0= ruleRule
             	    {
             	     
-            	    	        newCompositeNode(grammarAccess.getModelAccess().getRulesRuleParserRuleCall_1_0()); 
+            	    	        newCompositeNode(grammarAccess.getModelAccess().getRulesRuleParserRuleCall_2_0()); 
             	    	    
-            	    pushFollow(FOLLOW_ruleRule_in_ruleModel152);
-            	    lv_rules_1_0=ruleRule();
+            	    pushFollow(FOLLOW_ruleRule_in_ruleModel173);
+            	    lv_rules_2_0=ruleRule();
 
             	    state._fsp--;
 
@@ -195,7 +230,7 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
             	           		add(
             	           			current, 
             	           			"rules",
-            	            		lv_rules_1_0, 
+            	            		lv_rules_2_0, 
             	            		"Rule");
             	    	        afterParserOrEnumRuleCall();
             	    	    
@@ -236,7 +271,7 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleGrammar"
-    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:124:1: entryRuleGrammar returns [EObject current=null] : iv_ruleGrammar= ruleGrammar EOF ;
+    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:142:1: entryRuleGrammar returns [EObject current=null] : iv_ruleGrammar= ruleGrammar EOF ;
     public final EObject entryRuleGrammar() throws RecognitionException {
         EObject current = null;
 
@@ -244,17 +279,17 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:125:2: (iv_ruleGrammar= ruleGrammar EOF )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:126:2: iv_ruleGrammar= ruleGrammar EOF
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:143:2: (iv_ruleGrammar= ruleGrammar EOF )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:144:2: iv_ruleGrammar= ruleGrammar EOF
             {
              newCompositeNode(grammarAccess.getGrammarRule()); 
-            pushFollow(FOLLOW_ruleGrammar_in_entryRuleGrammar189);
+            pushFollow(FOLLOW_ruleGrammar_in_entryRuleGrammar210);
             iv_ruleGrammar=ruleGrammar();
 
             state._fsp--;
 
              current =iv_ruleGrammar; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleGrammar199); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleGrammar220); 
 
             }
 
@@ -272,7 +307,7 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleGrammar"
-    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:133:1: ruleGrammar returns [EObject current=null] : (otherlv_0= 'grammar' ( (lv_gname_1_0= RULE_ID ) ) ) ;
+    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:151:1: ruleGrammar returns [EObject current=null] : (otherlv_0= 'grammar' ( (lv_gname_1_0= RULE_ID ) ) ) ;
     public final EObject ruleGrammar() throws RecognitionException {
         EObject current = null;
 
@@ -282,23 +317,23 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:136:28: ( (otherlv_0= 'grammar' ( (lv_gname_1_0= RULE_ID ) ) ) )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:137:1: (otherlv_0= 'grammar' ( (lv_gname_1_0= RULE_ID ) ) )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:154:28: ( (otherlv_0= 'grammar' ( (lv_gname_1_0= RULE_ID ) ) ) )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:155:1: (otherlv_0= 'grammar' ( (lv_gname_1_0= RULE_ID ) ) )
             {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:137:1: (otherlv_0= 'grammar' ( (lv_gname_1_0= RULE_ID ) ) )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:137:3: otherlv_0= 'grammar' ( (lv_gname_1_0= RULE_ID ) )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:155:1: (otherlv_0= 'grammar' ( (lv_gname_1_0= RULE_ID ) ) )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:155:3: otherlv_0= 'grammar' ( (lv_gname_1_0= RULE_ID ) )
             {
-            otherlv_0=(Token)match(input,11,FOLLOW_11_in_ruleGrammar236); 
+            otherlv_0=(Token)match(input,11,FOLLOW_11_in_ruleGrammar257); 
 
                 	newLeafNode(otherlv_0, grammarAccess.getGrammarAccess().getGrammarKeyword_0());
                 
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:141:1: ( (lv_gname_1_0= RULE_ID ) )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:142:1: (lv_gname_1_0= RULE_ID )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:159:1: ( (lv_gname_1_0= RULE_ID ) )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:160:1: (lv_gname_1_0= RULE_ID )
             {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:142:1: (lv_gname_1_0= RULE_ID )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:143:3: lv_gname_1_0= RULE_ID
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:160:1: (lv_gname_1_0= RULE_ID )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:161:3: lv_gname_1_0= RULE_ID
             {
-            lv_gname_1_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleGrammar253); 
+            lv_gname_1_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleGrammar274); 
 
             			newLeafNode(lv_gname_1_0, grammarAccess.getGrammarAccess().getGnameIDTerminalRuleCall_1_0()); 
             		
@@ -338,8 +373,111 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
     // $ANTLR end "ruleGrammar"
 
 
+    // $ANTLR start "entryRuleGenerate"
+    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:185:1: entryRuleGenerate returns [EObject current=null] : iv_ruleGenerate= ruleGenerate EOF ;
+    public final EObject entryRuleGenerate() throws RecognitionException {
+        EObject current = null;
+
+        EObject iv_ruleGenerate = null;
+
+
+        try {
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:186:2: (iv_ruleGenerate= ruleGenerate EOF )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:187:2: iv_ruleGenerate= ruleGenerate EOF
+            {
+             newCompositeNode(grammarAccess.getGenerateRule()); 
+            pushFollow(FOLLOW_ruleGenerate_in_entryRuleGenerate315);
+            iv_ruleGenerate=ruleGenerate();
+
+            state._fsp--;
+
+             current =iv_ruleGenerate; 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleGenerate325); 
+
+            }
+
+        }
+         
+            catch (RecognitionException re) { 
+                recover(input,re); 
+                appendSkippedTokens();
+            } 
+        finally {
+        }
+        return current;
+    }
+    // $ANTLR end "entryRuleGenerate"
+
+
+    // $ANTLR start "ruleGenerate"
+    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:194:1: ruleGenerate returns [EObject current=null] : (otherlv_0= 'generate' ( (lv_genetool_1_0= RULE_ID ) ) ) ;
+    public final EObject ruleGenerate() throws RecognitionException {
+        EObject current = null;
+
+        Token otherlv_0=null;
+        Token lv_genetool_1_0=null;
+
+         enterRule(); 
+            
+        try {
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:197:28: ( (otherlv_0= 'generate' ( (lv_genetool_1_0= RULE_ID ) ) ) )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:198:1: (otherlv_0= 'generate' ( (lv_genetool_1_0= RULE_ID ) ) )
+            {
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:198:1: (otherlv_0= 'generate' ( (lv_genetool_1_0= RULE_ID ) ) )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:198:3: otherlv_0= 'generate' ( (lv_genetool_1_0= RULE_ID ) )
+            {
+            otherlv_0=(Token)match(input,12,FOLLOW_12_in_ruleGenerate362); 
+
+                	newLeafNode(otherlv_0, grammarAccess.getGenerateAccess().getGenerateKeyword_0());
+                
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:202:1: ( (lv_genetool_1_0= RULE_ID ) )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:203:1: (lv_genetool_1_0= RULE_ID )
+            {
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:203:1: (lv_genetool_1_0= RULE_ID )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:204:3: lv_genetool_1_0= RULE_ID
+            {
+            lv_genetool_1_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleGenerate379); 
+
+            			newLeafNode(lv_genetool_1_0, grammarAccess.getGenerateAccess().getGenetoolIDTerminalRuleCall_1_0()); 
+            		
+
+            	        if (current==null) {
+            	            current = createModelElement(grammarAccess.getGenerateRule());
+            	        }
+                   		setWithLastConsumed(
+                   			current, 
+                   			"genetool",
+                    		lv_genetool_1_0, 
+                    		"ID");
+            	    
+
+            }
+
+
+            }
+
+
+            }
+
+
+            }
+
+             leaveRule(); 
+        }
+         
+            catch (RecognitionException re) { 
+                recover(input,re); 
+                appendSkippedTokens();
+            } 
+        finally {
+        }
+        return current;
+    }
+    // $ANTLR end "ruleGenerate"
+
+
     // $ANTLR start "entryRuleRule"
-    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:167:1: entryRuleRule returns [EObject current=null] : iv_ruleRule= ruleRule EOF ;
+    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:228:1: entryRuleRule returns [EObject current=null] : iv_ruleRule= ruleRule EOF ;
     public final EObject entryRuleRule() throws RecognitionException {
         EObject current = null;
 
@@ -347,17 +485,17 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:168:2: (iv_ruleRule= ruleRule EOF )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:169:2: iv_ruleRule= ruleRule EOF
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:229:2: (iv_ruleRule= ruleRule EOF )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:230:2: iv_ruleRule= ruleRule EOF
             {
              newCompositeNode(grammarAccess.getRuleRule()); 
-            pushFollow(FOLLOW_ruleRule_in_entryRuleRule294);
+            pushFollow(FOLLOW_ruleRule_in_entryRuleRule420);
             iv_ruleRule=ruleRule();
 
             state._fsp--;
 
              current =iv_ruleRule; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleRule304); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleRule430); 
 
             }
 
@@ -375,32 +513,34 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleRule"
-    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:176:1: ruleRule returns [EObject current=null] : ( ( (lv_name_0_0= RULE_ID ) ) ( (lv_count_1_0= '*' ) )? otherlv_2= '::=' ( (lv_expression_3_0= ruleExpression ) ) ) ;
+    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:237:1: ruleRule returns [EObject current=null] : ( ( (lv_name_0_0= RULE_ID ) ) (otherlv_1= '[' ( (lv_count_2_0= RULE_ID ) ) otherlv_3= ']' )? otherlv_4= '::=' ( (lv_expression_5_0= ruleExpression ) ) ) ;
     public final EObject ruleRule() throws RecognitionException {
         EObject current = null;
 
         Token lv_name_0_0=null;
-        Token lv_count_1_0=null;
-        Token otherlv_2=null;
-        EObject lv_expression_3_0 = null;
+        Token otherlv_1=null;
+        Token lv_count_2_0=null;
+        Token otherlv_3=null;
+        Token otherlv_4=null;
+        EObject lv_expression_5_0 = null;
 
 
          enterRule(); 
             
         try {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:179:28: ( ( ( (lv_name_0_0= RULE_ID ) ) ( (lv_count_1_0= '*' ) )? otherlv_2= '::=' ( (lv_expression_3_0= ruleExpression ) ) ) )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:180:1: ( ( (lv_name_0_0= RULE_ID ) ) ( (lv_count_1_0= '*' ) )? otherlv_2= '::=' ( (lv_expression_3_0= ruleExpression ) ) )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:240:28: ( ( ( (lv_name_0_0= RULE_ID ) ) (otherlv_1= '[' ( (lv_count_2_0= RULE_ID ) ) otherlv_3= ']' )? otherlv_4= '::=' ( (lv_expression_5_0= ruleExpression ) ) ) )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:241:1: ( ( (lv_name_0_0= RULE_ID ) ) (otherlv_1= '[' ( (lv_count_2_0= RULE_ID ) ) otherlv_3= ']' )? otherlv_4= '::=' ( (lv_expression_5_0= ruleExpression ) ) )
             {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:180:1: ( ( (lv_name_0_0= RULE_ID ) ) ( (lv_count_1_0= '*' ) )? otherlv_2= '::=' ( (lv_expression_3_0= ruleExpression ) ) )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:180:2: ( (lv_name_0_0= RULE_ID ) ) ( (lv_count_1_0= '*' ) )? otherlv_2= '::=' ( (lv_expression_3_0= ruleExpression ) )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:241:1: ( ( (lv_name_0_0= RULE_ID ) ) (otherlv_1= '[' ( (lv_count_2_0= RULE_ID ) ) otherlv_3= ']' )? otherlv_4= '::=' ( (lv_expression_5_0= ruleExpression ) ) )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:241:2: ( (lv_name_0_0= RULE_ID ) ) (otherlv_1= '[' ( (lv_count_2_0= RULE_ID ) ) otherlv_3= ']' )? otherlv_4= '::=' ( (lv_expression_5_0= ruleExpression ) )
             {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:180:2: ( (lv_name_0_0= RULE_ID ) )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:181:1: (lv_name_0_0= RULE_ID )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:241:2: ( (lv_name_0_0= RULE_ID ) )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:242:1: (lv_name_0_0= RULE_ID )
             {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:181:1: (lv_name_0_0= RULE_ID )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:182:3: lv_name_0_0= RULE_ID
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:242:1: (lv_name_0_0= RULE_ID )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:243:3: lv_name_0_0= RULE_ID
             {
-            lv_name_0_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleRule346); 
+            lv_name_0_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleRule472); 
 
             			newLeafNode(lv_name_0_0, grammarAccess.getRuleAccess().getNameIDTerminalRuleCall_0_0()); 
             		
@@ -420,54 +560,72 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:198:2: ( (lv_count_1_0= '*' ) )?
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:259:2: (otherlv_1= '[' ( (lv_count_2_0= RULE_ID ) ) otherlv_3= ']' )?
             int alt2=2;
             int LA2_0 = input.LA(1);
 
-            if ( (LA2_0==12) ) {
+            if ( (LA2_0==13) ) {
                 alt2=1;
             }
             switch (alt2) {
                 case 1 :
-                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:199:1: (lv_count_1_0= '*' )
+                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:259:4: otherlv_1= '[' ( (lv_count_2_0= RULE_ID ) ) otherlv_3= ']'
                     {
-                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:199:1: (lv_count_1_0= '*' )
-                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:200:3: lv_count_1_0= '*'
-                    {
-                    lv_count_1_0=(Token)match(input,12,FOLLOW_12_in_ruleRule369); 
+                    otherlv_1=(Token)match(input,13,FOLLOW_13_in_ruleRule490); 
 
-                            newLeafNode(lv_count_1_0, grammarAccess.getRuleAccess().getCountAsteriskKeyword_1_0());
+                        	newLeafNode(otherlv_1, grammarAccess.getRuleAccess().getLeftSquareBracketKeyword_1_0());
                         
+                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:263:1: ( (lv_count_2_0= RULE_ID ) )
+                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:264:1: (lv_count_2_0= RULE_ID )
+                    {
+                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:264:1: (lv_count_2_0= RULE_ID )
+                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:265:3: lv_count_2_0= RULE_ID
+                    {
+                    lv_count_2_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleRule507); 
+
+                    			newLeafNode(lv_count_2_0, grammarAccess.getRuleAccess().getCountIDTerminalRuleCall_1_1_0()); 
+                    		
 
                     	        if (current==null) {
                     	            current = createModelElement(grammarAccess.getRuleRule());
                     	        }
-                           		setWithLastConsumed(current, "count", lv_count_1_0, "*");
+                           		setWithLastConsumed(
+                           			current, 
+                           			"count",
+                            		lv_count_2_0, 
+                            		"ID");
                     	    
 
                     }
 
 
                     }
+
+                    otherlv_3=(Token)match(input,14,FOLLOW_14_in_ruleRule524); 
+
+                        	newLeafNode(otherlv_3, grammarAccess.getRuleAccess().getRightSquareBracketKeyword_1_2());
+                        
+
+                    }
                     break;
 
             }
 
-            otherlv_2=(Token)match(input,13,FOLLOW_13_in_ruleRule395); 
+            otherlv_4=(Token)match(input,15,FOLLOW_15_in_ruleRule538); 
 
-                	newLeafNode(otherlv_2, grammarAccess.getRuleAccess().getColonColonEqualsSignKeyword_2());
+                	newLeafNode(otherlv_4, grammarAccess.getRuleAccess().getColonColonEqualsSignKeyword_2());
                 
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:217:1: ( (lv_expression_3_0= ruleExpression ) )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:218:1: (lv_expression_3_0= ruleExpression )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:289:1: ( (lv_expression_5_0= ruleExpression ) )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:290:1: (lv_expression_5_0= ruleExpression )
             {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:218:1: (lv_expression_3_0= ruleExpression )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:219:3: lv_expression_3_0= ruleExpression
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:290:1: (lv_expression_5_0= ruleExpression )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:291:3: lv_expression_5_0= ruleExpression
             {
              
             	        newCompositeNode(grammarAccess.getRuleAccess().getExpressionExpressionParserRuleCall_3_0()); 
             	    
-            pushFollow(FOLLOW_ruleExpression_in_ruleRule416);
-            lv_expression_3_0=ruleExpression();
+            pushFollow(FOLLOW_ruleExpression_in_ruleRule559);
+            lv_expression_5_0=ruleExpression();
 
             state._fsp--;
 
@@ -478,7 +636,7 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
                    		set(
                    			current, 
                    			"expression",
-                    		lv_expression_3_0, 
+                    		lv_expression_5_0, 
                     		"Expression");
             	        afterParserOrEnumRuleCall();
             	    
@@ -509,7 +667,7 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleExpression"
-    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:243:1: entryRuleExpression returns [EObject current=null] : iv_ruleExpression= ruleExpression EOF ;
+    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:315:1: entryRuleExpression returns [EObject current=null] : iv_ruleExpression= ruleExpression EOF ;
     public final EObject entryRuleExpression() throws RecognitionException {
         EObject current = null;
 
@@ -517,17 +675,17 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:244:2: (iv_ruleExpression= ruleExpression EOF )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:245:2: iv_ruleExpression= ruleExpression EOF
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:316:2: (iv_ruleExpression= ruleExpression EOF )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:317:2: iv_ruleExpression= ruleExpression EOF
             {
              newCompositeNode(grammarAccess.getExpressionRule()); 
-            pushFollow(FOLLOW_ruleExpression_in_entryRuleExpression452);
+            pushFollow(FOLLOW_ruleExpression_in_entryRuleExpression595);
             iv_ruleExpression=ruleExpression();
 
             state._fsp--;
 
              current =iv_ruleExpression; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleExpression462); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleExpression605); 
 
             }
 
@@ -545,7 +703,7 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleExpression"
-    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:252:1: ruleExpression returns [EObject current=null] : ( ( (lv_elements_0_0= ruleElement ) ) (otherlv_1= '|' ( (lv_elements_2_0= ruleElement ) ) )* ) ;
+    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:324:1: ruleExpression returns [EObject current=null] : ( ( (lv_elements_0_0= ruleElement ) ) (otherlv_1= '|' ( (lv_elements_2_0= ruleElement ) ) )* ) ;
     public final EObject ruleExpression() throws RecognitionException {
         EObject current = null;
 
@@ -558,22 +716,22 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:255:28: ( ( ( (lv_elements_0_0= ruleElement ) ) (otherlv_1= '|' ( (lv_elements_2_0= ruleElement ) ) )* ) )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:256:1: ( ( (lv_elements_0_0= ruleElement ) ) (otherlv_1= '|' ( (lv_elements_2_0= ruleElement ) ) )* )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:327:28: ( ( ( (lv_elements_0_0= ruleElement ) ) (otherlv_1= '|' ( (lv_elements_2_0= ruleElement ) ) )* ) )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:328:1: ( ( (lv_elements_0_0= ruleElement ) ) (otherlv_1= '|' ( (lv_elements_2_0= ruleElement ) ) )* )
             {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:256:1: ( ( (lv_elements_0_0= ruleElement ) ) (otherlv_1= '|' ( (lv_elements_2_0= ruleElement ) ) )* )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:256:2: ( (lv_elements_0_0= ruleElement ) ) (otherlv_1= '|' ( (lv_elements_2_0= ruleElement ) ) )*
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:328:1: ( ( (lv_elements_0_0= ruleElement ) ) (otherlv_1= '|' ( (lv_elements_2_0= ruleElement ) ) )* )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:328:2: ( (lv_elements_0_0= ruleElement ) ) (otherlv_1= '|' ( (lv_elements_2_0= ruleElement ) ) )*
             {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:256:2: ( (lv_elements_0_0= ruleElement ) )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:257:1: (lv_elements_0_0= ruleElement )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:328:2: ( (lv_elements_0_0= ruleElement ) )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:329:1: (lv_elements_0_0= ruleElement )
             {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:257:1: (lv_elements_0_0= ruleElement )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:258:3: lv_elements_0_0= ruleElement
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:329:1: (lv_elements_0_0= ruleElement )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:330:3: lv_elements_0_0= ruleElement
             {
              
             	        newCompositeNode(grammarAccess.getExpressionAccess().getElementsElementParserRuleCall_0_0()); 
             	    
-            pushFollow(FOLLOW_ruleElement_in_ruleExpression508);
+            pushFollow(FOLLOW_ruleElement_in_ruleExpression651);
             lv_elements_0_0=ruleElement();
 
             state._fsp--;
@@ -595,35 +753,35 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:274:2: (otherlv_1= '|' ( (lv_elements_2_0= ruleElement ) ) )*
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:346:2: (otherlv_1= '|' ( (lv_elements_2_0= ruleElement ) ) )*
             loop3:
             do {
                 int alt3=2;
                 int LA3_0 = input.LA(1);
 
-                if ( (LA3_0==14) ) {
+                if ( (LA3_0==16) ) {
                     alt3=1;
                 }
 
 
                 switch (alt3) {
             	case 1 :
-            	    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:274:4: otherlv_1= '|' ( (lv_elements_2_0= ruleElement ) )
+            	    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:346:4: otherlv_1= '|' ( (lv_elements_2_0= ruleElement ) )
             	    {
-            	    otherlv_1=(Token)match(input,14,FOLLOW_14_in_ruleExpression521); 
+            	    otherlv_1=(Token)match(input,16,FOLLOW_16_in_ruleExpression664); 
 
             	        	newLeafNode(otherlv_1, grammarAccess.getExpressionAccess().getVerticalLineKeyword_1_0());
             	        
-            	    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:278:1: ( (lv_elements_2_0= ruleElement ) )
-            	    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:279:1: (lv_elements_2_0= ruleElement )
+            	    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:350:1: ( (lv_elements_2_0= ruleElement ) )
+            	    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:351:1: (lv_elements_2_0= ruleElement )
             	    {
-            	    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:279:1: (lv_elements_2_0= ruleElement )
-            	    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:280:3: lv_elements_2_0= ruleElement
+            	    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:351:1: (lv_elements_2_0= ruleElement )
+            	    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:352:3: lv_elements_2_0= ruleElement
             	    {
             	     
             	    	        newCompositeNode(grammarAccess.getExpressionAccess().getElementsElementParserRuleCall_1_1_0()); 
             	    	    
-            	    pushFollow(FOLLOW_ruleElement_in_ruleExpression542);
+            	    pushFollow(FOLLOW_ruleElement_in_ruleExpression685);
             	    lv_elements_2_0=ruleElement();
 
             	    state._fsp--;
@@ -675,7 +833,7 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleElement"
-    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:304:1: entryRuleElement returns [EObject current=null] : iv_ruleElement= ruleElement EOF ;
+    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:376:1: entryRuleElement returns [EObject current=null] : iv_ruleElement= ruleElement EOF ;
     public final EObject entryRuleElement() throws RecognitionException {
         EObject current = null;
 
@@ -683,17 +841,17 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:305:2: (iv_ruleElement= ruleElement EOF )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:306:2: iv_ruleElement= ruleElement EOF
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:377:2: (iv_ruleElement= ruleElement EOF )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:378:2: iv_ruleElement= ruleElement EOF
             {
              newCompositeNode(grammarAccess.getElementRule()); 
-            pushFollow(FOLLOW_ruleElement_in_entryRuleElement580);
+            pushFollow(FOLLOW_ruleElement_in_entryRuleElement723);
             iv_ruleElement=ruleElement();
 
             state._fsp--;
 
              current =iv_ruleElement; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleElement590); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleElement733); 
 
             }
 
@@ -711,7 +869,7 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleElement"
-    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:313:1: ruleElement returns [EObject current=null] : ( (lv_terms_0_0= ruleTerm ) )+ ;
+    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:385:1: ruleElement returns [EObject current=null] : ( (lv_terms_0_0= ruleTerm ) )+ ;
     public final EObject ruleElement() throws RecognitionException {
         EObject current = null;
 
@@ -721,10 +879,10 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:316:28: ( ( (lv_terms_0_0= ruleTerm ) )+ )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:317:1: ( (lv_terms_0_0= ruleTerm ) )+
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:388:28: ( ( (lv_terms_0_0= ruleTerm ) )+ )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:389:1: ( (lv_terms_0_0= ruleTerm ) )+
             {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:317:1: ( (lv_terms_0_0= ruleTerm ) )+
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:389:1: ( (lv_terms_0_0= ruleTerm ) )+
             int cnt4=0;
             loop4:
             do {
@@ -734,7 +892,7 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
                 if ( (LA4_0==RULE_ID) ) {
                     int LA4_2 = input.LA(2);
 
-                    if ( (LA4_2==EOF||(LA4_2>=RULE_ID && LA4_2<=RULE_STRING)||LA4_2==14) ) {
+                    if ( (LA4_2==EOF||(LA4_2>=RULE_ID && LA4_2<=RULE_STRING)||LA4_2==16) ) {
                         alt4=1;
                     }
 
@@ -747,15 +905,15 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
                 switch (alt4) {
             	case 1 :
-            	    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:318:1: (lv_terms_0_0= ruleTerm )
+            	    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:390:1: (lv_terms_0_0= ruleTerm )
             	    {
-            	    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:318:1: (lv_terms_0_0= ruleTerm )
-            	    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:319:3: lv_terms_0_0= ruleTerm
+            	    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:390:1: (lv_terms_0_0= ruleTerm )
+            	    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:391:3: lv_terms_0_0= ruleTerm
             	    {
             	     
             	    	        newCompositeNode(grammarAccess.getElementAccess().getTermsTermParserRuleCall_0()); 
             	    	    
-            	    pushFollow(FOLLOW_ruleTerm_in_ruleElement635);
+            	    pushFollow(FOLLOW_ruleTerm_in_ruleElement778);
             	    lv_terms_0_0=ruleTerm();
 
             	    state._fsp--;
@@ -805,7 +963,7 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleTerm"
-    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:343:1: entryRuleTerm returns [EObject current=null] : iv_ruleTerm= ruleTerm EOF ;
+    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:415:1: entryRuleTerm returns [EObject current=null] : iv_ruleTerm= ruleTerm EOF ;
     public final EObject entryRuleTerm() throws RecognitionException {
         EObject current = null;
 
@@ -813,17 +971,17 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:344:2: (iv_ruleTerm= ruleTerm EOF )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:345:2: iv_ruleTerm= ruleTerm EOF
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:416:2: (iv_ruleTerm= ruleTerm EOF )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:417:2: iv_ruleTerm= ruleTerm EOF
             {
              newCompositeNode(grammarAccess.getTermRule()); 
-            pushFollow(FOLLOW_ruleTerm_in_entryRuleTerm671);
+            pushFollow(FOLLOW_ruleTerm_in_entryRuleTerm814);
             iv_ruleTerm=ruleTerm();
 
             state._fsp--;
 
              current =iv_ruleTerm; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleTerm681); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleTerm824); 
 
             }
 
@@ -841,7 +999,7 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleTerm"
-    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:352:1: ruleTerm returns [EObject current=null] : ( ( (lv_kConstr_0_0= ruleKeyConstr ) ) | ( (lv_rCall_1_0= ruleRuleCall ) ) ) ;
+    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:424:1: ruleTerm returns [EObject current=null] : ( ( (lv_kConstr_0_0= ruleKeyConstr ) ) | ( (lv_rCall_1_0= ruleRuleCall ) ) ) ;
     public final EObject ruleTerm() throws RecognitionException {
         EObject current = null;
 
@@ -853,10 +1011,10 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:355:28: ( ( ( (lv_kConstr_0_0= ruleKeyConstr ) ) | ( (lv_rCall_1_0= ruleRuleCall ) ) ) )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:356:1: ( ( (lv_kConstr_0_0= ruleKeyConstr ) ) | ( (lv_rCall_1_0= ruleRuleCall ) ) )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:427:28: ( ( ( (lv_kConstr_0_0= ruleKeyConstr ) ) | ( (lv_rCall_1_0= ruleRuleCall ) ) ) )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:428:1: ( ( (lv_kConstr_0_0= ruleKeyConstr ) ) | ( (lv_rCall_1_0= ruleRuleCall ) ) )
             {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:356:1: ( ( (lv_kConstr_0_0= ruleKeyConstr ) ) | ( (lv_rCall_1_0= ruleRuleCall ) ) )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:428:1: ( ( (lv_kConstr_0_0= ruleKeyConstr ) ) | ( (lv_rCall_1_0= ruleRuleCall ) ) )
             int alt5=2;
             int LA5_0 = input.LA(1);
 
@@ -874,18 +1032,18 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
             }
             switch (alt5) {
                 case 1 :
-                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:356:2: ( (lv_kConstr_0_0= ruleKeyConstr ) )
+                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:428:2: ( (lv_kConstr_0_0= ruleKeyConstr ) )
                     {
-                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:356:2: ( (lv_kConstr_0_0= ruleKeyConstr ) )
-                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:357:1: (lv_kConstr_0_0= ruleKeyConstr )
+                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:428:2: ( (lv_kConstr_0_0= ruleKeyConstr ) )
+                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:429:1: (lv_kConstr_0_0= ruleKeyConstr )
                     {
-                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:357:1: (lv_kConstr_0_0= ruleKeyConstr )
-                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:358:3: lv_kConstr_0_0= ruleKeyConstr
+                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:429:1: (lv_kConstr_0_0= ruleKeyConstr )
+                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:430:3: lv_kConstr_0_0= ruleKeyConstr
                     {
                      
                     	        newCompositeNode(grammarAccess.getTermAccess().getKConstrKeyConstrParserRuleCall_0_0()); 
                     	    
-                    pushFollow(FOLLOW_ruleKeyConstr_in_ruleTerm727);
+                    pushFollow(FOLLOW_ruleKeyConstr_in_ruleTerm870);
                     lv_kConstr_0_0=ruleKeyConstr();
 
                     state._fsp--;
@@ -911,18 +1069,18 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
                     }
                     break;
                 case 2 :
-                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:375:6: ( (lv_rCall_1_0= ruleRuleCall ) )
+                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:447:6: ( (lv_rCall_1_0= ruleRuleCall ) )
                     {
-                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:375:6: ( (lv_rCall_1_0= ruleRuleCall ) )
-                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:376:1: (lv_rCall_1_0= ruleRuleCall )
+                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:447:6: ( (lv_rCall_1_0= ruleRuleCall ) )
+                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:448:1: (lv_rCall_1_0= ruleRuleCall )
                     {
-                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:376:1: (lv_rCall_1_0= ruleRuleCall )
-                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:377:3: lv_rCall_1_0= ruleRuleCall
+                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:448:1: (lv_rCall_1_0= ruleRuleCall )
+                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:449:3: lv_rCall_1_0= ruleRuleCall
                     {
                      
                     	        newCompositeNode(grammarAccess.getTermAccess().getRCallRuleCallParserRuleCall_1_0()); 
                     	    
-                    pushFollow(FOLLOW_ruleRuleCall_in_ruleTerm754);
+                    pushFollow(FOLLOW_ruleRuleCall_in_ruleTerm897);
                     lv_rCall_1_0=ruleRuleCall();
 
                     state._fsp--;
@@ -968,7 +1126,7 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleKeyConstr"
-    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:401:1: entryRuleKeyConstr returns [EObject current=null] : iv_ruleKeyConstr= ruleKeyConstr EOF ;
+    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:473:1: entryRuleKeyConstr returns [EObject current=null] : iv_ruleKeyConstr= ruleKeyConstr EOF ;
     public final EObject entryRuleKeyConstr() throws RecognitionException {
         EObject current = null;
 
@@ -976,17 +1134,17 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:402:2: (iv_ruleKeyConstr= ruleKeyConstr EOF )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:403:2: iv_ruleKeyConstr= ruleKeyConstr EOF
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:474:2: (iv_ruleKeyConstr= ruleKeyConstr EOF )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:475:2: iv_ruleKeyConstr= ruleKeyConstr EOF
             {
              newCompositeNode(grammarAccess.getKeyConstrRule()); 
-            pushFollow(FOLLOW_ruleKeyConstr_in_entryRuleKeyConstr790);
+            pushFollow(FOLLOW_ruleKeyConstr_in_entryRuleKeyConstr933);
             iv_ruleKeyConstr=ruleKeyConstr();
 
             state._fsp--;
 
              current =iv_ruleKeyConstr; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleKeyConstr800); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleKeyConstr943); 
 
             }
 
@@ -1004,7 +1162,7 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleKeyConstr"
-    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:410:1: ruleKeyConstr returns [EObject current=null] : ( ( (lv_SChar_0_0= RULE_STRING ) ) (otherlv_1= '..' ( (lv_EChar_2_0= RULE_STRING ) ) )? ) ;
+    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:482:1: ruleKeyConstr returns [EObject current=null] : ( ( (lv_SChar_0_0= RULE_STRING ) ) (otherlv_1= '..' ( (lv_EChar_2_0= RULE_STRING ) ) )? ) ;
     public final EObject ruleKeyConstr() throws RecognitionException {
         EObject current = null;
 
@@ -1015,19 +1173,19 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:413:28: ( ( ( (lv_SChar_0_0= RULE_STRING ) ) (otherlv_1= '..' ( (lv_EChar_2_0= RULE_STRING ) ) )? ) )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:414:1: ( ( (lv_SChar_0_0= RULE_STRING ) ) (otherlv_1= '..' ( (lv_EChar_2_0= RULE_STRING ) ) )? )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:485:28: ( ( ( (lv_SChar_0_0= RULE_STRING ) ) (otherlv_1= '..' ( (lv_EChar_2_0= RULE_STRING ) ) )? ) )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:486:1: ( ( (lv_SChar_0_0= RULE_STRING ) ) (otherlv_1= '..' ( (lv_EChar_2_0= RULE_STRING ) ) )? )
             {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:414:1: ( ( (lv_SChar_0_0= RULE_STRING ) ) (otherlv_1= '..' ( (lv_EChar_2_0= RULE_STRING ) ) )? )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:414:2: ( (lv_SChar_0_0= RULE_STRING ) ) (otherlv_1= '..' ( (lv_EChar_2_0= RULE_STRING ) ) )?
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:486:1: ( ( (lv_SChar_0_0= RULE_STRING ) ) (otherlv_1= '..' ( (lv_EChar_2_0= RULE_STRING ) ) )? )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:486:2: ( (lv_SChar_0_0= RULE_STRING ) ) (otherlv_1= '..' ( (lv_EChar_2_0= RULE_STRING ) ) )?
             {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:414:2: ( (lv_SChar_0_0= RULE_STRING ) )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:415:1: (lv_SChar_0_0= RULE_STRING )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:486:2: ( (lv_SChar_0_0= RULE_STRING ) )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:487:1: (lv_SChar_0_0= RULE_STRING )
             {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:415:1: (lv_SChar_0_0= RULE_STRING )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:416:3: lv_SChar_0_0= RULE_STRING
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:487:1: (lv_SChar_0_0= RULE_STRING )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:488:3: lv_SChar_0_0= RULE_STRING
             {
-            lv_SChar_0_0=(Token)match(input,RULE_STRING,FOLLOW_RULE_STRING_in_ruleKeyConstr842); 
+            lv_SChar_0_0=(Token)match(input,RULE_STRING,FOLLOW_RULE_STRING_in_ruleKeyConstr985); 
 
             			newLeafNode(lv_SChar_0_0, grammarAccess.getKeyConstrAccess().getSCharSTRINGTerminalRuleCall_0_0()); 
             		
@@ -1047,28 +1205,28 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
             }
 
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:432:2: (otherlv_1= '..' ( (lv_EChar_2_0= RULE_STRING ) ) )?
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:504:2: (otherlv_1= '..' ( (lv_EChar_2_0= RULE_STRING ) ) )?
             int alt6=2;
             int LA6_0 = input.LA(1);
 
-            if ( (LA6_0==15) ) {
+            if ( (LA6_0==17) ) {
                 alt6=1;
             }
             switch (alt6) {
                 case 1 :
-                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:432:4: otherlv_1= '..' ( (lv_EChar_2_0= RULE_STRING ) )
+                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:504:4: otherlv_1= '..' ( (lv_EChar_2_0= RULE_STRING ) )
                     {
-                    otherlv_1=(Token)match(input,15,FOLLOW_15_in_ruleKeyConstr860); 
+                    otherlv_1=(Token)match(input,17,FOLLOW_17_in_ruleKeyConstr1003); 
 
                         	newLeafNode(otherlv_1, grammarAccess.getKeyConstrAccess().getFullStopFullStopKeyword_1_0());
                         
-                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:436:1: ( (lv_EChar_2_0= RULE_STRING ) )
-                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:437:1: (lv_EChar_2_0= RULE_STRING )
+                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:508:1: ( (lv_EChar_2_0= RULE_STRING ) )
+                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:509:1: (lv_EChar_2_0= RULE_STRING )
                     {
-                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:437:1: (lv_EChar_2_0= RULE_STRING )
-                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:438:3: lv_EChar_2_0= RULE_STRING
+                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:509:1: (lv_EChar_2_0= RULE_STRING )
+                    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:510:3: lv_EChar_2_0= RULE_STRING
                     {
-                    lv_EChar_2_0=(Token)match(input,RULE_STRING,FOLLOW_RULE_STRING_in_ruleKeyConstr877); 
+                    lv_EChar_2_0=(Token)match(input,RULE_STRING,FOLLOW_RULE_STRING_in_ruleKeyConstr1020); 
 
                     			newLeafNode(lv_EChar_2_0, grammarAccess.getKeyConstrAccess().getECharSTRINGTerminalRuleCall_1_1_0()); 
                     		
@@ -1115,7 +1273,7 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "entryRuleRuleCall"
-    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:462:1: entryRuleRuleCall returns [EObject current=null] : iv_ruleRuleCall= ruleRuleCall EOF ;
+    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:534:1: entryRuleRuleCall returns [EObject current=null] : iv_ruleRuleCall= ruleRuleCall EOF ;
     public final EObject entryRuleRuleCall() throws RecognitionException {
         EObject current = null;
 
@@ -1123,17 +1281,17 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
 
         try {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:463:2: (iv_ruleRuleCall= ruleRuleCall EOF )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:464:2: iv_ruleRuleCall= ruleRuleCall EOF
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:535:2: (iv_ruleRuleCall= ruleRuleCall EOF )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:536:2: iv_ruleRuleCall= ruleRuleCall EOF
             {
              newCompositeNode(grammarAccess.getRuleCallRule()); 
-            pushFollow(FOLLOW_ruleRuleCall_in_entryRuleRuleCall920);
+            pushFollow(FOLLOW_ruleRuleCall_in_entryRuleRuleCall1063);
             iv_ruleRuleCall=ruleRuleCall();
 
             state._fsp--;
 
              current =iv_ruleRuleCall; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleRuleCall930); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleRuleCall1073); 
 
             }
 
@@ -1151,7 +1309,7 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleRuleCall"
-    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:471:1: ruleRuleCall returns [EObject current=null] : ( (otherlv_0= RULE_ID ) ) ;
+    // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:543:1: ruleRuleCall returns [EObject current=null] : ( (otherlv_0= RULE_ID ) ) ;
     public final EObject ruleRuleCall() throws RecognitionException {
         EObject current = null;
 
@@ -1160,21 +1318,21 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
          enterRule(); 
             
         try {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:474:28: ( ( (otherlv_0= RULE_ID ) ) )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:475:1: ( (otherlv_0= RULE_ID ) )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:546:28: ( ( (otherlv_0= RULE_ID ) ) )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:547:1: ( (otherlv_0= RULE_ID ) )
             {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:475:1: ( (otherlv_0= RULE_ID ) )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:476:1: (otherlv_0= RULE_ID )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:547:1: ( (otherlv_0= RULE_ID ) )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:548:1: (otherlv_0= RULE_ID )
             {
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:476:1: (otherlv_0= RULE_ID )
-            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:477:3: otherlv_0= RULE_ID
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:548:1: (otherlv_0= RULE_ID )
+            // ../org.xtext.example.mydsl/src-gen/org/xtext/example/mydsl/parser/antlr/internal/InternalMyDsl.g:549:3: otherlv_0= RULE_ID
             {
 
             			if (current==null) {
             	            current = createModelElement(grammarAccess.getRuleCallRule());
             	        }
                     
-            otherlv_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleRuleCall974); 
+            otherlv_0=(Token)match(input,RULE_ID,FOLLOW_RULE_ID_in_ruleRuleCall1117); 
 
             		newLeafNode(otherlv_0, grammarAccess.getRuleCallAccess().getRefRuleCrossReference_0()); 
             	
@@ -1207,37 +1365,44 @@ public class InternalMyDslParser extends AbstractInternalAntlrParser {
 
     public static final BitSet FOLLOW_ruleModel_in_entryRuleModel75 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleModel85 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleGrammar_in_ruleModel131 = new BitSet(new long[]{0x0000000000000010L});
-    public static final BitSet FOLLOW_ruleRule_in_ruleModel152 = new BitSet(new long[]{0x0000000000000012L});
-    public static final BitSet FOLLOW_ruleGrammar_in_entryRuleGrammar189 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleGrammar199 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_11_in_ruleGrammar236 = new BitSet(new long[]{0x0000000000000010L});
-    public static final BitSet FOLLOW_RULE_ID_in_ruleGrammar253 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleRule_in_entryRuleRule294 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleRule304 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_ID_in_ruleRule346 = new BitSet(new long[]{0x0000000000003000L});
-    public static final BitSet FOLLOW_12_in_ruleRule369 = new BitSet(new long[]{0x0000000000002000L});
-    public static final BitSet FOLLOW_13_in_ruleRule395 = new BitSet(new long[]{0x0000000000000030L});
-    public static final BitSet FOLLOW_ruleExpression_in_ruleRule416 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleExpression_in_entryRuleExpression452 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleExpression462 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleElement_in_ruleExpression508 = new BitSet(new long[]{0x0000000000004002L});
-    public static final BitSet FOLLOW_14_in_ruleExpression521 = new BitSet(new long[]{0x0000000000000030L});
-    public static final BitSet FOLLOW_ruleElement_in_ruleExpression542 = new BitSet(new long[]{0x0000000000004002L});
-    public static final BitSet FOLLOW_ruleElement_in_entryRuleElement580 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleElement590 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleTerm_in_ruleElement635 = new BitSet(new long[]{0x0000000000000032L});
-    public static final BitSet FOLLOW_ruleTerm_in_entryRuleTerm671 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleTerm681 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleKeyConstr_in_ruleTerm727 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleRuleCall_in_ruleTerm754 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleKeyConstr_in_entryRuleKeyConstr790 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleKeyConstr800 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_STRING_in_ruleKeyConstr842 = new BitSet(new long[]{0x0000000000008002L});
-    public static final BitSet FOLLOW_15_in_ruleKeyConstr860 = new BitSet(new long[]{0x0000000000000020L});
-    public static final BitSet FOLLOW_RULE_STRING_in_ruleKeyConstr877 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleRuleCall_in_entryRuleRuleCall920 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleRuleCall930 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_ID_in_ruleRuleCall974 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleGrammar_in_ruleModel131 = new BitSet(new long[]{0x0000000000001000L});
+    public static final BitSet FOLLOW_ruleGenerate_in_ruleModel152 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_ruleRule_in_ruleModel173 = new BitSet(new long[]{0x0000000000000012L});
+    public static final BitSet FOLLOW_ruleGrammar_in_entryRuleGrammar210 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleGrammar220 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_11_in_ruleGrammar257 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_RULE_ID_in_ruleGrammar274 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleGenerate_in_entryRuleGenerate315 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleGenerate325 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_12_in_ruleGenerate362 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_RULE_ID_in_ruleGenerate379 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleRule_in_entryRuleRule420 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleRule430 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_ID_in_ruleRule472 = new BitSet(new long[]{0x000000000000A000L});
+    public static final BitSet FOLLOW_13_in_ruleRule490 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_RULE_ID_in_ruleRule507 = new BitSet(new long[]{0x0000000000004000L});
+    public static final BitSet FOLLOW_14_in_ruleRule524 = new BitSet(new long[]{0x0000000000008000L});
+    public static final BitSet FOLLOW_15_in_ruleRule538 = new BitSet(new long[]{0x0000000000000030L});
+    public static final BitSet FOLLOW_ruleExpression_in_ruleRule559 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleExpression_in_entryRuleExpression595 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleExpression605 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleElement_in_ruleExpression651 = new BitSet(new long[]{0x0000000000010002L});
+    public static final BitSet FOLLOW_16_in_ruleExpression664 = new BitSet(new long[]{0x0000000000000030L});
+    public static final BitSet FOLLOW_ruleElement_in_ruleExpression685 = new BitSet(new long[]{0x0000000000010002L});
+    public static final BitSet FOLLOW_ruleElement_in_entryRuleElement723 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleElement733 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleTerm_in_ruleElement778 = new BitSet(new long[]{0x0000000000000032L});
+    public static final BitSet FOLLOW_ruleTerm_in_entryRuleTerm814 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleTerm824 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleKeyConstr_in_ruleTerm870 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleRuleCall_in_ruleTerm897 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleKeyConstr_in_entryRuleKeyConstr933 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleKeyConstr943 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_STRING_in_ruleKeyConstr985 = new BitSet(new long[]{0x0000000000020002L});
+    public static final BitSet FOLLOW_17_in_ruleKeyConstr1003 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_RULE_STRING_in_ruleKeyConstr1020 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleRuleCall_in_entryRuleRuleCall1063 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleRuleCall1073 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_ID_in_ruleRuleCall1117 = new BitSet(new long[]{0x0000000000000002L});
 
 }
