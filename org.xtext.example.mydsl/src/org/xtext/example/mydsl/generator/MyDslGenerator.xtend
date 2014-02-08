@@ -16,9 +16,9 @@ class MyDslGenerator implements IGenerator {
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
 		for (m : resource.allContents.toIterable.filter(Model)) {
 			fsa.generateFile(m.gram.gname.toUpperCaseOnlyFirst + ".g4", m.compile)
-			fsa.generateFile("CountElements" + m.gram.gname.toUpperCaseOnlyFirst + ".dat", m.exportCountElements)
-			fsa.generateFile("Main.java",m.mainCompile);
-			fsa.generateFile("My"+m.gram.gname.toUpperCaseOnlyFirst+"Listener.java",m.listenerCompile);
+			fsa.generateFile("CountElements" + m.gram.gname.toUpperCaseOnlyFirst + ".dat", m.exportExtractElements)
+			fsa.generateFile("Main" + m.gram.gname.toUpperCaseOnlyFirst + ".java", m.mainCompile);
+			fsa.generateFile(m.gram.gname.toUpperCaseOnlyFirst + "Extractor.java", m.listenerCompile);
 		}
 	}
 
@@ -46,14 +46,14 @@ class MyDslGenerator implements IGenerator {
 	def bcompile(Expression exp) '''«FOR ele : exp.elements»«FOR t : ele.terms»«FOR k : t.KConstr»«IF !exp.elements.head.
 		equals(ele) && ele.terms.head.equals(t)»| «ENDIF»'«k.SChar»' «IF !k.EChar.nullOrEmpty».. '«k.EChar»' «ENDIF»«ENDFOR»«ENDFOR»«ENDFOR»'''
 
-	def exportCountElements(Model m) '''«FOR r : m.rules»«IF !r.count.nullOrEmpty»«r.name»
+	def exportExtractElements(Model m) '''«FOR r : m.rules»«IF !r.count.nullOrEmpty»«r.name»
 «ENDIF»«ENDFOR»'''
 
 	def toUpperCaseOnlyFirst(String s) {
 		s.substring(0, 1).toUpperCase + s.substring(1).toLowerCase;
 	}
-	
-	def mainCompile(Model m)'''package com.sample;
+
+	def mainCompile(Model m) '''package com.sample;
 
 import java.util.Arrays;
 
@@ -66,7 +66,7 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import parser.«m.gram.gname.toUpperCaseOnlyFirst»Lexer;
 import parser.«m.gram.gname.toUpperCaseOnlyFirst»Parser;
 
-public class Main {
+public class Main«m.gram.gname.toUpperCaseOnlyFirst» {
 
 	/**
 	 * @param args
@@ -79,7 +79,7 @@ public class Main {
 		«m.gram.gname.toUpperCaseOnlyFirst»Parser parser = new «m.gram.gname.toUpperCaseOnlyFirst»Parser(tokens);
 		ParseTreeWalker walker = new ParseTreeWalker();
 
-		My«m.gram.gname.toUpperCaseOnlyFirst»Listener myListener = new My«m.gram.gname.toUpperCaseOnlyFirst»Listener(parser);
+		«m.gram.gname.toUpperCaseOnlyFirst»Extractor extractor = new «m.gram.gname.toUpperCaseOnlyFirst»Extractor(parser);
 
 		// Parse code and generate a parse tree
 		ParserRuleContext tree = parser.translation_unit();
@@ -96,8 +96,8 @@ public class Main {
 }
 	
 	'''
-	
-	def listenerCompile(Model m)'''package com.sample;
+
+	def listenerCompile(Model m) '''package com.sample;
 
 import java.io.*;
 import java.util.*;
@@ -111,12 +111,12 @@ import parser.«m.gram.gname.toUpperCaseOnlyFirst»BaseListener;
 import parser.«m.gram.gname.toUpperCaseOnlyFirst»Lexer;
 import parser.«m.gram.gname.toUpperCaseOnlyFirst»Parser;
 
-public class My«m.gram.gname.toUpperCaseOnlyFirst»Listener extends «m.gram.gname.toUpperCaseOnlyFirst»BaseListener {
+public class «m.gram.gname.toUpperCaseOnlyFirst»Extractor extends «m.gram.gname.toUpperCaseOnlyFirst»BaseListener {
 	private «m.gram.gname.toUpperCaseOnlyFirst»Parser _parser;
 	private HashMap<String, Integer> _map;
 	private Set<String> extractElementSet;
 
-	public My«m.gram.gname.toUpperCaseOnlyFirst»Listener(«m.gram.gname.toUpperCaseOnlyFirst»Parser parser) {
+	public «m.gram.gname.toUpperCaseOnlyFirst»Extractor(«m.gram.gname.toUpperCaseOnlyFirst»Parser parser) {
 		_parser = parser;
 		_map = new HashMap<String, Integer>();
 		extractElementSet = new HashSet<String>();

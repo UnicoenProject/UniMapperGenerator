@@ -42,17 +42,21 @@ public class MyDslGenerator implements IGenerator {
         String _upperCaseOnlyFirst_1 = this.toUpperCaseOnlyFirst(_gname_1);
         String _plus_1 = ("CountElements" + _upperCaseOnlyFirst_1);
         String _plus_2 = (_plus_1 + ".dat");
-        CharSequence _exportCountElements = this.exportCountElements(m);
-        fsa.generateFile(_plus_2, _exportCountElements);
-        CharSequence _mainCompile = this.mainCompile(m);
-        fsa.generateFile("Main.java", _mainCompile);
+        CharSequence _exportExtractElements = this.exportExtractElements(m);
+        fsa.generateFile(_plus_2, _exportExtractElements);
         Grammar _gram_2 = m.getGram();
         String _gname_2 = _gram_2.getGname();
         String _upperCaseOnlyFirst_2 = this.toUpperCaseOnlyFirst(_gname_2);
-        String _plus_3 = ("My" + _upperCaseOnlyFirst_2);
-        String _plus_4 = (_plus_3 + "Listener.java");
+        String _plus_3 = ("Main" + _upperCaseOnlyFirst_2);
+        String _plus_4 = (_plus_3 + ".java");
+        CharSequence _mainCompile = this.mainCompile(m);
+        fsa.generateFile(_plus_4, _mainCompile);
+        Grammar _gram_3 = m.getGram();
+        String _gname_3 = _gram_3.getGname();
+        String _upperCaseOnlyFirst_3 = this.toUpperCaseOnlyFirst(_gname_3);
+        String _plus_5 = (_upperCaseOnlyFirst_3 + "Extractor.java");
         CharSequence _listenerCompile = this.listenerCompile(m);
-        fsa.generateFile(_plus_4, _listenerCompile);
+        fsa.generateFile(_plus_5, _listenerCompile);
       }
     }
   }
@@ -231,7 +235,7 @@ public class MyDslGenerator implements IGenerator {
     return _builder;
   }
   
-  public CharSequence exportCountElements(final Model m) {
+  public CharSequence exportExtractElements(final Model m) {
     StringConcatenation _builder = new StringConcatenation();
     {
       EList<Rule> _rules = m.getRules();
@@ -294,8 +298,13 @@ public class MyDslGenerator implements IGenerator {
     _builder.append("Parser;");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
-    _builder.append("public class Main {");
-    _builder.newLine();
+    _builder.append("public class Main");
+    Grammar _gram_2 = m.getGram();
+    String _gname_2 = _gram_2.getGname();
+    String _upperCaseOnlyFirst_2 = this.toUpperCaseOnlyFirst(_gname_2);
+    _builder.append(_upperCaseOnlyFirst_2, "");
+    _builder.append(" {");
+    _builder.newLineIfNotEmpty();
     _builder.newLine();
     _builder.append("\t");
     _builder.append("/**");
@@ -316,30 +325,30 @@ public class MyDslGenerator implements IGenerator {
     _builder.append("CharStream input = new ANTLRInputStream(code);");
     _builder.newLine();
     _builder.append("\t\t");
-    Grammar _gram_2 = m.getGram();
-    String _gname_2 = _gram_2.getGname();
-    String _upperCaseOnlyFirst_2 = this.toUpperCaseOnlyFirst(_gname_2);
-    _builder.append(_upperCaseOnlyFirst_2, "		");
-    _builder.append("Lexer lexer = new ");
     Grammar _gram_3 = m.getGram();
     String _gname_3 = _gram_3.getGname();
     String _upperCaseOnlyFirst_3 = this.toUpperCaseOnlyFirst(_gname_3);
     _builder.append(_upperCaseOnlyFirst_3, "		");
+    _builder.append("Lexer lexer = new ");
+    Grammar _gram_4 = m.getGram();
+    String _gname_4 = _gram_4.getGname();
+    String _upperCaseOnlyFirst_4 = this.toUpperCaseOnlyFirst(_gname_4);
+    _builder.append(_upperCaseOnlyFirst_4, "		");
     _builder.append("Lexer(input);");
     _builder.newLineIfNotEmpty();
     _builder.append("\t\t");
     _builder.append("CommonTokenStream tokens = new CommonTokenStream(lexer);");
     _builder.newLine();
     _builder.append("\t\t");
-    Grammar _gram_4 = m.getGram();
-    String _gname_4 = _gram_4.getGname();
-    String _upperCaseOnlyFirst_4 = this.toUpperCaseOnlyFirst(_gname_4);
-    _builder.append(_upperCaseOnlyFirst_4, "		");
-    _builder.append("Parser parser = new ");
     Grammar _gram_5 = m.getGram();
     String _gname_5 = _gram_5.getGname();
     String _upperCaseOnlyFirst_5 = this.toUpperCaseOnlyFirst(_gname_5);
     _builder.append(_upperCaseOnlyFirst_5, "		");
+    _builder.append("Parser parser = new ");
+    Grammar _gram_6 = m.getGram();
+    String _gname_6 = _gram_6.getGname();
+    String _upperCaseOnlyFirst_6 = this.toUpperCaseOnlyFirst(_gname_6);
+    _builder.append(_upperCaseOnlyFirst_6, "		");
     _builder.append("Parser(tokens);");
     _builder.newLineIfNotEmpty();
     _builder.append("\t\t");
@@ -347,17 +356,16 @@ public class MyDslGenerator implements IGenerator {
     _builder.newLine();
     _builder.newLine();
     _builder.append("\t\t");
-    _builder.append("My");
-    Grammar _gram_6 = m.getGram();
-    String _gname_6 = _gram_6.getGname();
-    String _upperCaseOnlyFirst_6 = this.toUpperCaseOnlyFirst(_gname_6);
-    _builder.append(_upperCaseOnlyFirst_6, "		");
-    _builder.append("Listener myListener = new My");
     Grammar _gram_7 = m.getGram();
     String _gname_7 = _gram_7.getGname();
     String _upperCaseOnlyFirst_7 = this.toUpperCaseOnlyFirst(_gname_7);
     _builder.append(_upperCaseOnlyFirst_7, "		");
-    _builder.append("Listener(parser);");
+    _builder.append("Extractor extractor = new ");
+    Grammar _gram_8 = m.getGram();
+    String _gname_8 = _gram_8.getGname();
+    String _upperCaseOnlyFirst_8 = this.toUpperCaseOnlyFirst(_gname_8);
+    _builder.append(_upperCaseOnlyFirst_8, "		");
+    _builder.append("Extractor(parser);");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
     _builder.append("\t\t");
@@ -438,12 +446,12 @@ public class MyDslGenerator implements IGenerator {
     _builder.append("Parser;");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
-    _builder.append("public class My");
+    _builder.append("public class ");
     Grammar _gram_3 = m.getGram();
     String _gname_3 = _gram_3.getGname();
     String _upperCaseOnlyFirst_3 = this.toUpperCaseOnlyFirst(_gname_3);
     _builder.append(_upperCaseOnlyFirst_3, "");
-    _builder.append("Listener extends ");
+    _builder.append("Extractor extends ");
     Grammar _gram_4 = m.getGram();
     String _gname_4 = _gram_4.getGname();
     String _upperCaseOnlyFirst_4 = this.toUpperCaseOnlyFirst(_gname_4);
@@ -466,12 +474,12 @@ public class MyDslGenerator implements IGenerator {
     _builder.newLine();
     _builder.newLine();
     _builder.append("\t");
-    _builder.append("public My");
+    _builder.append("public ");
     Grammar _gram_6 = m.getGram();
     String _gname_6 = _gram_6.getGname();
     String _upperCaseOnlyFirst_6 = this.toUpperCaseOnlyFirst(_gname_6);
     _builder.append(_upperCaseOnlyFirst_6, "	");
-    _builder.append("Listener(");
+    _builder.append("Extractor(");
     Grammar _gram_7 = m.getGram();
     String _gname_7 = _gram_7.getGname();
     String _upperCaseOnlyFirst_7 = this.toUpperCaseOnlyFirst(_gname_7);
