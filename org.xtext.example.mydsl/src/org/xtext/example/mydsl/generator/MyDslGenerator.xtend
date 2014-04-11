@@ -118,18 +118,8 @@ public class «m.gram.gname.toUpperCaseOnlyFirst»Extractor extends «m.gram.gna
 		_map = new HashMap<String, Integer>();
 		extractElementSet = new HashSet<String>();
 		File countElementsFile = new File("dat\\CountElements«m.gram.gname.toUpperCaseOnlyFirst».dat");
-		«FOR r:m.rules»«IF !r.count.nullOrEmpty»extractElementSet.add(«r.name»);
+		«FOR r:m.rules»«IF !r.count.nullOrEmpty»extractElementSet.add("«r.name»");
 		«ENDIF»«ENDFOR»
-		try {
-			Scanner scanner = new Scanner(countElementsFile);
-			while (scanner.hasNext()) {
-				String element = scanner.next();
-				extractElementSet.add(element);
-			}
-			scanner.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public void showTokenCounts() {

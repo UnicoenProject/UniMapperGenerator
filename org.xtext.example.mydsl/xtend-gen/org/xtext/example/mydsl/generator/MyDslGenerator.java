@@ -503,45 +503,15 @@ public class MyDslGenerator implements IGenerator {
           boolean _isNullOrEmpty = IterableExtensions.isNullOrEmpty(_count);
           boolean _not = (!_isNullOrEmpty);
           if (_not) {
-            _builder.append("extractElementSet.add(");
+            _builder.append("extractElementSet.add(\"");
             String _name = r.getName();
             _builder.append(_name, "		");
-            _builder.append(");");
+            _builder.append("\");");
             _builder.newLineIfNotEmpty();
           }
         }
       }
     }
-    _builder.append("\t\t");
-    _builder.append("try {");
-    _builder.newLine();
-    _builder.append("\t\t\t");
-    _builder.append("Scanner scanner = new Scanner(countElementsFile);");
-    _builder.newLine();
-    _builder.append("\t\t\t");
-    _builder.append("while (scanner.hasNext()) {");
-    _builder.newLine();
-    _builder.append("\t\t\t\t");
-    _builder.append("String element = scanner.next();");
-    _builder.newLine();
-    _builder.append("\t\t\t\t");
-    _builder.append("extractElementSet.add(element);");
-    _builder.newLine();
-    _builder.append("\t\t\t");
-    _builder.append("}");
-    _builder.newLine();
-    _builder.append("\t\t\t");
-    _builder.append("scanner.close();");
-    _builder.newLine();
-    _builder.append("\t\t");
-    _builder.append("} catch (FileNotFoundException e) {");
-    _builder.newLine();
-    _builder.append("\t\t\t");
-    _builder.append("e.printStackTrace();");
-    _builder.newLine();
-    _builder.append("\t\t");
-    _builder.append("}");
-    _builder.newLine();
     _builder.append("\t");
     _builder.append("}");
     _builder.newLine();
