@@ -241,8 +241,8 @@ public class MyDslGenerator implements IGenerator {
       EList<Rule> _rules = m.getRules();
       for(final Rule r : _rules) {
         {
-          String _count = r.getCount();
-          boolean _isNullOrEmpty = StringExtensions.isNullOrEmpty(_count);
+          EList<String> _count = r.getCount();
+          boolean _isNullOrEmpty = IterableExtensions.isNullOrEmpty(_count);
           boolean _not = (!_isNullOrEmpty);
           if (_not) {
             String _name = r.getName();
@@ -305,15 +305,6 @@ public class MyDslGenerator implements IGenerator {
     _builder.append(_upperCaseOnlyFirst_2, "");
     _builder.append(" {");
     _builder.newLineIfNotEmpty();
-    _builder.newLine();
-    _builder.append("\t");
-    _builder.append("/**");
-    _builder.newLine();
-    _builder.append("\t ");
-    _builder.append("* @param args");
-    _builder.newLine();
-    _builder.append("\t ");
-    _builder.append("*/");
     _builder.newLine();
     _builder.append("\t");
     _builder.append("public static void main(String[] args) {");
@@ -383,7 +374,7 @@ public class MyDslGenerator implements IGenerator {
     _builder.newLine();
     _builder.newLine();
     _builder.append("\t\t");
-    _builder.append("// Show PM counts");
+    _builder.append("// Show token counts");
     _builder.newLine();
     _builder.append("\t\t");
     _builder.append("myListener.showTokenCounts();");
@@ -503,6 +494,24 @@ public class MyDslGenerator implements IGenerator {
     _builder.append(_upperCaseOnlyFirst_8, "		");
     _builder.append(".dat\");");
     _builder.newLineIfNotEmpty();
+    _builder.append("\t\t");
+    {
+      EList<Rule> _rules = m.getRules();
+      for(final Rule r : _rules) {
+        {
+          EList<String> _count = r.getCount();
+          boolean _isNullOrEmpty = IterableExtensions.isNullOrEmpty(_count);
+          boolean _not = (!_isNullOrEmpty);
+          if (_not) {
+            _builder.append("extractElementSet.add(");
+            String _name = r.getName();
+            _builder.append(_name, "		");
+            _builder.append(");");
+            _builder.newLineIfNotEmpty();
+          }
+        }
+      }
+    }
     _builder.append("\t\t");
     _builder.append("try {");
     _builder.newLine();

@@ -41,15 +41,6 @@ public interface MyDslFactory extends EFactory
   Grammar createGrammar();
 
   /**
-   * Returns a new object of class '<em>Generate</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>Generate</em>'.
-   * @generated
-   */
-  Generate createGenerate();
-
-  /**
    * Returns a new object of class '<em>Rule</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->

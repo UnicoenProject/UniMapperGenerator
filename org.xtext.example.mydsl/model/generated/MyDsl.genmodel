@@ -9,14 +9,10 @@
       fileExtensions="mydsl" ecorePackage="MyDsl.ecore#/">
     <genClasses ecoreClass="MyDsl.ecore#//Model">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MyDsl.ecore#//Model/gram"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MyDsl.ecore#//Model/gen"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MyDsl.ecore#//Model/rules"/>
     </genClasses>
     <genClasses ecoreClass="MyDsl.ecore#//Grammar">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MyDsl.ecore#//Grammar/gname"/>
-    </genClasses>
-    <genClasses ecoreClass="MyDsl.ecore#//Generate">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MyDsl.ecore#//Generate/genetool"/>
     </genClasses>
     <genClasses ecoreClass="MyDsl.ecore#//Rule">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MyDsl.ecore#//Rule/name"/>

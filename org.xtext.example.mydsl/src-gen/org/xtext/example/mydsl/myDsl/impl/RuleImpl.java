@@ -2,14 +2,20 @@
  */
 package org.xtext.example.mydsl.myDsl.impl;
 
+import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+
+import org.eclipse.emf.ecore.util.EDataTypeEList;
 
 import org.xtext.example.mydsl.myDsl.Expression;
 import org.xtext.example.mydsl.myDsl.MyDslPackage;
@@ -53,24 +59,14 @@ public class RuleImpl extends MinimalEObjectImpl.Container implements Rule
   protected String name = NAME_EDEFAULT;
 
   /**
-   * The default value of the '{@link #getCount() <em>Count</em>}' attribute.
+   * The cached value of the '{@link #getCount() <em>Count</em>}' attribute list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #getCount()
    * @generated
    * @ordered
    */
-  protected static final String COUNT_EDEFAULT = null;
-
-  /**
-   * The cached value of the '{@link #getCount() <em>Count</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getCount()
-   * @generated
-   * @ordered
-   */
-  protected String count = COUNT_EDEFAULT;
+  protected EList<String> count;
 
   /**
    * The cached value of the '{@link #getExpression() <em>Expression</em>}' containment reference.
@@ -131,22 +127,13 @@ public class RuleImpl extends MinimalEObjectImpl.Container implements Rule
    * <!-- end-user-doc -->
    * @generated
    */
-  public String getCount()
+  public EList<String> getCount()
   {
+    if (count == null)
+    {
+      count = new EDataTypeEList<String>(String.class, this, MyDslPackage.RULE__COUNT);
+    }
     return count;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setCount(String newCount)
-  {
-    String oldCount = count;
-    count = newCount;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, MyDslPackage.RULE__COUNT, oldCount, count));
   }
 
   /**
@@ -238,6 +225,7 @@ public class RuleImpl extends MinimalEObjectImpl.Container implements Rule
    * <!-- end-user-doc -->
    * @generated
    */
+  @SuppressWarnings("unchecked")
   @Override
   public void eSet(int featureID, Object newValue)
   {
@@ -247,7 +235,8 @@ public class RuleImpl extends MinimalEObjectImpl.Container implements Rule
         setName((String)newValue);
         return;
       case MyDslPackage.RULE__COUNT:
-        setCount((String)newValue);
+        getCount().clear();
+        getCount().addAll((Collection<? extends String>)newValue);
         return;
       case MyDslPackage.RULE__EXPRESSION:
         setExpression((Expression)newValue);
@@ -270,7 +259,7 @@ public class RuleImpl extends MinimalEObjectImpl.Container implements Rule
         setName(NAME_EDEFAULT);
         return;
       case MyDslPackage.RULE__COUNT:
-        setCount(COUNT_EDEFAULT);
+        getCount().clear();
         return;
       case MyDslPackage.RULE__EXPRESSION:
         setExpression((Expression)null);
@@ -292,7 +281,7 @@ public class RuleImpl extends MinimalEObjectImpl.Container implements Rule
       case MyDslPackage.RULE__NAME:
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
       case MyDslPackage.RULE__COUNT:
-        return COUNT_EDEFAULT == null ? count != null : !COUNT_EDEFAULT.equals(count);
+        return count != null && !count.isEmpty();
       case MyDslPackage.RULE__EXPRESSION:
         return expression != null;
     }

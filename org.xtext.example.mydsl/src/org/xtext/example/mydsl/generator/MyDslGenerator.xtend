@@ -68,9 +68,6 @@ import parser.«m.gram.gname.toUpperCaseOnlyFirst»Parser;
 
 public class Main«m.gram.gname.toUpperCaseOnlyFirst» {
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
 		String code = "int m(v){int a = 0; if(i==0) a++;}";
 		CharStream input = new ANTLRInputStream(code);
@@ -87,7 +84,7 @@ public class Main«m.gram.gname.toUpperCaseOnlyFirst» {
 		// Scan the parse tree
 		walker.walk(myListener, tree);
 
-		// Show PM counts
+		// Show token counts
 		myListener.showTokenCounts();
 
 		// Show Complexity
@@ -121,6 +118,8 @@ public class «m.gram.gname.toUpperCaseOnlyFirst»Extractor extends «m.gram.gna
 		_map = new HashMap<String, Integer>();
 		extractElementSet = new HashSet<String>();
 		File countElementsFile = new File("dat\\CountElements«m.gram.gname.toUpperCaseOnlyFirst».dat");
+		«FOR r:m.rules»«IF !r.count.nullOrEmpty»extractElementSet.add(«r.name»);
+		«ENDIF»«ENDFOR»
 		try {
 			Scanner scanner = new Scanner(countElementsFile);
 			while (scanner.hasNext()) {

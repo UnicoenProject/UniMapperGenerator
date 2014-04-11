@@ -2,6 +2,8 @@
  */
 package org.xtext.example.mydsl.myDsl;
 
+import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -51,30 +53,20 @@ public interface Rule extends EObject
   void setName(String value);
 
   /**
-   * Returns the value of the '<em><b>Count</b></em>' attribute.
+   * Returns the value of the '<em><b>Count</b></em>' attribute list.
+   * The list contents are of type {@link java.lang.String}.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Count</em>' attribute isn't clear,
+   * If the meaning of the '<em>Count</em>' attribute list isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Count</em>' attribute.
-   * @see #setCount(String)
+   * @return the value of the '<em>Count</em>' attribute list.
    * @see org.xtext.example.mydsl.myDsl.MyDslPackage#getRule_Count()
-   * @model
+   * @model unique="false"
    * @generated
    */
-  String getCount();
-
-  /**
-   * Sets the value of the '{@link org.xtext.example.mydsl.myDsl.Rule#getCount <em>Count</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Count</em>' attribute.
-   * @see #getCount()
-   * @generated
-   */
-  void setCount(String value);
+  EList<String> getCount();
 
   /**
    * Returns the value of the '<em><b>Expression</b></em>' containment reference.

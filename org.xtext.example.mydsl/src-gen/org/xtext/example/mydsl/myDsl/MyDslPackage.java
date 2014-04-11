@@ -76,22 +76,13 @@ public interface MyDslPackage extends EPackage
   int MODEL__GRAM = 0;
 
   /**
-   * The feature id for the '<em><b>Gen</b></em>' containment reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int MODEL__GEN = 1;
-
-  /**
    * The feature id for the '<em><b>Rules</b></em>' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int MODEL__RULES = 2;
+  int MODEL__RULES = 1;
 
   /**
    * The number of structural features of the '<em>Model</em>' class.
@@ -100,7 +91,7 @@ public interface MyDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int MODEL_FEATURE_COUNT = 3;
+  int MODEL_FEATURE_COUNT = 2;
 
   /**
    * The meta object id for the '{@link org.xtext.example.mydsl.myDsl.impl.GrammarImpl <em>Grammar</em>}' class.
@@ -131,34 +122,6 @@ public interface MyDslPackage extends EPackage
   int GRAMMAR_FEATURE_COUNT = 1;
 
   /**
-   * The meta object id for the '{@link org.xtext.example.mydsl.myDsl.impl.GenerateImpl <em>Generate</em>}' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see org.xtext.example.mydsl.myDsl.impl.GenerateImpl
-   * @see org.xtext.example.mydsl.myDsl.impl.MyDslPackageImpl#getGenerate()
-   * @generated
-   */
-  int GENERATE = 2;
-
-  /**
-   * The feature id for the '<em><b>Genetool</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int GENERATE__GENETOOL = 0;
-
-  /**
-   * The number of structural features of the '<em>Generate</em>' class.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int GENERATE_FEATURE_COUNT = 1;
-
-  /**
    * The meta object id for the '{@link org.xtext.example.mydsl.myDsl.impl.RuleImpl <em>Rule</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -166,7 +129,7 @@ public interface MyDslPackage extends EPackage
    * @see org.xtext.example.mydsl.myDsl.impl.MyDslPackageImpl#getRule()
    * @generated
    */
-  int RULE = 3;
+  int RULE = 2;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -178,7 +141,7 @@ public interface MyDslPackage extends EPackage
   int RULE__NAME = 0;
 
   /**
-   * The feature id for the '<em><b>Count</b></em>' attribute.
+   * The feature id for the '<em><b>Count</b></em>' attribute list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
@@ -212,7 +175,7 @@ public interface MyDslPackage extends EPackage
    * @see org.xtext.example.mydsl.myDsl.impl.MyDslPackageImpl#getExpression()
    * @generated
    */
-  int EXPRESSION = 4;
+  int EXPRESSION = 3;
 
   /**
    * The feature id for the '<em><b>Elements</b></em>' containment reference list.
@@ -240,7 +203,7 @@ public interface MyDslPackage extends EPackage
    * @see org.xtext.example.mydsl.myDsl.impl.MyDslPackageImpl#getElement()
    * @generated
    */
-  int ELEMENT = 5;
+  int ELEMENT = 4;
 
   /**
    * The feature id for the '<em><b>Terms</b></em>' containment reference list.
@@ -268,7 +231,7 @@ public interface MyDslPackage extends EPackage
    * @see org.xtext.example.mydsl.myDsl.impl.MyDslPackageImpl#getTerm()
    * @generated
    */
-  int TERM = 6;
+  int TERM = 5;
 
   /**
    * The feature id for the '<em><b>KConstr</b></em>' containment reference list.
@@ -305,7 +268,7 @@ public interface MyDslPackage extends EPackage
    * @see org.xtext.example.mydsl.myDsl.impl.MyDslPackageImpl#getKeyConstr()
    * @generated
    */
-  int KEY_CONSTR = 7;
+  int KEY_CONSTR = 6;
 
   /**
    * The feature id for the '<em><b>SChar</b></em>' attribute.
@@ -342,7 +305,7 @@ public interface MyDslPackage extends EPackage
    * @see org.xtext.example.mydsl.myDsl.impl.MyDslPackageImpl#getRuleCall()
    * @generated
    */
-  int RULE_CALL = 8;
+  int RULE_CALL = 7;
 
   /**
    * The feature id for the '<em><b>Ref</b></em>' reference.
@@ -385,17 +348,6 @@ public interface MyDslPackage extends EPackage
   EReference getModel_Gram();
 
   /**
-   * Returns the meta object for the containment reference '{@link org.xtext.example.mydsl.myDsl.Model#getGen <em>Gen</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the containment reference '<em>Gen</em>'.
-   * @see org.xtext.example.mydsl.myDsl.Model#getGen()
-   * @see #getModel()
-   * @generated
-   */
-  EReference getModel_Gen();
-
-  /**
    * Returns the meta object for the containment reference list '{@link org.xtext.example.mydsl.myDsl.Model#getRules <em>Rules</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -428,27 +380,6 @@ public interface MyDslPackage extends EPackage
   EAttribute getGrammar_Gname();
 
   /**
-   * Returns the meta object for class '{@link org.xtext.example.mydsl.myDsl.Generate <em>Generate</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for class '<em>Generate</em>'.
-   * @see org.xtext.example.mydsl.myDsl.Generate
-   * @generated
-   */
-  EClass getGenerate();
-
-  /**
-   * Returns the meta object for the attribute '{@link org.xtext.example.mydsl.myDsl.Generate#getGenetool <em>Genetool</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Genetool</em>'.
-   * @see org.xtext.example.mydsl.myDsl.Generate#getGenetool()
-   * @see #getGenerate()
-   * @generated
-   */
-  EAttribute getGenerate_Genetool();
-
-  /**
    * Returns the meta object for class '{@link org.xtext.example.mydsl.myDsl.Rule <em>Rule</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -470,10 +401,10 @@ public interface MyDslPackage extends EPackage
   EAttribute getRule_Name();
 
   /**
-   * Returns the meta object for the attribute '{@link org.xtext.example.mydsl.myDsl.Rule#getCount <em>Count</em>}'.
+   * Returns the meta object for the attribute list '{@link org.xtext.example.mydsl.myDsl.Rule#getCount <em>Count</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Count</em>'.
+   * @return the meta object for the attribute list '<em>Count</em>'.
    * @see org.xtext.example.mydsl.myDsl.Rule#getCount()
    * @see #getRule()
    * @generated
@@ -660,14 +591,6 @@ public interface MyDslPackage extends EPackage
     EReference MODEL__GRAM = eINSTANCE.getModel_Gram();
 
     /**
-     * The meta object literal for the '<em><b>Gen</b></em>' containment reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference MODEL__GEN = eINSTANCE.getModel_Gen();
-
-    /**
      * The meta object literal for the '<em><b>Rules</b></em>' containment reference list feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -694,24 +617,6 @@ public interface MyDslPackage extends EPackage
     EAttribute GRAMMAR__GNAME = eINSTANCE.getGrammar_Gname();
 
     /**
-     * The meta object literal for the '{@link org.xtext.example.mydsl.myDsl.impl.GenerateImpl <em>Generate</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see org.xtext.example.mydsl.myDsl.impl.GenerateImpl
-     * @see org.xtext.example.mydsl.myDsl.impl.MyDslPackageImpl#getGenerate()
-     * @generated
-     */
-    EClass GENERATE = eINSTANCE.getGenerate();
-
-    /**
-     * The meta object literal for the '<em><b>Genetool</b></em>' attribute feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EAttribute GENERATE__GENETOOL = eINSTANCE.getGenerate_Genetool();
-
-    /**
      * The meta object literal for the '{@link org.xtext.example.mydsl.myDsl.impl.RuleImpl <em>Rule</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -730,7 +635,7 @@ public interface MyDslPackage extends EPackage
     EAttribute RULE__NAME = eINSTANCE.getRule_Name();
 
     /**
-     * The meta object literal for the '<em><b>Count</b></em>' attribute feature.
+     * The meta object literal for the '<em><b>Count</b></em>' attribute list feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated

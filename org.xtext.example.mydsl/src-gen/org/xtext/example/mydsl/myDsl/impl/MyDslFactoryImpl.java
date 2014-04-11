@@ -66,7 +66,6 @@ public class MyDslFactoryImpl extends EFactoryImpl implements MyDslFactory
     {
       case MyDslPackage.MODEL: return createModel();
       case MyDslPackage.GRAMMAR: return createGrammar();
-      case MyDslPackage.GENERATE: return createGenerate();
       case MyDslPackage.RULE: return createRule();
       case MyDslPackage.EXPRESSION: return createExpression();
       case MyDslPackage.ELEMENT: return createElement();
@@ -98,17 +97,6 @@ public class MyDslFactoryImpl extends EFactoryImpl implements MyDslFactory
   {
     GrammarImpl grammar = new GrammarImpl();
     return grammar;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public Generate createGenerate()
-  {
-    GenerateImpl generate = new GenerateImpl();
-    return generate;
   }
 
   /**
