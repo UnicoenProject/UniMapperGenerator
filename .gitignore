@@ -11,3 +11,7 @@ bin
 *.jar
 *.war
 *.ear
+
+# for ExBNF
+src-gen
+xtend-gen
