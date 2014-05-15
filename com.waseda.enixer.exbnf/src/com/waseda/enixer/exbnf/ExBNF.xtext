@@ -3,7 +3,28 @@ grammar com.waseda.enixer.exbnf.ExBNF with org.eclipse.xtext.common.Terminals
 generate exBNF "http://www.waseda.com/enixer/exbnf/ExBNF"
 
 Model:
-	greetings+=Greeting*;
-	
-Greeting:
-	'Hello' name=ID '!';
+	gram=Grammar (rules+=Rule)+;
+
+Grammar:
+	"grammar" gname=ID;
+
+Rule:
+	name=ID ("[" count+=Annotation ("," count+=Annotation)* "]")? "::=" expression=Expression;
+
+Annotation:
+	"cc";
+
+Expression:
+	elements+=Element ("|" elements+=Element)*;
+
+Element:
+	(terms+=Term)+;
+
+Term:
+	kConstr+=KeyConstr | rCall+=RuleCall;
+
+KeyConstr:
+	SChar=STRING (".." EChar=STRING)?;
+
+RuleCall:
+	ref=[Rule|ID];
