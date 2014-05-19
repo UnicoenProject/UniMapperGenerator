@@ -1,6 +1,6 @@
-grammar com.waseda.enixer.exbnf.ExBNF with org.eclipse.xtext.common.Terminals
+grammar org.xtext.example.mydsl.MyDsl with org.eclipse.xtext.common.Terminals
 
-generate exBNF "http://www.waseda.com/enixer/exbnf/ExBNF"
+generate myDsl "http://www.xtext.org/example/mydsl/MyDsl"
 
 Model:
 	gram=Grammar (rules+=Rule)+;

@@ -15,3 +15,6 @@ bin
 # for ExBNF
 src-gen
 xtend-gen
+
+# for Mac
+*.DS_Store
