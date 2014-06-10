@@ -90,6 +90,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="semicolonSymbol" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ParserRule" eSuperTypes="#//Rule">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" eType="#//Annotations"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="return" eType="#//Return"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="throws" eType="#//Exceptions"
@@ -98,8 +100,6 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="prequels" upperBound="-1"
         eType="#//RulePrequel" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" eType="#//Annotations"
-        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//RuleBlock"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="caught" eType="#//ExceptionGroup"
@@ -161,7 +161,7 @@
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Annotations">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="annotation" unique="false"
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="annotations" unique="false"
         upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Ebnf">

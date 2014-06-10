@@ -86,11 +86,11 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//Rule/semicolonSymbol"/>
     </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//ParserRule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//ParserRule/annotations"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//ParserRule/return"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//ParserRule/throws"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//ParserRule/locals"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//ParserRule/prequels"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//ParserRule/annotations"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//ParserRule/body"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//ParserRule/caught"/>
     </genClasses>
@@ -140,7 +140,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//Element/operator"/>
     </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//Annotations">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//Annotations/annotation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//Annotations/annotations"/>
     </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//Ebnf">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//Ebnf/body"/>

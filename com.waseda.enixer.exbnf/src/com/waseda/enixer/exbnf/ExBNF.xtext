@@ -100,8 +100,8 @@ Rule:
 
 /** Parser Rules */
 ParserRule:
-	name=RULE_REF return=Return? throws=Exceptions? locals=LocalVars? prequels+=RulePrequel* annotations=Annotations COLON
-	body=RuleBlock caught=ExceptionGroup semicolonSymbol=';';
+	name=RULE_REF annotations=Annotations? return=Return? throws=Exceptions? locals=LocalVars? prequels+=RulePrequel*
+	COLON body=RuleBlock caught=ExceptionGroup semicolonSymbol=';';
 
 	// Many language targets support exceptions and the rule will
 // generally be able to throw the language target equivalent
@@ -152,7 +152,7 @@ Element:
 
 /** Annotations */
 Annotations:
-	'[' annotation+=ANNOTATION (',' annotation+=ANNOTATION) ']';
+	'%' annotations+=ANNOTATION (',' annotations+=ANNOTATION)* '%';
 
 terminal ANNOTATION:
 	'cc';
