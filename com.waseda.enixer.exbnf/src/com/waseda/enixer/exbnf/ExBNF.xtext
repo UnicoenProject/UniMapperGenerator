@@ -16,22 +16,8 @@ enum GrammarType:
 	| PARSER='parser'
 	| TREE='tree';
 
-	// This is the list of all constructs that can be declared before
-// the set of rules that compose the grammar, and is invoked 0..n
-// times by the grammarPrequel rule.
-PrequelConstruct: // A list of options that affect analysis and/or code generation
-	Options | // A list of grammars to which this grammar will delegate certain
-	// parts of the parsing sequence - a set of imported grammars
-	Imports | // The declaration of any token types we need that are not already
-	// specified by a preceeding grammar, such as when a parser declares
-	// imaginary tokens with which to construct the AST, or a rewriting
-	// tree parser adds further imaginary tokens to ones defined in a prior
-	// {tree} parser.
-	Tokens | // A declaration of language target implemented constructs. All such
-	// action sections start with '@' and are given to the language target's
-	// StringTemplate group. For instance @parser::header and @lexer::header
-	// are gathered here.
-	GrammarAction;
+PrequelConstruct:
+	Options | Imports | Tokens | GrammarAction;
 
 /** Options */
 Options:
@@ -103,17 +89,9 @@ ParserRule:
 	name=RULE_REF annotations=Annotations? return=Return? throws=Exceptions? locals=LocalVars? prequels+=RulePrequel*
 	COLON body=RuleBlock caught=ExceptionGroup semicolonSymbol=';';
 
-	// Many language targets support exceptions and the rule will
-// generally be able to throw the language target equivalent
-// of a recognition exception. The grammar programmar can
-// specify a list of exceptions to catch or a generic catch all
-// and the target language code generation template is
-// responsible for generating code that makes sense.
 ExceptionGroup:
 	{ExceptionGroup} handlers+=ExceptionHandler* finally=FinallyClause?;
 
-	// Specifies a handler for a particular type of exception
-// thrown by a rule
 ExceptionHandler:
 	'catch' exception=ARG_OR_CHARSET body=ACTION;
 
@@ -152,7 +130,7 @@ Element:
 
 /** Annotations */
 Annotations:
-	'%' annotations+=ANNOTATION (',' annotations+=ANNOTATION)* '%';
+	'%' annotations+=ANNOTATION (',' annotations+=ANNOTATION)*;
 
 terminal ANNOTATION:
 	'cc';
@@ -161,7 +139,7 @@ terminal ANNOTATION:
 // notation, or ANTLR specific notation. I.E. ? + ^ and so on
 Ebnf:
 	body=Block
-	// And now we see if we have any of the optional suffixs and rewrite
+	// And now we see if we have any of the optional suffixes and rewrite
 	// the AST for this rule accordingly
 	operator=EbnfSuffix?;
 
@@ -169,7 +147,7 @@ ActionElement:
 	body=ACTION options=ElementOptions?;
 
 LabeledElement:
-	name=Refs ('=' | '+=') (body=Atom | body=Block);
+	name=Refs (op='=' | op='+=') (body=Atom | body=Block);
 
 EbnfSuffix:
 	operator='?' nongreedy='?'? | operator='*' nongreedy='?'? | operator='+' nongreedy='?'?;
@@ -182,7 +160,7 @@ EbnfSuffix:
 // of options, which apply only to that block.
 //
 Block:
-	'(' (options=Options? actions+=RuleAction* COLON)? body=AltList ')';
+	'(' (options=Options? actions+=RuleAction* colon=COLON)? body=AltList ')';
 
 AltList:
 	alternatives+=Alternative ('|' alternatives+=Alternative)*;
@@ -226,13 +204,11 @@ Wildcard:
 	// When used with elements we can specify what the tree node type can
 // be and also assign settings of various options  (which we do not check here)
 ElementOption: // This format indicates the default element option
-	qualifiedId=QualifiedId
-	| id=Refs assign='=' value=OptionValue;
+	qualifiedId=QualifiedId | id=Refs assign='=' value=OptionValue;
 
 /** Lexer Rule */
 LexerRule:
-	^fragment?='fragment'?
-	name=TOKEN_REF COLON body=LexerRuleBlock semicolonSymbol=';';
+	^fragment?='fragment'? name=TOKEN_REF COLON body=LexerRuleBlock semicolonSymbol=';';
 
 LexerRuleBlock:
 	body=LexerAltList;
@@ -244,66 +220,47 @@ LexerAlt:
 	body=LexerElements commands=LexerCommands?;
 
 LexerElements:
-	{LexerElements}
-	elements+=LexerElement*;
+	{LexerElements} elements+=LexerElement*;
 
 LexerElement:
-	body=LabeledLexerElement operator=EbnfSuffix?
-	| body=LexerAtom operator=EbnfSuffix?
-	| body=LexerBlock operator=EbnfSuffix?
-	| body=ActionElement;
+	body=LabeledLexerElement operator=EbnfSuffix? | body=LexerAtom operator=EbnfSuffix? | body=LexerBlock
+	operator=EbnfSuffix? | body=ActionElement;
 
 LabeledLexerElement:
-	label=Refs ('=' | '+=')
-	(body=LexerAtom
-	| body=LexerBlock);
+	label=Refs (op='=' | op='+=') (body=LexerAtom | body=LexerBlock);
 
 LexerAtom:
 	body=Range // Range x..y - only valid in lexers
-	| body=Terminal
-	| body=RuleRef
-	| body=NotSet
-	| body=Wildcard
-	| body=LexerCharSet;
+	| body=Terminal | body=RuleRef | body=NotSet | body=Wildcard | body=LexerCharSet;
 
 LexerCharSet:
 	body=ARG_OR_CHARSET;
 
 LexerBlock:
-	'('
-	(options=Options COLON)?
-	body=LexerAltList
-	')';
+	'(' (options=Options COLON)? body=LexerAltList ')';
 
 	// channel=HIDDEN, skip, more, mode(INSIDE), push(INSIDE), pop
 LexerCommands:
 	keyword=RARROW commands+=LexerCommand (',' commands+=LexerCommand)*;
 
 LexerCommand:
-	name=LexerCommandName '(' args=LexerCommandExpr ')'
-	| name=LexerCommandName;
+	name=LexerCommandName '(' args=LexerCommandExpr ')' | name=LexerCommandName;
 
 LexerCommandName:
-	'mode'
-	| Refs;
+	'mode' | Refs;
 
 LexerCommandExpr:
-	ref=[LexerCommandArg|Refs]
-	| value=INT;
+	ref=[LexerCommandArg|Refs] | value=INT;
 
 LexerCommandArg:
-	Mode
-	| LexerRule
-	| V3Token
-	| V4Token;
+	Mode | LexerRule | V3Token | V4Token;
 
 /** ID */
 QualifiedId:
 	name+=Refs ('.' name+=Refs)*;
 
 Refs:
-	TOKEN_REF
-	| RULE_REF;
+	TOKEN_REF | RULE_REF;
 
 /** tokenVocab */
 terminal TOKEN_VOCAB:

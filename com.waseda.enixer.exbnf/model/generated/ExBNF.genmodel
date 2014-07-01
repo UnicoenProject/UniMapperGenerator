@@ -152,6 +152,7 @@
     </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//LabeledElement">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//LabeledElement/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//LabeledElement/op"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//LabeledElement/body"/>
     </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//EbnfSuffix">
@@ -161,6 +162,7 @@
     <genClasses ecoreClass="ExBNF.ecore#//Block">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//Block/options"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//Block/actions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//Block/colon"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//Block/body"/>
     </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//AltList">
@@ -234,6 +236,7 @@
     </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//LabeledLexerElement">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//LabeledLexerElement/label"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//LabeledLexerElement/op"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//LabeledLexerElement/body"/>
     </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//LexerAtom">
