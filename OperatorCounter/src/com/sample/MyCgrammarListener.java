@@ -13,12 +13,10 @@ import parser.CgrammarLexer;
 import parser.CgrammarParser;
 
 public class MyCgrammarListener extends CgrammarBaseListener {
-	private CgrammarParser _parser;
 	private HashMap<String, Integer> _map;
 	private Set<String> extractElementSet;
 
 	public MyCgrammarListener(CgrammarParser parser) {
-		_parser = parser;
 		_map = new HashMap<String, Integer>();
 		extractElementSet = new HashSet<String>();
 		File countElementsFile = new File("dat\\CountElementsCgrammar.dat");

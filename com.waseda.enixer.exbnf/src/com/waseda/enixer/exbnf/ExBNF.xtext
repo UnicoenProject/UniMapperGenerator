@@ -68,7 +68,7 @@ V3Tokens:
 	keyword=TOKENS_SPEC tokens+=V3Token+ '}';
 
 V3Token:
-	id=Refs ('=' value=STRING)? ';';
+	name=Refs ('=' value=STRING)? ';';
 
 /** Grammar Actions */
 GrammarAction:
@@ -166,8 +166,11 @@ AltList:
 	alternatives+=Alternative ('|' alternatives+=Alternative)*;
 
 Atom:
-	body=Range // Range x..y - only valid in lexers
-	| body=Terminal | body=RuleRef | body=NotSet | body=Wildcard;
+	body=Range
+	| body=Terminal
+	| body=RuleRef
+	| body=NotSet
+	| body=Wildcard;
 
 RuleRef:
 	reference=[ParserRule|RULE_REF] args=ARG_OR_CHARSET? options=ElementOptions?;
@@ -230,8 +233,7 @@ LabeledLexerElement:
 	label=Refs (op='=' | op='+=') (body=LexerAtom | body=LexerBlock);
 
 LexerAtom:
-	body=Range // Range x..y - only valid in lexers
-	| body=Terminal | body=RuleRef | body=NotSet | body=Wildcard | body=LexerCharSet;
+	body=Range | body=Terminal | body=RuleRef | body=NotSet | body=Wildcard | body=LexerCharSet;
 
 LexerCharSet:
 	body=ARG_OR_CHARSET;

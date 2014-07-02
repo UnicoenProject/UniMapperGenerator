@@ -4,7 +4,7 @@
     editorDirectory="/com.waseda.enixer.exbnf.editor/src" modelPluginID="com.waseda.enixer.exbnf"
     forceOverwrite="true" modelName="ExBNF" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     complianceLevel="5.0" copyrightFields="false" editPluginID="com.waseda.enixer.exbnf.edit"
-    editorPluginID="com.waseda.enixer.exbnf.editor" runtimeVersion="2.9">
+    editorPluginID="com.waseda.enixer.exbnf.editor" runtimeVersion="2.10">
   <genPackages prefix="ExBNF" basePackage="com.waseda.enixer.exbnf" disposableProviderFactory="true"
       fileExtensions="exbnf" ecorePackage="ExBNF.ecore#/">
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="ExBNF.ecore#//GrammarType">
@@ -67,7 +67,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//V3Tokens/tokens"/>
     </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//V3Token">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//V3Token/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//V3Token/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//V3Token/value"/>
     </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//GrammarAction">
