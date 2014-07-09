@@ -1,6 +1,5 @@
 package com.sample;
 
-import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -19,17 +18,7 @@ public class MyCgrammarListener extends CgrammarBaseListener {
 	public MyCgrammarListener(CgrammarParser parser) {
 		_map = new HashMap<String, Integer>();
 		extractElementSet = new HashSet<String>();
-		File countElementsFile = new File("dat\\CountElementsCgrammar.dat");
-		try {
-			Scanner scanner = new Scanner(countElementsFile);
-			while (scanner.hasNext()) {
-				String element = scanner.next();
-				extractElementSet.add(element);
-			}
-			scanner.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+		extractElementSet.add("IF");
 	}
 
 	public void showTokenCounts() {
@@ -54,10 +43,10 @@ public class MyCgrammarListener extends CgrammarBaseListener {
 	public void visitTerminal(TerminalNode node) {
 		Token token = node.getSymbol();
 		String tokenName = CgrammarLexer.ruleNames[token.getType() - 1];
-		if (extractElementSet.contains(tokenName)) {
-			System.out.println("*** visitTerminal ***");
-			System.out.println(tokenName + ": " + token.getText());
+		System.out.println("*** visitTerminal ***");
+		System.out.println(tokenName + ": " + token.getText());
 
+		if (extractElementSet.contains(tokenName)) {
 			// Count tokens
 			Integer value = _map.get(tokenName);
 			value = value == null ? 0 : value;
@@ -68,10 +57,10 @@ public class MyCgrammarListener extends CgrammarBaseListener {
 	@Override
 	public void enterEveryRule(ParserRuleContext ctx) {
 		String ruleName = CgrammarParser.ruleNames[ctx.getRuleIndex()];
-		if (extractElementSet.contains(ruleName)) {
-			System.out.println("*** visitRule ***");
-			System.out.println(ruleName + ": " + ctx.getText());
+		System.out.println("*** visitRule ***");
+		System.out.println(ruleName + ": " + ctx.getText());
 
+		if (extractElementSet.contains(ruleName)) {
 			Integer value = _map.get(ruleName);
 			value = value == null ? 0 : value;
 			_map.put(ruleName, value + 1);

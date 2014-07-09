@@ -83,10 +83,10 @@
     </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//Rule">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//Rule/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//Rule/annotations"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//Rule/semicolonSymbol"/>
     </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//ParserRule">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//ParserRule/annotations"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//ParserRule/return"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//ParserRule/throws"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//ParserRule/locals"/>

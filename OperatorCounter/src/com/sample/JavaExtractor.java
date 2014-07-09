@@ -1,8 +1,9 @@
 package com.sample;
 
-import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
@@ -14,22 +15,12 @@ import parser.JavaParser;
 
 public class JavaExtractor extends JavaBaseListener {
 	private HashMap<String, Integer> _map;
-	private Set<String> extractElementSet;
+	private Set<String> extractCCElementSet;
 
 	public JavaExtractor(JavaParser parser) {
 		_map = new HashMap<String, Integer>();
-		extractElementSet = new HashSet<String>();
-		File countElementsFile = new File("dat\\CountElementsJava.dat");
-		try {
-			Scanner scanner = new Scanner(countElementsFile);
-			while (scanner.hasNext()) {
-				String element = scanner.next();
-				extractElementSet.add(element);
-			}
-			scanner.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+		extractCCElementSet = new HashSet<String>();
+		extractCCElementSet.add("if_statement");
 	}
 
 	public void showTokenCounts() {
@@ -53,11 +44,13 @@ public class JavaExtractor extends JavaBaseListener {
 	@Override
 	public void visitTerminal(TerminalNode node) {
 		Token token = node.getSymbol();
-		String tokenName = JavaLexer.ruleNames[token.getType() - 1];
-		if (extractElementSet.contains(tokenName)) {
-			System.out.println("*** visitTerminal ***");
-			System.out.println(tokenName + ": " + token.getText());
+		String tokenName = "EOF";
+		if (token.getType() != Token.EOF)
+			tokenName = JavaLexer.ruleNames[token.getType() - 1];
+		System.out.println("*** visitTerminal ***");
+		System.out.println(tokenName + ": " + token.getText());
 
+		if (extractCCElementSet.contains(tokenName)) {
 			// Count tokens
 			Integer value = _map.get(tokenName);
 			value = value == null ? 0 : value;
@@ -68,10 +61,10 @@ public class JavaExtractor extends JavaBaseListener {
 	@Override
 	public void enterEveryRule(ParserRuleContext ctx) {
 		String ruleName = JavaParser.ruleNames[ctx.getRuleIndex()];
-		if (extractElementSet.contains(ruleName)) {
-			System.out.println("*** visitRule ***");
-			System.out.println(ruleName + ": " + ctx.getText());
+		System.out.println("*** visitRule ***");
+		System.out.println(ruleName + ": " + ctx.getText());
 
+		if (extractCCElementSet.contains(ruleName)) {
 			Integer value = _map.get(ruleName);
 			value = value == null ? 0 : value;
 			_map.put(ruleName, value + 1);

@@ -404,7 +404,7 @@ localVariableDeclaration
 statement
     :   block
     |   ASSERT expression (':' expression)? ';'
-    |   'if' parExpression statement ('else' statement)?
+    |   if_statement
     |   'for' '(' forControl ')' statement
     |   'while' parExpression statement
     |   'do' statement 'while' parExpression ';'
@@ -421,6 +421,10 @@ statement
     |   Identifier ':' statement
     ;
 
+if_statement
+	:	'if' parExpression statement ('else' statement)?
+	;
+	
 catchClause
     :   'catch' '(' variableModifier* catchType Identifier ')' block
     ;
@@ -975,8 +979,7 @@ Identifier
     :   JavaLetter JavaLetterOrDigit*
     ;
 
-fragment
-JavaLetter
+fragment JavaLetter
     :   [a-zA-Z$_] // these are the "java letters" below 0xFF
     |   // covers all characters above 0xFF which are not a surrogate
         ~[\u0000-\u00FF\uD800-\uDBFF]
@@ -984,8 +987,7 @@ JavaLetter
         [\uD800-\uDBFF] [\uDC00-\uDFFF]
     ;
 
-fragment
-JavaLetterOrDigit
+fragment JavaLetterOrDigit
     :   [a-zA-Z0-9$_] // these are the "java letters or digits" below 0xFF
     |   // covers all characters above 0xFF which are not a surrogate
         ~[\u0000-\u00FF\uD800-\uDBFF]

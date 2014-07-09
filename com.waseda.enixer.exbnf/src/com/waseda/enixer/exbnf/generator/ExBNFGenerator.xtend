@@ -65,6 +65,7 @@ import com.waseda.enixer.exbnf.exBNF.LexerCommand
 import com.waseda.enixer.exbnf.exBNF.LexerCommandExpr
 import com.waseda.enixer.exbnf.exBNF.QualifiedId
 import com.waseda.enixer.exbnf.exBNF.ElementOptions
+import com.waseda.enixer.exbnf.exBNF.Rule
 
 /**
  * Generates code from your model files on save.
@@ -97,7 +98,7 @@ class ExBNFGenerator implements IGenerator {
 		return sb
 	}
 
-	def nameCompile(Grammar g) '''«IF g.type != null»«IF !g.type.equals(GrammarType.DEFAULT)»«g.type» «ENDIF»«ENDIF»grammar «g.
+	def nameCompile(Grammar g) '''«IF g.getType() != null»«IF !g.type.equals(GrammarType.DEFAULT)»«g.type» «ENDIF»«ENDIF»grammar «g.
 		name»;'''
 
 	def dispatch compile(Options op) '''«op.keyword»«FOR o : op.options» «o.compile»;«ENDFOR»}'''
@@ -242,7 +243,11 @@ class ExBNFGenerator implements IGenerator {
 
 	def makeMain(Grammar g) '''package com.sample;
 
-import org.antlr.v4.runtime.ANTLRInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+iimport org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -253,12 +258,22 @@ import parser.«g.name»Lexer;
 
 public class «g.name»Main {
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
-		String code = "int main(void){int a = 0; if(i==0) a++;}";
-		CharStream input = new ANTLRInputStream(code);
+		System.out.print("Input target file: ");
+		Scanner sc = new Scanner(System.in);
+		String filePath = sc.next();
+		sc.close();
+		File file = new File(filePath);
+		StringBuilder builder = new StringBuilder();
+		try {
+			sc = new Scanner(file);
+			while(sc.hasNextLine())
+				builder.append(sc.nextLine()).append(System.getProperty("line.separator"));
+		} catch (FileNotFoundException e) {
+			System.err.println("Error: File not found!");
+			return;
+		}
+		CharStream input = new ANTLRInputStream(builder.toString());
 		«g.name»Lexer lexer = new «g.name»Lexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		«g.name»Parser parser = new «g.name»Parser(tokens);
@@ -284,9 +299,10 @@ public class «g.name»Main {
 
 	def makeExtractor(Grammar g) '''package com.sample;
 
-import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
@@ -302,19 +318,9 @@ public class «g.name»Extractor extends «g.name»BaseListener {
 
 	public «g.name»Extractor(«g.name»Parser parser) {
 		_map = new HashMap<String, Integer>();
-		extractElementSet = new HashSet<String>();
-		File countElementsFile = new File("dat\\CountElements«g.name».dat");
-		try {
-			Scanner scanner = new Scanner(countElementsFile);
-			while (scanner.hasNext()) {
-				String element = scanner.next();
-				extractElementSet.add(element);
-			}
-			scanner.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
+		extractCCElementSet = new HashSet<String>();
+«FOR r : g.rules»«IF r.annotations != null»		extractCCElementSet.add("«r.name»");
+«ENDIF»«ENDFOR»	}
 
 	public void showTokenCounts() {
 		System.out.println("*** showTokenCounts ***");
@@ -337,11 +343,13 @@ public class «g.name»Extractor extends «g.name»BaseListener {
 	@Override
 	public void visitTerminal(TerminalNode node) {
 		Token token = node.getSymbol();
-		String tokenName = «g.name»Lexer.ruleNames[token.getType() - 1];
-		if (extractElementSet.contains(tokenName)) {
-			System.out.println("*** visitTerminal ***");
-			System.out.println(tokenName + ": " + token.getText());
+		String tokenName = "EOF";
+		if (token.getType() != Token.EOF)
+			tokenName = «g.name»Lexer.ruleNames[token.getType() - 1];
+		System.out.println("*** visitTerminal ***");
+		System.out.println(tokenName + ": " + token.getText());
 
+		if (extractCCElementSet.contains(tokenName)) {
 			// Count tokens
 			Integer value = _map.get(tokenName);
 			value = value == null ? 0 : value;
@@ -352,10 +360,10 @@ public class «g.name»Extractor extends «g.name»BaseListener {
 	@Override
 	public void enterEveryRule(ParserRuleContext ctx) {
 		String ruleName = «g.name»Parser.ruleNames[ctx.getRuleIndex()];
-		if (extractElementSet.contains(ruleName)) {
-			System.out.println("*** visitRule ***");
-			System.out.println(ruleName + ": " + ctx.getText());
+		System.out.println("*** visitRule ***");
+		System.out.println(ruleName + ": " + ctx.getText());
 
+		if (extractElementSet.contains(ruleName)) {
 			Integer value = _map.get(ruleName);
 			value = value == null ? 0 : value;
 			_map.put(ruleName, value + 1);

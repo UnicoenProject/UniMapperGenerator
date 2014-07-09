@@ -1,5 +1,9 @@
 package com.sample;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -11,12 +15,24 @@ import parser.JavaLexer;
 
 public class JavaMain {
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
-		String code = "int main(void){int a = 0; if(i==0) a++;}";
-		CharStream input = new ANTLRInputStream(code);
+		System.out.print("Input target file: ");
+		Scanner sc = new Scanner(System.in);
+		String filePath = sc.next();
+		sc.close();
+		File file = new File(filePath);
+		StringBuilder builder = new StringBuilder();
+		try {
+			Scanner fsc = new Scanner(file);
+			while (fsc.hasNextLine())
+				builder.append(fsc.nextLine()).append(
+						System.getProperty("line.separator"));
+			fsc.close();
+		} catch (FileNotFoundException e) {
+			System.err.println("Error: File not found!");
+			return;
+		}
+		CharStream input = new ANTLRInputStream(builder.toString());
 		JavaLexer lexer = new JavaLexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		JavaParser parser = new JavaParser(tokens);
@@ -37,4 +53,3 @@ public class JavaMain {
 		extractor.showCyclomaticComplexity();
 	}
 }
-	
