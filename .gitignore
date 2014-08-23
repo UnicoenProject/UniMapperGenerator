@@ -1,6 +1,7 @@
 OperatorCounter/.classpath
 OperatorCounter/.project
 OperatorCounter/.settings
+com.waseda.enixer.exbnf/.launch
 
 # for Maven
 target

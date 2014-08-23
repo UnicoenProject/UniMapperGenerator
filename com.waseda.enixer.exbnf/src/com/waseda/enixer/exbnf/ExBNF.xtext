@@ -211,7 +211,7 @@ ElementOption: // This format indicates the default element option
 
 /** Lexer Rule */
 LexerRule:
-	^fragment?='fragment'? name=TOKEN_REF  annotations=Annotations? COLON body=LexerRuleBlock semicolonSymbol=';';
+	^fragment?='fragment'? name=TOKEN_REF annotations=Annotations? COLON body=LexerRuleBlock semicolonSymbol=';';
 
 LexerRuleBlock:
 	body=LexerAltList;

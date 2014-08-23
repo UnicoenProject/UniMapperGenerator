@@ -16,11 +16,28 @@ import parser.JavaLexer;
 public class JavaMain {
 
 	public static void main(String[] args) {
-		System.out.print("Input target file: ");
+		String filePath = getFilePath();
+		execute(filePath);
+	}
+
+	public static String getFilePath() {
+		System.out.print("Input target file or directory: ");
 		Scanner sc = new Scanner(System.in);
 		String filePath = sc.next();
 		sc.close();
+		return filePath;
+	}
+
+	public static void execute(String filePath) {
 		File file = new File(filePath);
+		if (file.isDirectory()) {
+			File[] children = file.listFiles();
+			System.out.println(file.getName() + " is a directory.");
+			System.out.println();
+			for (File f : children)
+				execute(f.getPath());
+			return;
+		}
 		StringBuilder builder = new StringBuilder();
 		try {
 			Scanner fsc = new Scanner(file);
@@ -29,13 +46,14 @@ public class JavaMain {
 						System.getProperty("line.separator"));
 			fsc.close();
 		} catch (FileNotFoundException e) {
-			System.err.println("Error: File not found!");
+			System.err.println("Error: File not found.");
 			return;
 		}
 		CharStream input = new ANTLRInputStream(builder.toString());
 		JavaLexer lexer = new JavaLexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		JavaParser parser = new JavaParser(tokens);
+		parser.setErrorHandler(new JavaErrorStrategy());
 		ParseTreeWalker walker = new ParseTreeWalker();
 
 		JavaExtractor extractor = new JavaExtractor(parser);
@@ -43,13 +61,18 @@ public class JavaMain {
 		// Parse code and generate a parse tree
 		ParserRuleContext tree = parser.compilationUnit();
 
-		// Scan the parse tree
-		walker.walk(extractor, tree);
+		if (tree.exception == null) {
+			// Scan the parse tree
+			walker.walk(extractor, tree);
 
-		// Show PM counts
-		extractor.showTokenCounts();
+			// Show token counts
+			// extractor.showTokenCounts();
 
-		// Show Complexity
-		extractor.showCyclomaticComplexity();
+			// Show Complexity
+			extractor.showCyclomaticComplexity();
+		} else {
+			System.out.println(file.getName() + " is not a Java file.");
+		}
+		System.out.println();
 	}
 }

@@ -65,7 +65,6 @@ import com.waseda.enixer.exbnf.exBNF.LexerCommand
 import com.waseda.enixer.exbnf.exBNF.LexerCommandExpr
 import com.waseda.enixer.exbnf.exBNF.QualifiedId
 import com.waseda.enixer.exbnf.exBNF.ElementOptions
-import com.waseda.enixer.exbnf.exBNF.Rule
 
 /**
  * Generates code from your model files on save.
