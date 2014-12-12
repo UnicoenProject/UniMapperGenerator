@@ -30,7 +30,19 @@ TokenVocab:
 	name=TOKEN_VOCAB '=' importURI=[Grammar|Refs];
 
 OptionValue:
-	qopValue=QualifiedId | strValue=STRING | aopValue=ACTION | intValue=INT;
+	QualifiedOption | StringOption | ActionOption | IntOption;
+
+QualifiedOption:
+	value=QualifiedId;
+
+StringOption:
+	value=STRING;
+
+ActionOption:
+	value=ACTION;
+
+IntOption:
+	value=INT;
 
 /** Imports */
 Imports:
@@ -74,8 +86,8 @@ Rule:
 
 /** Parser Rules */
 ParserRule:
-	name=RULE_REF args=ARG_OR_CHARSET? return=Return? throws=Exceptions? locals=LocalVars? prequels+=RulePrequel* COLON
-	body=RuleBlock caught=ExceptionGroup semicolonSymbol=';';
+	name=RULE_REF annotations=Annotations? return=Return? throws=Exceptions? locals=LocalVars? prequels+=RulePrequel*
+	COLON body=RuleBlock caught=ExceptionGroup semicolonSymbol=';';
 
 ExceptionGroup:
 	{ExceptionGroup} handlers+=ExceptionHandler* finally=FinallyClause?;
@@ -116,8 +128,19 @@ Alternative:
 Element:
 	body=LabeledElement operator=EbnfSuffix? | body=Atom operator=EbnfSuffix? | body=Ebnf | body=ActionElement;
 
+/** Annotations */
+Annotations:
+	'%' annotations+=ANNOTATION (',' annotations+=ANNOTATION)*;
+
+terminal ANNOTATION:
+	'cc';
+
+	// A block of grammar structure optionally followed by standard EBNF
+// notation, or ANTLR specific notation. I.E. ? + ^ and so on
 Ebnf:
 	body=Block
+	// And now we see if we have any of the optional suffixes and rewrite
+	// the AST for this rule accordingly
 	operator=EbnfSuffix?;
 
 ActionElement:
@@ -159,7 +182,7 @@ Range:
 	from=STRING '..' to=STRING;
 
 Terminal:
-	reference=[TokenRef|TOKEN_REF] options=ElementOptions? | literal=STRING options=ElementOptions? | eof='EOF';
+	reference=[TokenRef|TOKEN_REF] options=ElementOptions? | literal=STRING options=ElementOptions? | literal='EOF';
 
 TokenRef:
 	V3Token | V4Token | LexerRule;
@@ -188,7 +211,7 @@ ElementOption: // This format indicates the default element option
 
 /** Lexer Rule */
 LexerRule:
-	^fragment?='fragment'? name=TOKEN_REF COLON body=LexerRuleBlock semicolonSymbol=';';
+	^fragment?='fragment'? name=TOKEN_REF annotations=Annotations? COLON body=LexerRuleBlock semicolonSymbol=';';
 
 LexerRuleBlock:
 	body=LexerAltList;
@@ -299,12 +322,12 @@ terminal INT returns ecore::EInt:
 
 /** String literal */
 terminal STRING:
-	'\'' LITERAL_CHAR* '\'';
+	"'" LITERAL_CHAR* "'";
 
 terminal fragment LITERAL_CHAR:
 	ESC
 	|
-	!('\''
+	!("'"
 	| '\\');
 
 terminal fragment ESC:
@@ -315,7 +338,7 @@ terminal fragment ESC:
 	| 'b'
 	| 'f'
 	| '"'
-	| '\''
+	| "'"
 	| '\\'
 	| '>'
 	| 'u' XDIGIT XDIGIT XDIGIT XDIGIT
@@ -342,11 +365,11 @@ terminal fragment ACTION_STRING_LITERAL:
 	'"';
 
 terminal fragment ACTION_CHAR_LITERAL:
-	'\''
+	"'"
 	(ACTION_ESC
 	|
-	!('\\' | '\''))*
-	'\'';
+	!('\\' | "'"))*
+	"'";
 
 	// Within literal strings and characters that are not part of the ANTLR
 // syntax, we must allow for escaped character sequences so that we do not
@@ -398,3 +421,5 @@ terminal WS:
 
 terminal fragment WSNLCHARS:
 	' ' | '\t' | '\f' | '\n' | '\r';
+
+

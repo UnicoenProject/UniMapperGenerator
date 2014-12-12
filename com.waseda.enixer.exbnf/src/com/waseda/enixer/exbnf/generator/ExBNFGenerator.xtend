@@ -6,65 +6,7 @@ package com.waseda.enixer.exbnf.generator
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess
-import com.waseda.enixer.exbnf.exBNF.Grammar
-import com.waseda.enixer.exbnf.exBNF.Options
-import com.waseda.enixer.exbnf.exBNF.Imports
-import com.waseda.enixer.exbnf.exBNF.GrammarAction
-import com.waseda.enixer.exbnf.exBNF.Option
-import com.waseda.enixer.exbnf.exBNF.TokenVocab
-import com.waseda.enixer.exbnf.exBNF.Mode
-import com.waseda.enixer.exbnf.exBNF.QualifiedOption
-import com.waseda.enixer.exbnf.exBNF.StringOption
-import com.waseda.enixer.exbnf.exBNF.ActionOption
-import com.waseda.enixer.exbnf.exBNF.IntOption
-import com.waseda.enixer.exbnf.exBNF.Import
-import com.waseda.enixer.exbnf.exBNF.V4Tokens
-import com.waseda.enixer.exbnf.exBNF.V4Token
-import com.waseda.enixer.exbnf.exBNF.EmptyTokens
-import com.waseda.enixer.exbnf.exBNF.V3Tokens
-import com.waseda.enixer.exbnf.exBNF.V3Token
-import com.waseda.enixer.exbnf.exBNF.ParserRule
-import com.waseda.enixer.exbnf.exBNF.Return
-import com.waseda.enixer.exbnf.exBNF.LocalVars
-import com.waseda.enixer.exbnf.exBNF.ExceptionGroup
-import com.waseda.enixer.exbnf.exBNF.RuleBlock
-import com.waseda.enixer.exbnf.exBNF.LexerRule
-import com.waseda.enixer.exbnf.exBNF.GrammarType
-import com.waseda.enixer.exbnf.exBNF.ExceptionHandler
-import com.waseda.enixer.exbnf.exBNF.FinallyClause
-import com.waseda.enixer.exbnf.exBNF.RuleAction
-import com.waseda.enixer.exbnf.exBNF.RuleAltList
-import com.waseda.enixer.exbnf.exBNF.LabeledAlt
-import com.waseda.enixer.exbnf.exBNF.Alternative
-import com.waseda.enixer.exbnf.exBNF.Element
-import com.waseda.enixer.exbnf.exBNF.EbnfSuffix
-import com.waseda.enixer.exbnf.exBNF.Ebnf
-import com.waseda.enixer.exbnf.exBNF.ActionElement
-import com.waseda.enixer.exbnf.exBNF.LabeledElement
-import com.waseda.enixer.exbnf.exBNF.Block
-import com.waseda.enixer.exbnf.exBNF.AltList
-import com.waseda.enixer.exbnf.exBNF.Atom
-import com.waseda.enixer.exbnf.exBNF.RuleRef
-import com.waseda.enixer.exbnf.exBNF.Terminal
-import com.waseda.enixer.exbnf.exBNF.NotSet
-import com.waseda.enixer.exbnf.exBNF.BlockSet
-import com.waseda.enixer.exbnf.exBNF.SetElement
-import com.waseda.enixer.exbnf.exBNF.Wildcard
-import com.waseda.enixer.exbnf.exBNF.ElementOption
-import com.waseda.enixer.exbnf.exBNF.LexerRuleBlock
-import com.waseda.enixer.exbnf.exBNF.LexerAltList
-import com.waseda.enixer.exbnf.exBNF.LexerAlt
-import com.waseda.enixer.exbnf.exBNF.LexerElements
-import com.waseda.enixer.exbnf.exBNF.LexerElement
-import com.waseda.enixer.exbnf.exBNF.LabeledLexerElement
-import com.waseda.enixer.exbnf.exBNF.LexerAtom
-import com.waseda.enixer.exbnf.exBNF.LexerCharSet
-import com.waseda.enixer.exbnf.exBNF.LexerBlock
-import com.waseda.enixer.exbnf.exBNF.LexerCommands
-import com.waseda.enixer.exbnf.exBNF.LexerCommand
-import com.waseda.enixer.exbnf.exBNF.LexerCommandExpr
-import com.waseda.enixer.exbnf.exBNF.QualifiedId
-import com.waseda.enixer.exbnf.exBNF.ElementOptions
+import com.waseda.enixer.exbnf.exBNF.*
 
 /**
  * Generates code from your model files on save.
@@ -73,32 +15,33 @@ import com.waseda.enixer.exbnf.exBNF.ElementOptions
  */
 class ExBNFGenerator implements IGenerator {
 	val nl = System.getProperty("line.separator")
-	var root = ""
 
 	override def doGenerate(Resource resource, IFileSystemAccess fsa) {
 		var list = resource.allContents.toIterable.filter(Grammar)
 		for (g : list) {
 			fsa.generateFile(g.name + ".g4", g.compile)
-			root = g.rules.get(0).name
-			fsa.generateFile(g.name + "Main.java", g.makeMain)
-			fsa.generateFile(g.name + "Extractor.java", g.makeExtractor)
 		}
 	}
 
 	def dispatch compile(Grammar g) {
 		var sb = new StringBuilder
-		sb.append(g.nameCompile + nl)
+		sb.append(g.nameCompile + nl + nl)
+		sb.append(header + nl + nl)
 		for (p : g.prequels)
 			sb.append(p.compile + nl)
 		for (r : g.rules)
 			sb.append(r.compile + nl)
 		for (m : g.modes)
 			sb.append(m.compile + nl)
-		return sb
+		return sb.toString
 	}
 
 	def nameCompile(Grammar g) '''«IF g.getType() != null»«IF !g.type.equals(GrammarType.DEFAULT)»«g.type» «ENDIF»«ENDIF»grammar «g.
 		name»;'''
+
+	def header() '''@header{
+	package net.unicoen.parser;
+}'''
 
 	def dispatch compile(Options op) '''«op.keyword»«FOR o : op.options» «o.compile»;«ENDFOR»}'''
 
@@ -106,13 +49,8 @@ class ExBNFGenerator implements IGenerator {
 
 	def dispatch compile(TokenVocab tv) '''«tv.name» = «tv.importURI»'''
 
-	def dispatch compile(QualifiedOption qo) '''«qo.value.compile»'''
-
-	def dispatch compile(StringOption so) '''«so.value»'''
-
-	def dispatch compile(ActionOption ao) '''«ao.value»'''
-
-	def dispatch compile(IntOption io) '''«io.value»'''
+	def dispatch compile(OptionValue opv) '''«IF opv.qopValue != null»«opv.qopValue»«ELSEIF opv.strValue != null»'«opv.strValue»'«ELSEIF opv.
+		aopValue != null»«ELSE»«ENDIF»'''
 
 	def dispatch compile(Imports im) '''«im.keyword» «FOR i : im.imports»«IF !im.imports.get(0).equals(i)», «ENDIF»«i.
 		compile»«ENDFOR»'''
@@ -186,16 +124,17 @@ class ExBNFGenerator implements IGenerator {
 
 	def dispatch compile(ElementOptions eo) '''«eo.begin»«FOR o : eo.options»«o.compile»,«ENDFOR»«eo.end»'''
 
-	def dispatch compile(com.waseda.enixer.exbnf.exBNF.Range ra) '''«ra.from»..«ra.to»'''
+	def dispatch compile(Range ra) ''''«ra.from»'..'«ra.to»' '''
 
 	def dispatch compile(Terminal te) '''«IF te.reference != null»«te.reference.refCompile»«IF te.options != null»«te.
-		options.compile»«ENDIF»«ELSE»«te.literal»«IF te.options != null»«te.options.compile»«ENDIF»«ENDIF»'''
+		options.compile»«ENDIF»«ELSEIF te.literal != null»'«te.literal»'«IF te.options != null» «te.options.compile»«ENDIF»«ELSE»«te.
+		eof»«ENDIF»'''
 
 	def dispatch compile(NotSet ns) '''~«ns.body.compile»'''
 
 	def dispatch compile(BlockSet bs) '''(«FOR e : bs.elements»«IF !bs.elements.get(0).equals(e)»|«ENDIF»«e.compile»«ENDFOR»)'''
 
-	def dispatch compile(SetElement se) '''«IF se.tokenRef != null»«se.tokenRef»«ELSEIF se.stringLiteral != null»«se.stringLiteral»«ELSEIF se.
+	def dispatch compile(SetElement se) '''«IF se.tokenRef != null»«se.tokenRef»«ELSEIF se.stringLiteral != null»'«se.stringLiteral»'«ELSEIF se.
 		range != null»«se.range»«ELSE»«se.charSet»«ENDIF»'''
 
 	def dispatch compile(Wildcard wi) '''«wi.dot»«IF wi.options != null»«wi.options.compile»«ENDIF»'''
@@ -234,139 +173,10 @@ class ExBNFGenerator implements IGenerator {
 
 	def dispatch compile(QualifiedId qi) '''«FOR n : qi.name»«n».«ENDFOR»'''
 
-	def dispatch refCompile(V3Token v3) '''«v3.name»'''
+	def dispatch refCompile(V3Token v3) '''«v3.name» = '«v3.value»';'''
 
 	def dispatch refCompile(V4Token v4) '''«v4.name»'''
 
 	def dispatch refCompile(LexerRule lr) '''«lr.name»'''
 
-	def makeMain(Grammar g) '''package com.sample;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
-
-iimport org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-
-import parser.«g.name»Parser;
-import parser.«g.name»Lexer;
-
-public class «g.name»Main {
-
-	public static void main(String[] args) {
-		System.out.print("Input target file: ");
-		Scanner sc = new Scanner(System.in);
-		String filePath = sc.next();
-		sc.close();
-		File file = new File(filePath);
-		StringBuilder builder = new StringBuilder();
-		try {
-			sc = new Scanner(file);
-			while(sc.hasNextLine())
-				builder.append(sc.nextLine()).append(System.getProperty("line.separator"));
-		} catch (FileNotFoundException e) {
-			System.err.println("Error: File not found!");
-			return;
-		}
-		CharStream input = new ANTLRInputStream(builder.toString());
-		«g.name»Lexer lexer = new «g.name»Lexer(input);
-		CommonTokenStream tokens = new CommonTokenStream(lexer);
-		«g.name»Parser parser = new «g.name»Parser(tokens);
-		ParseTreeWalker walker = new ParseTreeWalker();
-
-		«g.name»Extractor extractor = new «g.name»Extractor(parser);
-
-		// Parse code and generate a parse tree
-		ParserRuleContext tree = parser.«root»();
-
-		// Scan the parse tree
-		walker.walk(extractor, tree);
-
-		// Show PM counts
-		extractor.showTokenCounts();
-
-		// Show Complexity
-		extractor.showCyclomaticComplexity();
-	}
-}
-	
-	'''
-
-	def makeExtractor(Grammar g) '''package com.sample;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.tree.TerminalNode;
-
-import parser.«g.name»BaseListener;
-import parser.«g.name»Lexer;
-import parser.«g.name»Parser;
-
-public class «g.name»Extractor extends «g.name»BaseListener {
-	private HashMap<String, Integer> _map;
-	private Set<String> extractElementSet;
-
-	public «g.name»Extractor(«g.name»Parser parser) {
-		_map = new HashMap<String, Integer>();
-		extractCCElementSet = new HashSet<String>();
-«FOR r : g.rules»«IF r.annotations != null»		extractCCElementSet.add("«r.name»");
-«ENDIF»«ENDFOR»	}
-
-	public void showTokenCounts() {
-		System.out.println("*** showTokenCounts ***");
-		for (Entry<String, Integer> nameAndCount : _map.entrySet()) {
-			String name = nameAndCount.getKey();
-			int count = nameAndCount.getValue();
-			System.out.println(name + ": " + count);
-		}
-	}
-
-	public void showCyclomaticComplexity() {
-		System.out.println("*** showCyclomaticComplexity ***");
-		int result = 1;
-		for (Entry<String, Integer> nameAndCount : _map.entrySet()) {
-			result += nameAndCount.getValue();
-		}
-		System.out.println("Cyclomatic Complexity : " + result);
-	}
-
-	@Override
-	public void visitTerminal(TerminalNode node) {
-		Token token = node.getSymbol();
-		String tokenName = "EOF";
-		if (token.getType() != Token.EOF)
-			tokenName = «g.name»Lexer.ruleNames[token.getType() - 1];
-		System.out.println("*** visitTerminal ***");
-		System.out.println(tokenName + ": " + token.getText());
-
-		if (extractCCElementSet.contains(tokenName)) {
-			// Count tokens
-			Integer value = _map.get(tokenName);
-			value = value == null ? 0 : value;
-			_map.put(tokenName, value + 1);
-		}
-	}
-
-	@Override
-	public void enterEveryRule(ParserRuleContext ctx) {
-		String ruleName = «g.name»Parser.ruleNames[ctx.getRuleIndex()];
-		System.out.println("*** visitRule ***");
-		System.out.println(ruleName + ": " + ctx.getText());
-
-		if (extractElementSet.contains(ruleName)) {
-			Integer value = _map.get(ruleName);
-			value = value == null ? 0 : value;
-			_map.put(ruleName, value + 1);
-		}
-	}
-}'''
 }

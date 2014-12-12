@@ -32,18 +32,11 @@
     <genClasses ecoreClass="ExBNF.ecore#//TokenVocab">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ExBNF.ecore#//TokenVocab/importURI"/>
     </genClasses>
-    <genClasses ecoreClass="ExBNF.ecore#//OptionValue"/>
-    <genClasses ecoreClass="ExBNF.ecore#//QualifiedOption">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//QualifiedOption/value"/>
-    </genClasses>
-    <genClasses ecoreClass="ExBNF.ecore#//StringOption">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//StringOption/value"/>
-    </genClasses>
-    <genClasses ecoreClass="ExBNF.ecore#//ActionOption">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//ActionOption/value"/>
-    </genClasses>
-    <genClasses ecoreClass="ExBNF.ecore#//IntOption">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//IntOption/value"/>
+    <genClasses ecoreClass="ExBNF.ecore#//OptionValue">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//OptionValue/qopValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//OptionValue/strValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//OptionValue/aopValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//OptionValue/intValue"/>
     </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//Imports">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//Imports/keyword"/>
@@ -83,10 +76,10 @@
     </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//Rule">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//Rule/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//Rule/annotations"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//Rule/semicolonSymbol"/>
     </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//ParserRule">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//ParserRule/args"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//ParserRule/return"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//ParserRule/throws"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//ParserRule/locals"/>
@@ -139,9 +132,6 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//Element/body"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//Element/operator"/>
     </genClasses>
-    <genClasses ecoreClass="ExBNF.ecore#//Annotations">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//Annotations/annotations"/>
-    </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//Ebnf">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//Ebnf/body"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//Ebnf/operator"/>
@@ -189,6 +179,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ExBNF.ecore#//Terminal/reference"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//Terminal/options"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//Terminal/literal"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//Terminal/eof"/>
     </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//TokenRef"/>
     <genClasses ecoreClass="ExBNF.ecore#//NotSet">

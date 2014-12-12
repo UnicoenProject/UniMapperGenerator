@@ -31,19 +31,12 @@
   <eClassifiers xsi:type="ecore:EClass" name="TokenVocab" eSuperTypes="#//Option">
     <eStructuralFeatures xsi:type="ecore:EReference" name="importURI" eType="#//Grammar"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="OptionValue"/>
-  <eClassifiers xsi:type="ecore:EClass" name="QualifiedOption" eSuperTypes="#//OptionValue">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//QualifiedId"
+  <eClassifiers xsi:type="ecore:EClass" name="OptionValue">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="qopValue" eType="#//QualifiedId"
         containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="StringOption" eSuperTypes="#//OptionValue">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ActionOption" eSuperTypes="#//OptionValue">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="IntOption" eSuperTypes="#//OptionValue">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="strValue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="aopValue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="intValue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Imports" eSuperTypes="#//PrequelConstruct">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="keyword" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -87,11 +80,10 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Rule">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" eType="#//Annotations"
-        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="semicolonSymbol" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ParserRule" eSuperTypes="#//Rule">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="args" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="return" eType="#//Return"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="throws" eType="#//Exceptions"
@@ -160,10 +152,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="operator" eType="#//EbnfSuffix"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Annotations">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="annotations" unique="false"
-        upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Ebnf">
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//Block"
         containment="true"/>
@@ -223,6 +211,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="options" eType="#//ElementOptions"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="literal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="eof" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TokenRef"/>
   <eClassifiers xsi:type="ecore:EClass" name="NotSet">
