@@ -7,6 +7,7 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess
 import com.waseda.enixer.exbnf.exBNF.*
+import com.waseda.enixer.exbnf.exBNF.LexerAltWithDollar
 
 /**
  * Generates code from your model files on save.
@@ -96,11 +97,13 @@ class ExBNFGenerator implements IGenerator {
 
 	def dispatch compile(RuleAltList ral) '''«FOR a : ral.alternatives»«IF !ral.alternatives.get(0).equals(a)»| «ENDIF»«a.
 		compile»«ENDFOR»'''
-
+	
 	def dispatch compile(LabeledAlt la) '''«la.body.compile»«IF la.poundSymbol != null» «la.poundSymbol»«la.label»«ENDIF»'''
 
 	def dispatch compile(Alternative al) '''«IF al.options != null»«al.options.compile» «ENDIF»«FOR e : al.elements»«e.
 		compile»«ENDFOR»'''
+
+	def dispatch compile(ElementWithDollar lad) '''«lad.body.compile»'''
 
 	def dispatch compile(Element el) '''«el.body.compile»«IF el.operator != null»«el.operator.compile»«ENDIF» '''
 
@@ -149,7 +152,9 @@ class ExBNFGenerator implements IGenerator {
 
 	def dispatch compile(LexerAltList lal) '''«FOR a : lal.alternatives»«IF !lal.alternatives.get(0).equals(a)»|«ENDIF»«a.
 		compile»«ENDFOR»'''
-
+		
+	def dispatch compile(LexerAltWithDollar lad) '''«lad.body.compile»'''
+		
 	def dispatch compile(LexerAlt la) '''«la.body.compile» «IF la.commands != null»«la.commands.compile»«ENDIF»'''
 
 	def dispatch compile(LexerElements le) '''«FOR e : le.elements»«e.compile»«ENDFOR»'''

@@ -76,6 +76,7 @@
     </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//Rule">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//Rule/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//Rule/type"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//Rule/semicolonSymbol"/>
     </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//ParserRule">
@@ -127,6 +128,11 @@
     <genClasses ecoreClass="ExBNF.ecore#//Alternative">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//Alternative/options"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//Alternative/elements"/>
+    </genClasses>
+    <genClasses ecoreClass="ExBNF.ecore#//ElementWithDollar">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//ElementWithDollar/body"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//ElementWithDollar/dollarSymbol"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//ElementWithDollar/num"/>
     </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//Element">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//Element/body"/>
@@ -204,6 +210,10 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//ElementOption/assign"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//ElementOption/value"/>
     </genClasses>
+    <genClasses ecoreClass="ExBNF.ecore#//UnicoenType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//UnicoenType/keyword"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//UnicoenType/name"/>
+    </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//LexerRule">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//LexerRule/fragment"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//LexerRule/body"/>
@@ -213,6 +223,11 @@
     </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//LexerAltList">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//LexerAltList/alternatives"/>
+    </genClasses>
+    <genClasses ecoreClass="ExBNF.ecore#//LexerAltWithDollar">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//LexerAltWithDollar/body"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//LexerAltWithDollar/dollarSymbol"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//LexerAltWithDollar/num"/>
     </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//LexerAlt">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//LexerAlt/body"/>

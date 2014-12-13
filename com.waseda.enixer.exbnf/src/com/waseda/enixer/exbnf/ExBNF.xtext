@@ -74,7 +74,8 @@ Rule:
 
 /** Parser Rules */
 ParserRule:
-	name=RULE_REF args=ARG_OR_CHARSET? return=Return? throws=Exceptions? locals=LocalVars? prequels+=RulePrequel* COLON
+	name=RULE_REF args=ARG_OR_CHARSET? return=Return? throws=Exceptions? locals=LocalVars? prequels+=RulePrequel*
+	type=UnicoenType? COLON
 	body=RuleBlock caught=ExceptionGroup semicolonSymbol=';';
 
 ExceptionGroup:
@@ -111,7 +112,10 @@ LabeledAlt:
 	body=Alternative (poundSymbol='#' label=Refs)?;
 
 Alternative:
-	{Alternative} options=ElementOptions? elements+=Element*;
+	{Alternative} options=ElementOptions? elements+=ElementWithDollar*;
+
+ElementWithDollar:
+	body=Element (dollarSymbol='$' num=INT)?;
 
 Element:
 	body=LabeledElement operator=EbnfSuffix? | body=Atom operator=EbnfSuffix? | body=Ebnf | body=ActionElement;
@@ -186,15 +190,21 @@ Wildcard:
 ElementOption: // This format indicates the default element option
 	qualifiedId=QualifiedId | id=Refs assign='=' value=OptionValue;
 
+UnicoenType:
+	keyword='=>' name=Refs;
+
 /** Lexer Rule */
 LexerRule:
-	^fragment?='fragment'? name=TOKEN_REF COLON body=LexerRuleBlock semicolonSymbol=';';
+	^fragment?='fragment'? name=TOKEN_REF type=UnicoenType? COLON body=LexerRuleBlock semicolonSymbol=';';
 
 LexerRuleBlock:
 	body=LexerAltList;
 
 LexerAltList:
-	alternatives+=LexerAlt ('|' alternatives+=LexerAlt)*;
+	alternatives+=LexerAltWithDollar ('|' alternatives+=LexerAltWithDollar)*;
+
+LexerAltWithDollar:
+	body=LexerAlt (dollarSymbol='$' num=INT)?;
 
 LexerAlt:
 	body=LexerElements commands=LexerCommands?;

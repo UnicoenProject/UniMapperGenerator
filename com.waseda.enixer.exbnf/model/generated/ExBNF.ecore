@@ -80,6 +80,8 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Rule">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//UnicoenType"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="semicolonSymbol" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ParserRule" eSuperTypes="#//Rule">
@@ -144,7 +146,13 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="options" eType="#//ElementOptions"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="elements" upperBound="-1"
-        eType="#//Element" containment="true"/>
+        eType="#//ElementWithDollar" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ElementWithDollar">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//Element"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dollarSymbol" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="num" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Element">
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"
@@ -242,6 +250,10 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//OptionValue"
         containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UnicoenType">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="keyword" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LexerRule" eSuperTypes="#//Rule #//TokenRef #//LexerCommandArg">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="fragment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//LexerRuleBlock"
@@ -253,7 +265,13 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LexerAltList">
     <eStructuralFeatures xsi:type="ecore:EReference" name="alternatives" upperBound="-1"
-        eType="#//LexerAlt" containment="true"/>
+        eType="#//LexerAltWithDollar" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LexerAltWithDollar">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//LexerAlt"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dollarSymbol" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="num" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LexerAlt">
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//LexerElements"
