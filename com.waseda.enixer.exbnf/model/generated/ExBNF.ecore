@@ -265,13 +265,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LexerAltList">
     <eStructuralFeatures xsi:type="ecore:EReference" name="alternatives" upperBound="-1"
-        eType="#//LexerAltWithDollar" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="LexerAltWithDollar">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//LexerAlt"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dollarSymbol" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="num" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+        eType="#//LexerAlt" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LexerAlt">
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//LexerElements"
@@ -281,7 +275,13 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LexerElements">
     <eStructuralFeatures xsi:type="ecore:EReference" name="elements" upperBound="-1"
-        eType="#//LexerElement" containment="true"/>
+        eType="#//LexerElementWithDollar" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LexerElementWithDollar">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//LexerElement"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dollarSymbol" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="num" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LexerElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"

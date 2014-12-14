@@ -201,16 +201,16 @@ LexerRuleBlock:
 	body=LexerAltList;
 
 LexerAltList:
-	alternatives+=LexerAltWithDollar ('|' alternatives+=LexerAltWithDollar)*;
-
-LexerAltWithDollar:
-	body=LexerAlt (dollarSymbol='$' num=INT)?;
+	alternatives+=LexerAlt ('|' alternatives+=LexerAlt)*;
 
 LexerAlt:
 	body=LexerElements commands=LexerCommands?;
 
 LexerElements:
-	{LexerElements} elements+=LexerElement*;
+	{LexerElements} elements+=LexerElementWithDollar*;
+
+LexerElementWithDollar:
+	body=LexerElement (dollarSymbol='$' num=INT)?;
 
 LexerElement:
 	body=LabeledLexerElement operator=EbnfSuffix? | body=LexerAtom operator=EbnfSuffix? | body=LexerBlock
