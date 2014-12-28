@@ -15,11 +15,15 @@ import com.waseda.enixer.exbnf.exBNF.*
  */
 class ExBNFGenerator implements IGenerator {
 	val nl = System.getProperty("line.separator")
+	var name = new String
 
 	override def doGenerate(Resource resource, IFileSystemAccess fsa) {
 		var list = resource.allContents.toIterable.filter(Grammar)
 		for (g : list) {
-			fsa.generateFile(g.name + ".g4", g.compile)
+			name = g.name.toCamelCase
+			fsa.generateFile(name + ".g4", g.compile)
+			fsa.generateFile(name + "Mapper.xtend", g.generateMapper)
+			fsa.generateFile(name + "MapperTest.xtend", g.generateMapperTestTemplate)
 		}
 	}
 
@@ -36,7 +40,7 @@ class ExBNFGenerator implements IGenerator {
 		return sb.toString
 	}
 
-	def nameCompile(Grammar g) '''«IF g.getType() != null»«IF !g.type.equals(GrammarType.DEFAULT)»«g.type» «ENDIF»«ENDIF»grammar «g.
+	def nameCompile(Grammar g) '''«IF g.type != null»«IF !g.type.equals(GrammarType.DEFAULT)»«g.type» «ENDIF»«ENDIF»grammar «g.
 		name»;'''
 
 	def header() '''@header{
@@ -96,7 +100,7 @@ class ExBNFGenerator implements IGenerator {
 
 	def dispatch compile(RuleAltList ral) '''«FOR a : ral.alternatives»«IF !ral.alternatives.get(0).equals(a)»| «ENDIF»«a.
 		compile»«ENDFOR»'''
-	
+
 	def dispatch compile(LabeledAlt la) '''«la.body.compile»«IF la.poundSymbol != null» «la.poundSymbol»«la.label»«ENDIF»'''
 
 	def dispatch compile(Alternative al) '''«IF al.options != null»«al.options.compile» «ENDIF»«FOR e : al.elements»«e.
@@ -151,11 +155,11 @@ class ExBNFGenerator implements IGenerator {
 
 	def dispatch compile(LexerAltList lal) '''«FOR a : lal.alternatives»«IF !lal.alternatives.get(0).equals(a)»|«ENDIF»«a.
 		compile»«ENDFOR»'''
-		
+
 	def dispatch compile(LexerAlt la) '''«la.body.compile» «IF la.commands != null»«la.commands.compile»«ENDIF»'''
 
 	def dispatch compile(LexerElements le) '''«FOR e : le.elements»«e.compile»«ENDFOR»'''
-	
+
 	def dispatch compile(LexerElementWithDollar led) '''«led.body.compile»'''
 
 	def dispatch compile(LexerElement le) '''«le.body.compile»«IF le.operator != null»«le.operator.compile»«ENDIF»'''
@@ -183,4 +187,177 @@ class ExBNFGenerator implements IGenerator {
 
 	def dispatch refCompile(LexerRule lr) '''«lr.name»'''
 
+	def generateMapperTestTemplate(Grammar g) '''package net.unicoen.mapper
+
+import org.junit.Test
+import static org.hamcrest.Matchers.*
+import static org.junit.Assert.*
+
+class «name»MapperTest {
+	val mapper = new «name»Mapper
+
+	@Test
+	def «name»Test(){
+		
+	}
+
+}
+	'''
+
+	def generateMapper(Grammar g) {
+		var sb = new StringBuilder
+		sb.append(
+			'''package net.unicoen.mapper
+
+import java.io.FileInputStream
+import org.antlr.v4.runtime.ANTLRInputStream
+import org.antlr.v4.runtime.CharStream
+import org.antlr.v4.runtime.CommonTokenStream
+import net.unicoen.node.UniNode
+import net.unicoen.parser.«name»Lexer
+import net.unicoen.parser.«name»Parser
+import net.unicoen.parser.«name»BaseVisitor
+import net.unicoen.node.UniBinOp
+import net.unicoen.node.UniExpr
+import net.unicoen.node.UniIntLiteral
+import net.unicoen.node.UniDoubleLiteral
+
+class «name»Mapper extends «name»BaseVisitor<UniNode> {
+	def parseFile(String path) {
+		val inputStream = new FileInputStream(path)
+		try {
+			parseCore(new ANTLRInputStream(inputStream))
+		} finally {
+			inputStream.close
+		}
+	}
+
+	def parse(String code) {
+		parseCore(new ANTLRInputStream(code))
+	}
+
+	def parseCore(CharStream chars) {
+		val lexer = new «name»Lexer(chars)
+		val tokens = new CommonTokenStream(lexer)
+		val parser = new «name»Parser(tokens)
+		val tree = parser.«g.rules.get(0).name»
+		visit(tree)
+	}''' + nl + nl)
+		for (r : g.rules) {
+			if (r.type != null) {
+				sb.append(r.visitMethod)
+			}
+		}
+		sb.append('}' + nl)
+		sb.toString
+	}
+
+	def toCamelCase(String str) {
+		Character.toUpperCase(str.charAt(0)) + str.substring(1)
+	}
+
+	def dispatch visitMethod(ParserRule r) {
+		var sb = new StringBuilder
+		sb.append('''	override public visit«r.name.toCamelCase»(«name»Parser.«r.name.toCamelCase»Context ctx) {''' + nl)
+		var type = r.type.name
+		if (type.equals("UniBinOp")) {
+			sb.append(r.makeUniBinOpMethodBody)
+		} else if (type.equals("UniIntLiteral")) {
+			sb.append(r.makeUniIntLiteralMethodBody)
+		} else if (type.equals("UniDoubleLiteral")) {
+			sb.append(r.makeUniDoubleLiteralMethodBody)
+		} else if (type.equals("SWITCH")) {
+			sb.append(r.makeBranchMethodBody)
+		} else {
+			sb.append(r.makeSuperMethodBody)
+		}
+		sb.append('''	}''' + nl + nl)
+		sb
+	}
+
+	def makeUniBinOpMethodBody(ParserRule r) {
+		var sb = new StringBuilder
+		var children = r.eAllContents.toIterable.filter(ElementWithDollar)
+		var left = new String;
+		var operator = new String;
+		var right = new String;
+		for (c : children) {
+			if (c.num == 0) {
+				var grandchildren = c.eAllContents.toIterable.filter(RuleRef)
+				left = grandchildren.get(0).reference.name
+			}
+			if (c.num == 1) {
+				var grandchildren = c.eAllContents.toIterable.filter(RuleRef)
+				operator = grandchildren.get(0).reference.name
+			}
+			if (c.num == 2) {
+				var grandchildren = c.eAllContents.toIterable.filter(RuleRef)
+				right = grandchildren.get(0).reference.name
+			}
+		}
+		sb.append(
+			'''		if (ctx.childCount == 1) {
+			return visit(ctx.getChild(0))
+		}
+		var ret = new UniBinOp
+		for (tree : ctx.children) {
+			if (tree instanceof «name»Parser.«right.toCamelCase»Context) {
+				ret.right = visit(tree) as UniExpr
+			} else if (tree instanceof «name»Parser.«operator.toCamelCase»Context) {
+				var temp = new UniBinOp
+				temp.operator = tree.text
+				if (ret.operator == null) {
+					temp.left = ret.right
+				} else {
+					temp.left = ret
+				}
+				ret = temp
+			} else {
+				throw new RuntimeException
+			}
+		}
+		ret
+	''')
+		sb.toString
+	}
+
+	def dispatch visitMethod(LexerRule r) {
+		var name = r.type.name
+		name
+	}
+
+	def makeUniIntLiteralMethodBody(ParserRule r) {
+		var sb = new StringBuilder
+		sb.append('''		new UniIntLiteral(Integer.parseInt(ctx.text))''' + nl)
+		sb
+	}
+
+	def makeUniDoubleLiteralMethodBody(ParserRule r) {
+		var sb = new StringBuilder
+		sb.append('''		new UniDoubleLiteral(Double.parseDouble(ctx.text))''' + nl)
+		sb
+	}
+
+	def makeSuperMethodBody(ParserRule r) {
+		var sb = new StringBuilder
+		sb.append('''		super.visit«r.name.toCamelCase»(ctx)''' + nl)
+		sb
+	}
+
+	def makeBranchMethodBody(ParserRule r) {
+		var sb = new StringBuilder
+		sb.append('''		for (tree : ctx.children) {''' + nl)
+		var children = r.eAllContents.toIterable.filter(ElementWithDollar)
+		for (c : children) {
+			if (c.dollarSymbol != null) {
+				var grandchildren = c.eAllContents.toIterable.filter(RuleRef)
+				sb.append(
+					'''			if(tree instanceof «name»Parser.«grandchildren.get(0).reference.name.toCamelCase»Context) {
+				return visit(tree)
+			}''' + nl)
+			}
+		}
+		sb.append('''		}''' + nl)
+		sb
+	}
 }

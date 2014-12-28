@@ -115,7 +115,7 @@ Alternative:
 	{Alternative} options=ElementOptions? elements+=ElementWithDollar*;
 
 ElementWithDollar:
-	body=Element (dollarSymbol='$' num=INT)?;
+	body=Element (dollarSymbol='$' (num=INT | op=Refs))?;
 
 Element:
 	body=LabeledElement operator=EbnfSuffix? | body=Atom operator=EbnfSuffix? | body=Ebnf | body=ActionElement;
@@ -210,7 +210,7 @@ LexerElements:
 	{LexerElements} elements+=LexerElementWithDollar*;
 
 LexerElementWithDollar:
-	body=LexerElement (dollarSymbol='$' num=INT)?;
+	body=LexerElement (dollarSymbol='$' (num=INT | op=Refs)?)?;
 
 LexerElement:
 	body=LabeledLexerElement operator=EbnfSuffix? | body=LexerAtom operator=EbnfSuffix? | body=LexerBlock
