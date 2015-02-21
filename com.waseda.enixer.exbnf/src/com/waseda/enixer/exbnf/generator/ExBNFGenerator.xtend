@@ -44,7 +44,7 @@ class ExBNFGenerator implements IGenerator {
 		name»;'''
 
 	def header() '''@header{
-	package net.unicoen.parser;
+	package net.unicoen.parser.antlr;
 }'''
 
 	def dispatch compile(Options op) '''«op.keyword»«FOR o : op.options» «o.compile»;«ENDFOR»}'''
@@ -213,7 +213,8 @@ import java.io.FileInputStream
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CommonTokenStream
-import net.unicoen.node.UniNode
+import org.antlr.v4.runtime.ParserRuleContext
+import org.antlr.v4.runtime.tree.ParseTree
 import net.unicoen.parser.«name»Lexer
 import net.unicoen.parser.«name»Parser
 import net.unicoen.parser.«name»BaseVisitor
@@ -222,7 +223,7 @@ import net.unicoen.node.UniExpr
 import net.unicoen.node.UniIntLiteral
 import net.unicoen.node.UniDoubleLiteral
 
-class «name»Mapper extends «name»BaseVisitor<UniNode> {
+class «name»Mapper extends «name»BaseVisitor<Object> {
 	def parseFile(String path) {
 		val inputStream = new FileInputStream(path)
 		try {
@@ -242,6 +243,13 @@ class «name»Mapper extends «name»BaseVisitor<UniNode> {
 		val parser = new «name»Parser(tokens)
 		val tree = parser.«g.rules.get(0).name»
 		visit(tree)
+	}
+	
+	override public visit(ParseTree tree) {
+		var ruleName = «name»Parser.ruleNames.get((tree as ParserRuleContext).ruleIndex);
+		println("*** visitRule ***");
+		println(ruleName + ": " + tree.text);
+		super.visit(tree)
 	}''' + nl + nl)
 		for (r : g.rules) {
 			if (r.type != null) {
@@ -266,8 +274,10 @@ class «name»Mapper extends «name»BaseVisitor<UniNode> {
 			sb.append(r.makeUniIntLiteralMethodBody)
 		} else if (type.equals("UniDoubleLiteral")) {
 			sb.append(r.makeUniDoubleLiteralMethodBody)
-		} else if (type.equals("SWITCH")) {
-			sb.append(r.makeBranchMethodBody)
+		} else if (type.equals("UniIf")) {
+			sb.append(r.makeUniIfMethodBody)
+		} else if (type.equals("String")) {
+			sb.append(r.makeStringMethodBody)
 		} else {
 			sb.append(r.makeSuperMethodBody)
 		}
@@ -338,26 +348,20 @@ class «name»Mapper extends «name»BaseVisitor<UniNode> {
 		sb
 	}
 
-	def makeSuperMethodBody(ParserRule r) {
+	def makeUniIfMethodBody(ParserRule r) {
 		var sb = new StringBuilder
-		sb.append('''		super.visit«r.name.toCamelCase»(ctx)''' + nl)
 		sb
 	}
 
-	def makeBranchMethodBody(ParserRule r) {
+	def makeStringMethodBody(ParserRule r) {
 		var sb = new StringBuilder
-		sb.append('''		for (tree : ctx.children) {''' + nl)
-		var children = r.eAllContents.toIterable.filter(ElementWithDollar)
-		for (c : children) {
-			if (c.dollarSymbol != null) {
-				var grandchildren = c.eAllContents.toIterable.filter(RuleRef)
-				sb.append(
-					'''			if(tree instanceof «name»Parser.«grandchildren.get(0).reference.name.toCamelCase»Context) {
-				return visit(tree)
-			}''' + nl)
-			}
-		}
-		sb.append('''		}''' + nl)
+		sb.append('''		ctx.text''' + nl)
+		sb
+	}
+
+	def makeSuperMethodBody(ParserRule r) {
+		var sb = new StringBuilder
+		sb.append('''		super.visit«r.name.toCamelCase»(ctx)''' + nl)
 		sb
 	}
 }

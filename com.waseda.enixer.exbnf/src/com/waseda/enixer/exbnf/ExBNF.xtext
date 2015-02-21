@@ -191,7 +191,10 @@ ElementOption: // This format indicates the default element option
 	qualifiedId=QualifiedId | id=Refs assign='=' value=OptionValue;
 
 UnicoenType:
-	keyword='=>' name=Refs;
+	keyword='=>' name=UnicoenTypeIdentifiers;
+
+UnicoenTypeIdentifiers:
+	Refs ('<' UnicoenTypeIdentifiers '>')?;
 
 /** Lexer Rule */
 LexerRule:
