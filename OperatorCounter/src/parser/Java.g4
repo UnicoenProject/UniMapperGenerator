@@ -89,14 +89,10 @@ variableModifier
 
 classDeclaration
     :   'class' Identifier typeParameters?
-        superclass?
+        ('extends' type)?
         ('implements' typeList)?
         classBody
     ;
-
-superclass
-	:	'extends' type
-	;
 
 typeParameters
     :   '<' typeParameter (',' typeParameter)* '>'

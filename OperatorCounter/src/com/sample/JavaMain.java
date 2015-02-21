@@ -14,10 +14,12 @@ import parser.JavaParser;
 import parser.JavaLexer;
 
 public class JavaMain {
+	public static ClassList classList = new ClassList();
 
 	public static void main(String[] args) {
 		String filePath = getFilePath();
 		execute(filePath);
+		classList.showClassList();
 	}
 
 	public static String getFilePath() {
@@ -33,7 +35,6 @@ public class JavaMain {
 		if (file.isDirectory()) {
 			File[] children = file.listFiles();
 			System.out.println(file.getName() + " is a directory.");
-			System.out.println();
 			for (File f : children)
 				execute(f.getPath());
 			return;
@@ -69,10 +70,10 @@ public class JavaMain {
 			// extractor.showTokenCounts();
 
 			// Show Complexity
-			extractor.showCyclomaticComplexity();
+			// extractor.showCyclomaticComplexity();
+
 		} else {
 			System.out.println(file.getName() + " is not a Java file.");
 		}
-		System.out.println();
 	}
 }
