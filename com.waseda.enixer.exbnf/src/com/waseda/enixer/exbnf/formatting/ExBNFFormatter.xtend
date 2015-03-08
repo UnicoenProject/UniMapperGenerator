@@ -5,8 +5,8 @@ package com.waseda.enixer.exbnf.formatting
 
 import org.eclipse.xtext.formatting.impl.AbstractDeclarativeFormatter
 import org.eclipse.xtext.formatting.impl.FormattingConfig
-// import com.google.inject.Inject;
-// import com.waseda.enixer.exbnf.services.ExBNFGrammarAccess
+import com.google.inject.Inject;
+import com.waseda.enixer.exbnf.services.ExBNFGrammarAccess
 
 /**
  * This class contains custom formatting description.
@@ -18,13 +18,24 @@ import org.eclipse.xtext.formatting.impl.FormattingConfig
  */
 class ExBNFFormatter extends AbstractDeclarativeFormatter {
 
-//	@Inject extension ExBNFGrammarAccess
-	
+	@Inject extension ExBNFGrammarAccess exBNFGrammarAccess
+
 	override protected void configureFormatting(FormattingConfig c) {
-// It's usually a good idea to activate the following three statements.
-// They will add and preserve newlines around comments
-//		c.setLinewrap(0, 1, 2).before(SL_COMMENTRule)
-//		c.setLinewrap(0, 1, 2).before(ML_COMMENTRule)
-//		c.setLinewrap(0, 1, 1).after(ML_COMMENTRule)
+
+		// It's usually a good idea to activate the following three statements.
+		// They will add and preserve newlines around comments
+		c.setLinewrap(0, 1, 2).before(SL_COMMENTRule)
+		c.setLinewrap(0, 1, 2).before(ML_COMMENTRule)
+		c.setLinewrap(0, 1, 1).after(ML_COMMENTRule)
+
+		c.setLinewrap(2, 2, 2).before(exBNFGrammarAccess.ruleRule)
+		c.setLinewrap.after(exBNFGrammarAccess.COLONRule)
+		c.setNoSpace.around(exBNFGrammarAccess.DOLLARRule)
+		c.setNoSpace.before(exBNFGrammarAccess.ebnfSuffixRule)
+		c.setNoSpace.before(exBNFGrammarAccess.COLONRule)
+		c.setNoSpace.before(exBNFGrammarAccess.SEMICOLONRule)
+
+		c.setIndentationIncrement.before(exBNFGrammarAccess.COLONRule)
+		c.setIndentationDecrement.after(exBNFGrammarAccess.ruleRule)
 	}
 }

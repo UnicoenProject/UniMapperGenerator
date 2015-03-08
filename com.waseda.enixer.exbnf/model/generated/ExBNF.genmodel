@@ -131,7 +131,6 @@
     </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//ElementWithDollar">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//ElementWithDollar/body"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//ElementWithDollar/dollarSymbol"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//ElementWithDollar/num"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//ElementWithDollar/op"/>
     </genClasses>
@@ -234,7 +233,6 @@
     </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//LexerElementWithDollar">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//LexerElementWithDollar/body"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//LexerElementWithDollar/dollarSymbol"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//LexerElementWithDollar/num"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//LexerElementWithDollar/op"/>
     </genClasses>

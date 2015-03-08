@@ -18,33 +18,35 @@ class ExBNFGenerator implements IGenerator {
 	var name = new String
 
 	override def doGenerate(Resource resource, IFileSystemAccess fsa) {
-		var list = resource.allContents.toIterable.filter(Grammar)
-		for (g : list) {
-			name = g.name.toCamelCase
-			fsa.generateFile(name + ".g4", g.compile)
-			fsa.generateFile(name + "Mapper.xtend", g.generateMapper)
-			fsa.generateFile(name + "MapperTest.xtend", g.generateMapperTestTemplate)
-		}
+		resource.allContents.toIterable.filter(Grammar).forEach [
+			name = it.name.toCamelCase
+			fsa.generateFile(name + ".g4", it.compile)
+			fsa.generateFile(name + "Mapper.xtend", it.generateMapper)
+			fsa.generateFile(name + "MapperTest.xtend", it.generateMapperTestTemplate)
+		]
 	}
 
 	def dispatch compile(Grammar g) {
-		var sb = new StringBuilder
+		val sb = new StringBuilder
 		sb.append(g.nameCompile + nl + nl)
 		sb.append(header + nl + nl)
-		for (p : g.prequels)
-			sb.append(p.compile + nl)
-		for (r : g.rules)
-			sb.append(r.compile + nl)
-		for (m : g.modes)
-			sb.append(m.compile + nl)
-		return sb.toString
+		g.prequels.forEach [
+			sb.append(it.compile + nl)
+		]
+		g.rules.forEach [
+			sb.append(it.compile + nl)
+		]
+		g.modes.forEach [
+			sb.append(it.compile + nl)
+		]
+		sb.toString
 	}
 
 	def nameCompile(Grammar g) '''«IF g.type != null»«IF !g.type.equals(GrammarType.DEFAULT)»«g.type» «ENDIF»«ENDIF»grammar «g.
 		name»;'''
 
 	def header() '''@header{
-	package net.unicoen.parser.antlr;
+	package net.unicoen.parser;
 }'''
 
 	def dispatch compile(Options op) '''«op.keyword»«FOR o : op.options» «o.compile»;«ENDFOR»}'''
@@ -194,7 +196,7 @@ import static org.hamcrest.Matchers.*
 import static org.junit.Assert.*
 
 class «name»MapperTest {
-	val mapper = new «name»Mapper
+	val mapper = new «name»Mapper(true)
 
 	@Test
 	def «name»Test(){
@@ -205,7 +207,7 @@ class «name»MapperTest {
 	'''
 
 	def generateMapper(Grammar g) {
-		var sb = new StringBuilder
+		val sb = new StringBuilder
 		sb.append(
 			'''package net.unicoen.mapper
 
@@ -224,6 +226,12 @@ import net.unicoen.node.UniIntLiteral
 import net.unicoen.node.UniDoubleLiteral
 
 class «name»Mapper extends «name»BaseVisitor<Object> {
+	var _isDebugMode = false
+
+	new(boolean isDebugMode) {
+		_isDebugMode = isDebugMode
+	}
+
 	def parseFile(String path) {
 		val inputStream = new FileInputStream(path)
 		try {
@@ -242,20 +250,42 @@ class «name»Mapper extends «name»BaseVisitor<Object> {
 		val tokens = new CommonTokenStream(lexer)
 		val parser = new «name»Parser(tokens)
 		val tree = parser.«g.rules.get(0).name»
-		visit(tree)
+		tree.visit
 	}
-	
-	override public visit(ParseTree tree) {
-		var ruleName = «name»Parser.ruleNames.get((tree as ParserRuleContext).ruleIndex);
-		println("*** visitRule ***");
-		println(ruleName + ": " + tree.text);
-		super.visit(tree)
-	}''' + nl + nl)
-		for (r : g.rules) {
-			if (r.type != null) {
-				sb.append(r.visitMethod)
+
+	override public visitChildren(RuleNode node) {
+		val n = node.childCount;
+		(0 ..< n).fold(defaultResult) [ acc, i |
+			if (!node.shouldVisitNextChild(acc)) {
+				acc
+			} else {
+				val c = node.getChild(i);
+				val childResult = c.visit;
+				acc.aggregateResult(childResult);
 			}
+		]
+	}
+
+	override public visit(ParseTree tree) {
+		if (_isDebugMode) {
+			if (!(tree instanceof ParserRuleContext)) {
+				return visitTerminal(tree as TerminalNode)
+			}
+			val ruleName = «name»Parser.ruleNames.get((tree as ParserRuleContext).ruleIndex)
+			println("*** visit" + ruleName + " ***")
+			println(tree.text)
+			val ret = tree.accept(this)
+			println("returned: " + ret)
+			ret
+		} else {
+			tree.accept(this)
 		}
+	}''' + nl + nl)
+		g.rules.forEach [
+			if (it.type != null) {
+				sb.append(it.visitMethod)
+			}
+		]
 		sb.append('}' + nl)
 		sb.toString
 	}
@@ -265,28 +295,81 @@ class «name»Mapper extends «name»BaseVisitor<Object> {
 	}
 
 	def dispatch visitMethod(ParserRule r) {
-		var sb = new StringBuilder
+		val sb = new StringBuilder
 		sb.append('''	override public visit«r.name.toCamelCase»(«name»Parser.«r.name.toCamelCase»Context ctx) {''' + nl)
-		var type = r.type.name
-		if (type.equals("UniBinOp")) {
-			sb.append(r.makeUniBinOpMethodBody)
-		} else if (type.equals("UniIntLiteral")) {
-			sb.append(r.makeUniIntLiteralMethodBody)
-		} else if (type.equals("UniDoubleLiteral")) {
-			sb.append(r.makeUniDoubleLiteralMethodBody)
-		} else if (type.equals("UniIf")) {
-			sb.append(r.makeUniIfMethodBody)
-		} else if (type.equals("String")) {
-			sb.append(r.makeStringMethodBody)
-		} else {
-			sb.append(r.makeSuperMethodBody)
+		val type = r.type.name
+		switch type {
+			case "UniClassDec":
+				sb.append(r.makeUniClassDecMethodBody)
+			case "UniBinOp":
+				sb.append(r.makeUniBinOpMethodBody)
+			case "UniIntLiteral":
+				sb.append(r.makeUniIntLiteralMethodBody)
+			case "UniDoubleLiteral":
+				sb.append(r.makeUniDoubleLiteralMethodBody)
+			case "UniIf":
+				sb.append(r.makeUniIfMethodBody)
+			case "List<String>":
+				sb.append(r.makeListMethodBody("String"))
+			case "String":
+				sb.append(r.makeStringMethodBody)
+			default:
+				sb.append(r.makeSuperMethodBody)
 		}
 		sb.append('''	}''' + nl + nl)
 		sb
 	}
 
+	def makeUniClassDecMethodBody(ParserRule r) {
+		val sb = new StringBuilder
+		sb.append(
+			'''		val ret = new UniClassDec
+		ret.members = Lists.newArrayList
+		ctx.children.forEach [
+			switch it {''' + nl)
+		r.eAllContents.toIterable.filter(ElementWithDollar).forEach [
+			switch it.op {
+				case "className":
+					sb.append(
+						'''				«name»Parser.«it.eAllContents.toIterable.filter(RuleRef).get(0).reference.name.
+							toCamelCase»Context:
+					ret.className = it.visit as String''' + nl)
+				case "modifiers":
+					sb.append(
+						'''				«name»Parser.«it.eAllContents.toIterable.filter(RuleRef).get(0).reference.name.
+							toCamelCase»Context:
+					ret.modifiers = it.visit as List<String>''' + nl)
+				case "members":
+					sb.append(
+						'''				«name»Parser.«it.eAllContents.toIterable.filter(RuleRef).get(0).reference.name.
+							toCamelCase»Context:
+					ret.members = it.visit as UniMemberDec''' + nl)
+			}
+		]
+		sb.append(
+			'''			}
+		]
+		ret
+		''')
+		sb.toString
+	}
+
+	def makeListMethodBody(ParserRule r, String clz) {
+		val sb = new StringBuilder
+		sb.append(
+			'''		val list = Lists.newArrayList
+		if (ctx.children != null) {
+			ctx.children.forEach [
+				list += it.visit as «clz»
+			]
+		}
+		list
+		''')
+		sb.toString
+	}
+
 	def makeUniBinOpMethodBody(ParserRule r) {
-		var sb = new StringBuilder
+		val sb = new StringBuilder
 		var children = r.eAllContents.toIterable.filter(ElementWithDollar)
 		var left = new String;
 		var operator = new String;
@@ -361,6 +444,7 @@ class «name»Mapper extends «name»BaseVisitor<Object> {
 
 	def makeSuperMethodBody(ParserRule r) {
 		var sb = new StringBuilder
+		sb.append('''		// This return type is not supported.''' + nl)
 		sb.append('''		super.visit«r.name.toCamelCase»(ctx)''' + nl)
 		sb
 	}

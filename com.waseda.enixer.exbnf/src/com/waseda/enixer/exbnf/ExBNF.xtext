@@ -5,7 +5,7 @@ generate exBNF "http://www.waseda.com/enixer/exbnf/ExBNF"
 
 /** Grammar */
 Grammar:
-	type=GrammarType? 'grammar' name=Refs ';'
+	type=GrammarType? 'grammar' name=Refs SEMICOLON
 	prequels+=PrequelConstruct*
 	rules+=Rule*
 	modes+=Mode*;
@@ -21,7 +21,7 @@ PrequelConstruct:
 
 /** Options */
 Options:
-	{Options} keyword=OPTIONS_SPEC (options+=Option ';')* '}';
+	{Options} keyword=OPTIONS_SPEC (options+=Option SEMICOLON)* '}';
 
 Option:
 	TokenVocab | name=Refs '=' value=OptionValue;
@@ -34,7 +34,7 @@ OptionValue:
 
 /** Imports */
 Imports:
-	keyword='import' imports+=Import (',' imports+=Import)* ';';
+	keyword='import' imports+=Import (',' imports+=Import)* SEMICOLON;
 
 Import:
 	alias=Refs '=' importURI=[Grammar|Refs] | importURI=[Grammar|Refs];
@@ -56,7 +56,7 @@ V3Tokens:
 	keyword=TOKENS_SPEC tokens+=V3Token+ '}';
 
 V3Token:
-	name=Refs ('=' value=STRING)? ';';
+	name=Refs ('=' value=STRING)? SEMICOLON;
 
 /** Grammar Actions */
 GrammarAction:
@@ -66,7 +66,7 @@ ActionScope:
 	'parser' | 'lexer' | 'tree' | Refs;
 
 Mode:
-	'mode' id=Refs ';' rules+=LexerRule*;
+	'mode' id=Refs SEMICOLON rules+=LexerRule*;
 
 /** Rules */
 Rule:
@@ -76,7 +76,7 @@ Rule:
 ParserRule:
 	name=RULE_REF args=ARG_OR_CHARSET? return=Return? throws=Exceptions? locals=LocalVars? prequels+=RulePrequel*
 	type=UnicoenType? COLON
-	body=RuleBlock caught=ExceptionGroup semicolonSymbol=';';
+	body=RuleBlock caught=ExceptionGroup semicolonSymbol=SEMICOLON;
 
 ExceptionGroup:
 	{ExceptionGroup} handlers+=ExceptionHandler* finally=FinallyClause?;
@@ -115,7 +115,7 @@ Alternative:
 	{Alternative} options=ElementOptions? elements+=ElementWithDollar*;
 
 ElementWithDollar:
-	body=Element (dollarSymbol='$' (num=INT | op=Refs))?;
+	body=Element (DOLLAR (num=INT | op=Refs))?;
 
 Element:
 	body=LabeledElement operator=EbnfSuffix? | body=Atom operator=EbnfSuffix? | body=Ebnf | body=ActionElement;
@@ -198,7 +198,7 @@ UnicoenTypeIdentifiers:
 
 /** Lexer Rule */
 LexerRule:
-	^fragment?='fragment'? name=TOKEN_REF type=UnicoenType? COLON body=LexerRuleBlock semicolonSymbol=';';
+	^fragment?='fragment'? name=TOKEN_REF type=UnicoenType? COLON body=LexerRuleBlock semicolonSymbol=SEMICOLON;
 
 LexerRuleBlock:
 	body=LexerAltList;
@@ -213,7 +213,7 @@ LexerElements:
 	{LexerElements} elements+=LexerElementWithDollar*;
 
 LexerElementWithDollar:
-	body=LexerElement (dollarSymbol='$' (num=INT | op=Refs)?)?;
+	body=LexerElement (DOLLAR (num=INT | op=Refs)?)?;
 
 LexerElement:
 	body=LabeledLexerElement operator=EbnfSuffix? | body=LexerAtom operator=EbnfSuffix? | body=LexerBlock
@@ -367,6 +367,12 @@ terminal fragment ACTION_CHAR_LITERAL:
 // delimiter has been escaped.
 terminal fragment ACTION_ESC:
 	'\\' .;
+
+terminal DOLLAR:
+	'$';
+
+terminal SEMICOLON:
+	';';
 
 /** Argument action (a.k.a language code) */
 terminal ARG_OR_CHARSET:
