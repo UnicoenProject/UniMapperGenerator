@@ -7,6 +7,7 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess
 import com.waseda.enixer.exbnf.exBNF.*
+import org.eclipse.emf.ecore.EObject
 
 /**
  * Generates code from your model files on save.
@@ -301,14 +302,22 @@ class «name»Mapper extends «name»BaseVisitor<Object> {
 		switch type {
 			case "UniClassDec":
 				sb.append(r.makeUniClassDecMethodBody)
+			case "UniMethodDec":
+				sb.append(r.makeUniMethodDecMethodBody)
+			case "List<UniArg>":
+				sb.append(r.makeListMethodBody("UniArg"))
+			case "UniArg":
+				sb.append(r.makeUniArgMethodBody)
+			case "List<UniExpr>":
+				sb.append(r.makeListMethodBody("UniExpr"))
+			case "UniBlock":
+				sb.append(r.makeUniBlockMethodBody)
 			case "UniBinOp":
 				sb.append(r.makeUniBinOpMethodBody)
 			case "UniIntLiteral":
 				sb.append(r.makeUniIntLiteralMethodBody)
 			case "UniDoubleLiteral":
 				sb.append(r.makeUniDoubleLiteralMethodBody)
-			case "UniIf":
-				sb.append(r.makeUniIfMethodBody)
 			case "List<String>":
 				sb.append(r.makeListMethodBody("String"))
 			case "String":
@@ -320,6 +329,10 @@ class «name»Mapper extends «name»BaseVisitor<Object> {
 		sb
 	}
 
+	def makeCaseStatement(EObject obj, String type, String variable) '''				«name»Parser.«obj.eAllContents.toIterable.
+		filter(RuleRef).get(0).reference.name.toCamelCase»Context:
+					ret.«variable» = it.visit as «type»'''
+
 	def makeUniClassDecMethodBody(ParserRule r) {
 		val sb = new StringBuilder
 		sb.append(
@@ -330,20 +343,11 @@ class «name»Mapper extends «name»BaseVisitor<Object> {
 		r.eAllContents.toIterable.filter(ElementWithDollar).forEach [
 			switch it.op {
 				case "className":
-					sb.append(
-						'''				«name»Parser.«it.eAllContents.toIterable.filter(RuleRef).get(0).reference.name.
-							toCamelCase»Context:
-					ret.className = it.visit as String''' + nl)
+					sb.append(it.makeCaseStatement("String", it.op) + nl)
 				case "modifiers":
-					sb.append(
-						'''				«name»Parser.«it.eAllContents.toIterable.filter(RuleRef).get(0).reference.name.
-							toCamelCase»Context:
-					ret.modifiers = it.visit as List<String>''' + nl)
+					sb.append(it.makeCaseStatement("List<String>", it.op) + nl)
 				case "members":
-					sb.append(
-						'''				«name»Parser.«it.eAllContents.toIterable.filter(RuleRef).get(0).reference.name.
-							toCamelCase»Context:
-					ret.members = it.visit as UniMemberDec''' + nl)
+					sb.append(it.makeCaseStatement("UniMemberDec", it.op) + nl)
 			}
 		]
 		sb.append(
@@ -365,6 +369,75 @@ class «name»Mapper extends «name»BaseVisitor<Object> {
 		}
 		list
 		''')
+		sb.toString
+	}
+
+	def makeUniMethodDecMethodBody(ParserRule r) {
+		val sb = new StringBuilder
+		sb.append(
+			'''		val ret = new UniMethodDec
+		ctx.children.forEach [
+			switch it {''' + nl)
+		r.eAllContents.toIterable.filter(ElementWithDollar).forEach [
+			switch it.op {
+				case "returnType":
+					sb.append(it.makeCaseStatement("String", it.op) + nl)
+				case "methodName":
+					sb.append(it.makeCaseStatement("String", it.op) + nl)
+				case "block":
+					sb.append(it.makeCaseStatement("UniBlock", it.op) + nl)
+				case "modifiers":
+					sb.append(it.makeCaseStatement("List<String>", it.op) + nl)
+				case "args":
+					sb.append(it.makeCaseStatement("List<UniArg>", it.op) + nl)
+			}
+		]
+		sb.append(
+			'''			}
+		]
+		ret
+		''')
+		sb.toString
+	}
+
+	def makeUniArgMethodBody(ParserRule r) {
+		val sb = new StringBuilder
+		sb.append(
+			'''		val ret = new UniArg
+		ctx.children.forEach [
+			switch it {''' + nl)
+		r.eAllContents.toIterable.filter(ElementWithDollar).forEach [
+			switch it.op {
+				case "type":
+					sb.append(it.makeCaseStatement("String", it.op) + nl)
+				case "name":
+					sb.append(it.makeCaseStatement("String", it.op) + nl)
+			}
+		]
+		sb.append(
+			'''			}
+		]
+		ret
+		''')
+		sb.toString
+	}
+
+	def makeUniBlockMethodBody(ParserRule r) {
+		val sb = new StringBuilder
+		sb.append(
+			'''		val ret = Lists.newArrayList
+		ctx.children.forEach [
+			switch it {''' + nl)
+		r.eAllContents.toIterable.filter(ElementWithDollar).forEach [
+			switch it.op {
+				case "body":
+					sb.append(it.makeCaseStatement("UniExpr", it.op) + nl)
+			}
+		]
+		sb.append(
+			'''			}
+		]
+		new UniBlock(ret)''' + nl)
 		sb.toString
 	}
 
@@ -431,11 +504,6 @@ class «name»Mapper extends «name»BaseVisitor<Object> {
 		sb
 	}
 
-	def makeUniIfMethodBody(ParserRule r) {
-		var sb = new StringBuilder
-		sb
-	}
-
 	def makeStringMethodBody(ParserRule r) {
 		var sb = new StringBuilder
 		sb.append('''		ctx.text''' + nl)
@@ -444,7 +512,7 @@ class «name»Mapper extends «name»BaseVisitor<Object> {
 
 	def makeSuperMethodBody(ParserRule r) {
 		var sb = new StringBuilder
-		sb.append('''		// This return type is not supported.''' + nl)
+		sb.append('''		// Return type «r.type.name» is not supported.''' + nl)
 		sb.append('''		super.visit«r.name.toCamelCase»(ctx)''' + nl)
 		sb
 	}
