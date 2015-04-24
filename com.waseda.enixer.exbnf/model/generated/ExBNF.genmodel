@@ -3,7 +3,7 @@
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/com.waseda.enixer.exbnf/src-gen" editDirectory="/com.waseda.enixer.exbnf.edit/src"
     editorDirectory="/com.waseda.enixer.exbnf.editor/src" modelPluginID="com.waseda.enixer.exbnf"
     forceOverwrite="true" modelName="ExBNF" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
-    complianceLevel="5.0" copyrightFields="false" editPluginID="com.waseda.enixer.exbnf.edit"
+    complianceLevel="6.0" copyrightFields="false" editPluginID="com.waseda.enixer.exbnf.edit"
     editorPluginID="com.waseda.enixer.exbnf.editor" runtimeVersion="2.10">
   <genPackages prefix="ExBNF" basePackage="com.waseda.enixer.exbnf" disposableProviderFactory="true"
       fileExtensions="exbnf" ecorePackage="ExBNF.ecore#/">
@@ -131,7 +131,6 @@
     </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//ElementWithDollar">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//ElementWithDollar/body"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//ElementWithDollar/num"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//ElementWithDollar/op"/>
     </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//Element">

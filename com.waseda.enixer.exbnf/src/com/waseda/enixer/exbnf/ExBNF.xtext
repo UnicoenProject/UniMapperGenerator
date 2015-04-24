@@ -115,7 +115,7 @@ Alternative:
 	{Alternative} options=ElementOptions? elements+=ElementWithDollar*;
 
 ElementWithDollar:
-	body=Element (DOLLAR (num=INT | op=Refs))?;
+	body=Element (DOLLAR op=Refs)?;
 
 Element:
 	body=LabeledElement operator=EbnfSuffix? | body=Atom operator=EbnfSuffix? | body=Ebnf | body=ActionElement;
