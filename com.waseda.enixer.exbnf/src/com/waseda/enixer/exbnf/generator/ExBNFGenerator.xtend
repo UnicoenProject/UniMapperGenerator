@@ -8,6 +8,7 @@ import org.eclipse.xtext.generator.IGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess
 import com.waseda.enixer.exbnf.exBNF.*
 import org.eclipse.emf.ecore.EObject
+import com.waseda.enixer.exbnf.exBNF.ParserRule
 
 /**
  * Generates code from your model files on save.
@@ -138,18 +139,22 @@ class «name»Mapper extends «name»BaseVisitor<Object> {
 			nl)
 		val type = r.type.name
 		switch type {
+			case "UniArg":
+				sb.append(r.makeUniArgMethodBody)
+			case "UniBlock":
+				sb.append(r.makeUniBlockMethodBody)
+			case "UniBoolLiteral":
+				sb.append(r.makeUniBoolLiteralMethodBody)
+			case "UniBreak":
+				sb.append(r.makeUniBreakMethodBody)
 			case "UniClassDec":
 				sb.append(r.makeUniClassDecMethodBody)
 			case "UniMethodDec":
 				sb.append(r.makeUniMethodDecMethodBody)
 			case "List<UniArg>":
 				sb.append(r.makeListMethodBody("UniArg"))
-			case "UniArg":
-				sb.append(r.makeUniArgMethodBody)
 			case "List<UniExpr>":
 				sb.append(r.makeListMethodBody("UniExpr"))
-			case "UniBlock":
-				sb.append(r.makeUniBlockMethodBody)
 			case "UniIntLiteral":
 				sb.append(r.makeUniIntLiteralMethodBody)
 			case "UniDoubleLiteral":
@@ -163,6 +168,12 @@ class «name»Mapper extends «name»BaseVisitor<Object> {
 		}
 		sb.append('''	}''' + nl + nl)
 		sb
+	}
+
+	def makeUniBoolLiteralMethodBody(ParserRule rule) {
+		val sb = new StringBuilder
+		sb.append('''		new UniBoolLiteral(Boolean.parseBoolean(ctx.text))''')
+		sb.toString
 	}
 
 	def makeCaseStatement(EObject obj, String type, String variable) '''				«name»Parser.«obj.eAllContents.toIterable.
@@ -293,25 +304,31 @@ class «name»Mapper extends «name»BaseVisitor<Object> {
 	def makeUniIntLiteralMethodBody(ParserRule r) {
 		var sb = new StringBuilder
 		sb.append('''		new UniIntLiteral(Integer.parseInt(ctx.text))''' + nl)
-		sb
+		sb.toString
 	}
 
 	def makeUniDoubleLiteralMethodBody(ParserRule r) {
 		var sb = new StringBuilder
 		sb.append('''		new UniDoubleLiteral(Double.parseDouble(ctx.text))''' + nl)
-		sb
+		sb.toString
 	}
 
 	def makeStringMethodBody(ParserRule r) {
 		var sb = new StringBuilder
 		sb.append('''		ctx.text''' + nl)
-		sb
+		sb.toString
 	}
 
 	def makeSuperMethodBody(ParserRule r) {
 		var sb = new StringBuilder
 		sb.append('''		// Return type «r.type.name» is not supported.''' + nl)
 		sb.append('''		super.visit«r.name.toCamelCase»(ctx)''' + nl)
-		sb
+		sb.toString
+	}
+
+	def makeUniBreakMethodBody(ParserRule r) {
+		val sb = new StringBuilder
+		sb.append('''		new UniBreak()''' + nl)
+		sb.toString
 	}
 }
