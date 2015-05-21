@@ -88,9 +88,9 @@ class «name»Mapper extends «name»BaseVisitor<Object> {
 		val lexer = new «name»Lexer(chars)
 		val tokens = new CommonTokenStream(lexer)
 		val parser = new «name»Parser(tokens)
-		val tree = parser.«g.rules.get(0).name»
+«IF g.rules.size > 0»		val tree = parser.«IF g.root != null»«g.root.root.name»«ELSE»«g.rules.get(0).name»«ENDIF»
 		tree.visit
-	}
+«ENDIF»	}
 
 	override public visitChildren(RuleNode node) {
 		val n = node.childCount;

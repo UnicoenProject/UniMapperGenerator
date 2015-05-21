@@ -6,6 +6,7 @@ generate exBNF "http://www.waseda.com/enixer/exbnf/ExBNF"
 /** Grammar */
 Grammar:
 	type=GrammarType? 'grammar' name=Refs SEMICOLON
+	root=rootSelection?
 	prequels+=PrequelConstruct*
 	rules+=Rule*
 	modes+=Mode*;
@@ -15,6 +16,9 @@ enum GrammarType:
 	| LEXER='lexer'
 	| PARSER='parser'
 	| TREE='tree';
+
+rootSelection:
+	'root' root=[ParserRule|RULE_REF] SEMICOLON;
 
 PrequelConstruct:
 	Options | Imports | Tokens | GrammarAction;
