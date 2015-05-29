@@ -3,12 +3,18 @@
  */
 package com.waseda.enixer.exbnf.generator
 
-import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.xtext.generator.IGenerator
-import org.eclipse.xtext.generator.IFileSystemAccess
-import com.waseda.enixer.exbnf.exBNF.*
-import org.eclipse.emf.ecore.EObject
+import com.waseda.enixer.exbnf.exBNF.ElementWithDollar
+import com.waseda.enixer.exbnf.exBNF.Grammar
+import com.waseda.enixer.exbnf.exBNF.LexerRule
 import com.waseda.enixer.exbnf.exBNF.ParserRule
+import com.waseda.enixer.exbnf.exBNF.RuleRef
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.xtext.generator.IFileSystemAccess
+import org.eclipse.xtext.generator.IGenerator
+import java.lang.reflect.Type
+import java.lang.reflect.ParameterizedType
+import net.unicoen.node.UniNode
 
 /**
  * Generates code from your model files on save.
@@ -17,15 +23,16 @@ import com.waseda.enixer.exbnf.exBNF.ParserRule
  */
 class ExBNFGenerator implements IGenerator {
 	val nl = System.getProperty("line.separator")
-	var name = new String
+	val packagePrefix = UniNode.package.name + '.'
+	private String _name
 
 	override def doGenerate(Resource resource, IFileSystemAccess fsa) {
 		val g4Generator = new ANTLRGrammarGenerator(fsa)
 		resource.allContents.toIterable.filter(Grammar).forEach [
-			name = it.name.toCamelCase
-			g4Generator.generate(name, it);
-			fsa.generateFile(name + "Mapper.xtend", it.generateMapper)
-			fsa.generateFile(name + "MapperTest.xtend", it.generateMapperTestTemplate)
+			_name = it.name.toCamelCase
+			g4Generator.generate(_name, it);
+			fsa.generateFile(_name + "Mapper.xtend", it.generateMapper)
+			fsa.generateFile(_name + "MapperTest.xtend", it.generateMapperTestTemplate)
 		]
 	}
 
@@ -35,11 +42,11 @@ import org.junit.Test
 import static org.hamcrest.Matchers.*
 import static org.junit.Assert.*
 
-class «name»MapperTest {
-	val mapper = new «name»Mapper(true)
+class «_name»MapperTest {
+	val mapper = new «_name»Mapper(true)
 
 	@Test
-	def «name»Test(){
+	def «_name»Test(){
 		
 	}
 
@@ -56,15 +63,12 @@ import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
 import org.antlr.v4.runtime.tree.ParseTree
-import net.unicoen.parser.«name»Lexer
-import net.unicoen.parser.«name»Parser
-import net.unicoen.parser.«name»BaseVisitor
-import net.unicoen.node.UniBinOp
-import net.unicoen.node.UniExpr
-import net.unicoen.node.UniIntLiteral
-import net.unicoen.node.UniDoubleLiteral
+import net.unicoen.parser.«_name»Lexer
+import net.unicoen.parser.«_name»Parser
+import net.unicoen.parser.«_name»BaseVisitor
+import net.unicoen.node.*
 
-class «name»Mapper extends «name»BaseVisitor<Object> {
+class «_name»Mapper extends «_name»BaseVisitor<Object> {
 	var _isDebugMode = false
 
 	new(boolean isDebugMode) {
@@ -85,9 +89,9 @@ class «name»Mapper extends «name»BaseVisitor<Object> {
 	}
 
 	def parseCore(CharStream chars) {
-		val lexer = new «name»Lexer(chars)
+		val lexer = new «_name»Lexer(chars)
 		val tokens = new CommonTokenStream(lexer)
-		val parser = new «name»Parser(tokens)
+		val parser = new «_name»Parser(tokens)
 «IF g.rules.size > 0»		val tree = parser.«IF g.root != null»«g.root.root.name»«ELSE»«g.rules.get(0).name»«ENDIF»
 		tree.visit
 «ENDIF»	}
@@ -110,7 +114,7 @@ class «name»Mapper extends «name»BaseVisitor<Object> {
 			if (!(tree instanceof ParserRuleContext)) {
 				return visitTerminal(tree as TerminalNode)
 			}
-			val ruleName = «name»Parser.ruleNames.get((tree as ParserRuleContext).ruleIndex)
+			val ruleName = «_name»Parser.ruleNames.get((tree as ParserRuleContext).ruleIndex)
 			println("*** visit" + ruleName + " ***")
 			println(tree.text)
 			val ret = tree.accept(this)
@@ -122,7 +126,11 @@ class «name»Mapper extends «name»BaseVisitor<Object> {
 	}''' + nl + nl)
 		g.rules.forEach [
 			if (it.type != null) {
-				sb.append(it.visitMethod)
+				if (it.type.name.endsWith("Literal")) {
+					sb.append(it.makeLiteralMethod)
+				} else {
+					sb.append(it.visitMethod)
+				}
 			}
 		]
 		sb.append('}' + nl)
@@ -135,69 +143,63 @@ class «name»Mapper extends «name»BaseVisitor<Object> {
 
 	def dispatch visitMethod(ParserRule r) {
 		val sb = new StringBuilder
-		sb.append('''	override public visit«r.name.toCamelCase»(«name»Parser.«r.name.toCamelCase»Context ctx) {''' +
+		val name = r.type.name
+		sb.append('''	override public visit«r.name.toCamelCase»(«_name»Parser.«r.name.toCamelCase»Context ctx) {''' +
 			nl)
-		val type = r.type.name
-		switch type {
-			case "UniArg":
-				sb.append(r.makeUniArgMethodBody)
-			case "UniBlock":
-				sb.append(r.makeUniBlockMethodBody)
-			case "UniBoolLiteral":
-				sb.append(r.makeUniBoolLiteralMethodBody)
-			case "UniBreak":
-				sb.append(r.makeUniBreakMethodBody)
-			case "UniClassDec":
-				sb.append(r.makeUniClassDecMethodBody)
-			case "UniMethodDec":
-				sb.append(r.makeUniMethodDecMethodBody)
-			case "List<UniArg>":
-				sb.append(r.makeListMethodBody("UniArg"))
-			case "List<UniExpr>":
-				sb.append(r.makeListMethodBody("UniExpr"))
-			case "UniIntLiteral":
-				sb.append(r.makeUniIntLiteralMethodBody)
-			case "UniDoubleLiteral":
-				sb.append(r.makeUniDoubleLiteralMethodBody)
-			case "List<String>":
-				sb.append(r.makeListMethodBody("String"))
-			case "String":
-				sb.append(r.makeStringMethodBody)
-			default:
-				sb.append(r.makeSuperMethodBody)
+		if (name.startsWith("Uni")) {
+			sb.append(r.makeMethodBody(Class.forName(packagePrefix + name)))
+		} else if (name.startsWith("List")) {
+			val itemClassName = name.substring(name.indexOf('<') + 1, name.indexOf('>'))
+			sb.append(r.makeListMethodBody(itemClassName))
+		} else if (name.equals("String")) {
+			sb.append(r.makeStringMethodBody)
+		} else {
+			throw new RuntimeException("Unknown Class Name: " + name)
 		}
 		sb.append('''	}''' + nl + nl)
 		sb
 	}
 
-	def makeUniBoolLiteralMethodBody(ParserRule rule) {
-		val sb = new StringBuilder
-		sb.append('''		new UniBoolLiteral(Boolean.parseBoolean(ctx.text))''')
-		sb.toString
-	}
-
-	def makeCaseStatement(EObject obj, String type, String variable) '''				«name»Parser.«obj.eAllContents.toIterable.
+	def makeCaseStatement(EObject obj, String type, String variable) '''				«_name»Parser.«obj.eAllContents.toIterable.
 		filter(RuleRef).get(0).reference.name.toCamelCase»Context:
 					ret.«variable» = it.visit as «type»'''
 
-	def makeUniClassDecMethodBody(ParserRule r) {
+	def makeMethodBody(ParserRule r, Class<?> clz) {
 		val sb = new StringBuilder
-		sb.append('''		val ret = new UniClassDec
-		ret.members = Lists.newArrayList
+		println(r.type.name)
+		sb.append('''		val ret = new «r.type.name»
 		ctx.children.forEach [
 			switch it {''' + nl)
 		var list = r.eAllContents.toIterable.filter(ElementWithDollar)
 		list.forEach [
-			switch it.op {
-				case "className":
-					sb.append(it.makeCaseStatement("String", it.op) + nl)
-				case "modifiers":
-					sb.append(it.makeCaseStatement("List<String>", it.op) + nl)
-				case "members":
-					sb.append(it.makeCaseStatement("UniMemberDec", it.op) + nl)
-				case null: {
-					// do nothing
-				}
+			if (it.op == null) {
+				return
+			}
+			if (it.op.equals("__merge")) {
+				val fields = clz.fields
+				val ruleName = it.eAllContents.toIterable.filter(RuleRef).get(0).reference.name.toCamelCase
+				sb.append('''				«_name»Parser.«ruleName»Context: {''' + nl)
+				sb.append('''					val child = it.visit as «r.type.name»''' + nl)
+				fields.forEach [
+					sb.append('''					if (child.«it.name» != null) {''' + nl)
+					if (it.type.simpleName.endsWith("List")) {
+						sb.append('''						if (ret.«it.name» != null) {''' + nl)
+						sb.append('''							ret.«it.name» += child.«it.name»''' + nl)
+						sb.append('''						} else {''' + nl)
+						sb.append('''							ret.«it.name» = child.«it.name»''' + nl)
+						sb.append('''						}''' + nl)
+					} else {
+						sb.append('''						ret.«it.name» = child.«it.name»''' + nl)
+					}
+					sb.append('''					}''' + nl)
+				]
+			}
+			try {
+				val field = clz.getField(it.op)
+				val typeName = field.genericType.typeName
+				sb.append(it.makeCaseStatement(typeName, it.op) + nl)
+			} catch (NoSuchFieldException e) {
+				return
 			}
 		]
 		sb.append(
@@ -206,6 +208,28 @@ class «name»Mapper extends «name»BaseVisitor<Object> {
 		ret
 		''')
 		sb.toString
+	}
+
+	def getTypeName(Type type) {
+		switch type {
+			Class<?>:
+				return type.name
+			ParameterizedType: {
+				val sb = new StringBuilder
+				sb.append(type.typeName).append('<')
+				var isFirst = true
+				for (Type arg : type.actualTypeArguments) {
+					if (!isFirst) {
+						sb.append(',')
+					}
+					sb.append(arg.typeName)
+				}
+				sb.append('>')
+				return sb.toString
+			}
+			default:
+				throw new RuntimeException("Unknown type:" + type.toString)
+		}
 	}
 
 	def makeListMethodBody(ParserRule r, String clz) {
@@ -222,113 +246,27 @@ class «name»Mapper extends «name»BaseVisitor<Object> {
 		sb.toString
 	}
 
-	def makeUniMethodDecMethodBody(ParserRule r) {
-		val sb = new StringBuilder
-		sb.append('''		val ret = new UniMethodDec
-		ctx.children.forEach [
-			switch it {''' + nl)
-		r.eAllContents.toIterable.filter(ElementWithDollar).forEach [
-			switch it.op {
-				case "returnType":
-					sb.append(it.makeCaseStatement("String", it.op) + nl)
-				case "methodName":
-					sb.append(it.makeCaseStatement("String", it.op) + nl)
-				case "block":
-					sb.append(it.makeCaseStatement("UniBlock", it.op) + nl)
-				case "modifiers":
-					sb.append(it.makeCaseStatement("List<String>", it.op) + nl)
-				case "args":
-					sb.append(it.makeCaseStatement("List<UniArg>", it.op) + nl)
-				case null: {
-					// do nothing
-				}
-			}
-		]
-		sb.append(
-			'''			}
-		]
-		ret
-		''')
-		sb.toString
-	}
-
-	def makeUniArgMethodBody(ParserRule r) {
-		val sb = new StringBuilder
-		sb.append('''		val ret = new UniArg
-		ctx.children.forEach [
-			switch it {''' + nl)
-		r.eAllContents.toIterable.filter(ElementWithDollar).forEach [
-			switch it.op {
-				case "type":
-					sb.append(it.makeCaseStatement("String", it.op) + nl)
-				case "name":
-					sb.append(it.makeCaseStatement("String", it.op) + nl)
-				case null: {
-					// do nothing
-				}
-			}
-		]
-		sb.append(
-			'''			}
-		]
-		ret
-		''')
-		sb.toString
-	}
-
-	def makeUniBlockMethodBody(ParserRule r) {
-		val sb = new StringBuilder
-		sb.append('''		val ret = Lists.newArrayList
-		ctx.children.forEach [
-			switch it {''' + nl)
-		r.eAllContents.toIterable.filter(ElementWithDollar).forEach [
-			switch it.op {
-				case "body":
-					sb.append(it.makeCaseStatement("UniExpr", it.op) + nl)
-				case null: {
-					// do nothing
-				}
-			}
-		]
-		sb.append('''			}
-		]
-		new UniBlock(ret)''' + nl)
-		sb.toString
-	}
-
 	def dispatch visitMethod(LexerRule r) {
-		var name = r.type.name
-		name
-	}
-
-	def makeUniIntLiteralMethodBody(ParserRule r) {
-		var sb = new StringBuilder
-		sb.append('''		new UniIntLiteral(Integer.parseInt(ctx.text))''' + nl)
-		sb.toString
-	}
-
-	def makeUniDoubleLiteralMethodBody(ParserRule r) {
-		var sb = new StringBuilder
-		sb.append('''		new UniDoubleLiteral(Double.parseDouble(ctx.text))''' + nl)
-		sb.toString
+		r.type.name
 	}
 
 	def makeStringMethodBody(ParserRule r) {
-		var sb = new StringBuilder
+		val sb = new StringBuilder
 		sb.append('''		ctx.text''' + nl)
 		sb.toString
 	}
 
-	def makeSuperMethodBody(ParserRule r) {
-		var sb = new StringBuilder
-		sb.append('''		// Return type «r.type.name» is not supported.''' + nl)
-		sb.append('''		super.visit«r.name.toCamelCase»(ctx)''' + nl)
+	def dispatch makeLiteralMethod(ParserRule r) {
+		val sb = new StringBuilder
+		val methodName = "visit" + r.name.toCamelCase
+		sb.append('''	override public «methodName»(«_name»Parser.«r.name.toCamelCase»Context ctx) {''' + nl)
+		sb.append('''		throw new RuntimeException("Unimplemented Method: «methodName»")''' + nl)
+		sb.append('''	}''' + nl + nl)
 		sb.toString
 	}
 
-	def makeUniBreakMethodBody(ParserRule r) {
-		val sb = new StringBuilder
-		sb.append('''		new UniBreak()''' + nl)
-		sb.toString
+	def dispatch makeLiteralMethod(LexerRule r) {
+		r.visitMethod
 	}
+
 }

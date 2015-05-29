@@ -63,7 +63,7 @@ class ANTLRGrammarGenerator {
 
 	def dispatch compile(V3Token v3) '''«v3.name»«IF !v3.value.empty» = «v3.value»«ENDIF»;'''
 
-	def dispatch compile(GrammarAction ga) '''«ga.atSymbol»«IF !ga.scope.empty»«ga.scope» «ga.colonSymbol» «ENDIF»«ga.
+	def dispatch compile(GrammarAction ga) '''@«IF !ga.scope.empty»«ga.scope» «ga.colonSymbol» «ENDIF»«ga.
 		name» «ga.action»'''
 
 	def dispatch compile(Mode m) '''mode «m.id»;«FOR lr : m.rules»«lr.compile»«ENDFOR»'''
@@ -85,14 +85,14 @@ class ANTLRGrammarGenerator {
 
 	def dispatch compile(LocalVars lv) '''locals «lv.body»'''
 
-	def dispatch compile(RuleAction ra) '''«ra.atSymbol» «ra.name» «ra.body»'''
+	def dispatch compile(RuleAction ra) '''@«ra.name» «ra.body»'''
 
 	def dispatch compile(RuleBlock rb) '''«rb.body.compile»'''
 
 	def dispatch compile(RuleAltList ral) '''«FOR a : ral.alternatives»«IF !ral.alternatives.get(0).equals(a)»| «ENDIF»«a.
 		compile»«ENDFOR»'''
 
-	def dispatch compile(LabeledAlt la) '''«la.body.compile»«IF la.poundSymbol != null» «la.poundSymbol»«la.label»«ENDIF»'''
+	def dispatch compile(LabeledAlt la) '''«la.body.compile»«IF la.label != null» #«la.label»«ENDIF»'''
 
 	def dispatch compile(Alternative al) '''«IF al.options != null»«al.options.compile» «ENDIF»«FOR e : al.elements»«e.
 		compile»«ENDFOR»'''
@@ -119,7 +119,7 @@ class ANTLRGrammarGenerator {
 
 	def dispatch compile(RuleRef rr) '''«rr.reference.name»«rr.args»«IF rr.options != null»«rr.options.compile»«ENDIF»'''
 
-	def dispatch compile(ElementOptions eo) '''«eo.begin»«FOR o : eo.options»«o.compile»,«ENDFOR»«eo.end»'''
+	def dispatch compile(ElementOptions eo) '''<«FOR o : eo.options»«o.compile»,«ENDFOR»>'''
 
 	def dispatch compile(Range ra) ''''«ra.from»'..'«ra.to»' '''
 

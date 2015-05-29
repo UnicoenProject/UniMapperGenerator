@@ -64,7 +64,7 @@ V3Token:
 
 /** Grammar Actions */
 GrammarAction:
-	atSymbol='@' (scope=ActionScope colonSymbol='::')? name=Refs action=ACTION;
+	'@' (scope=ActionScope colonSymbol='::')? name=Refs action=ACTION;
 
 ActionScope:
 	'parser' | 'lexer' | 'tree' | Refs;
@@ -104,7 +104,7 @@ RulePrequel:
 	Options | RuleAction;
 
 RuleAction:
-	atSymbol='@' name=Refs body=ACTION;
+	'@' name=Refs body=ACTION;
 
 RuleBlock:
 	body=RuleAltList;
@@ -113,13 +113,13 @@ RuleAltList:
 	alternatives+=LabeledAlt ('|' alternatives+=LabeledAlt)*;
 
 LabeledAlt:
-	body=Alternative (poundSymbol='#' label=Refs)?;
+	body=Alternative ('#' label=Refs)?;
 
 Alternative:
 	{Alternative} options=ElementOptions? elements+=ElementWithDollar*;
 
 ElementWithDollar:
-	body=Element (DOLLAR op=Refs)?;
+	body=Element (DOLLAR op=('__merge' | Refs))?;
 
 Element:
 	body=LabeledElement operator=EbnfSuffix? | body=Atom operator=EbnfSuffix? | body=Ebnf | body=ActionElement;
@@ -132,7 +132,7 @@ ActionElement:
 	body=ACTION options=ElementOptions?;
 
 LabeledElement:
-	name=Refs (op='=' | op='+=') (body=Atom | body=Block);
+	name=Refs op=('=' | '+=') (body=Atom | body=Block);
 
 EbnfSuffix:
 	operator='?' nongreedy='?'? | operator='*' nongreedy='?'? | operator='+' nongreedy='?'?;
@@ -151,17 +151,13 @@ AltList:
 	alternatives+=Alternative ('|' alternatives+=Alternative)*;
 
 Atom:
-	body=Range
-	| body=Terminal
-	| body=RuleRef
-	| body=NotSet
-	| body=Wildcard;
+	body=(Range | Terminal | RuleRef | NotSet | Wildcard);
 
 RuleRef:
 	reference=[ParserRule|RULE_REF] args=ARG_OR_CHARSET? options=ElementOptions?;
 
 ElementOptions:
-	{ElementOptions} begin='<' (options+=ElementOption (',' options+=ElementOption)*)? end='>';
+	{ElementOptions} '<' (options+=ElementOption (',' options+=ElementOption)*)? '>';
 
 Range:
 	from=STRING '..' to=STRING;
@@ -224,10 +220,10 @@ LexerElement:
 	operator=EbnfSuffix? | body=ActionElement;
 
 LabeledLexerElement:
-	label=Refs (op='=' | op='+=') (body=LexerAtom | body=LexerBlock);
+	label=Refs op=('=' | '+=') (body=LexerAtom | body=LexerBlock);
 
 LexerAtom:
-	body=Range | body=Terminal | body=RuleRef | body=NotSet | body=Wildcard | body=LexerCharSet;
+	body=(Range | Terminal | RuleRef | NotSet | Wildcard | LexerCharSet);
 
 LexerCharSet:
 	body=ARG_OR_CHARSET;
