@@ -139,8 +139,8 @@ class ANTLRGrammarGenerator {
 	def dispatch compile(ElementOption eo) '''«IF eo.qualifiedId != null»«eo.qualifiedId.compile»«ELSE»«eo.id» «eo.
 		assign» «eo.value»«ENDIF»'''
 
-	def dispatch compile(LexerRule lr) '''«IF lr.^fragment»flagment «ENDIF»«lr.name» :
-		«lr.body.compile»«lr.semicolonSymbol»'''
+	def dispatch compile(LexerRule lr) '''«IF lr.^fragment»fragment «ENDIF»«lr.name» :
+		«lr.body.compile»;'''
 
 	def dispatch compile(LexerRuleBlock lrb) '''«lrb.body.compile»'''
 

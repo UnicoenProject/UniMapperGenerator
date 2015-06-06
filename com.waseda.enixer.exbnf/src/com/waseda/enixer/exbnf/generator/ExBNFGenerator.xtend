@@ -8,13 +8,14 @@ import com.waseda.enixer.exbnf.exBNF.Grammar
 import com.waseda.enixer.exbnf.exBNF.LexerRule
 import com.waseda.enixer.exbnf.exBNF.ParserRule
 import com.waseda.enixer.exbnf.exBNF.RuleRef
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
 import java.lang.reflect.Type
 import java.lang.reflect.ParameterizedType
 import net.unicoen.node.UniNode
+import com.waseda.enixer.exbnf.exBNF.Atom
+import com.waseda.enixer.exbnf.exBNF.Terminal
 
 /**
  * Generates code from your model files on save.
@@ -22,17 +23,17 @@ import net.unicoen.node.UniNode
  * see http://www.eclipse.org/Xtext/documentation.html#TutorialCodeGeneration
  */
 class ExBNFGenerator implements IGenerator {
-	val nl = System.getProperty("line.separator")
-	val packagePrefix = UniNode.package.name + '.'
-	private String _name
+	private String _grammarName
+	private int _nonTerminalId
+	private int _terminalId
 
 	override def doGenerate(Resource resource, IFileSystemAccess fsa) {
 		val g4Generator = new ANTLRGrammarGenerator(fsa)
 		resource.allContents.toIterable.filter(Grammar).forEach [
-			_name = it.name.toCamelCase
-			g4Generator.generate(_name, it);
-			fsa.generateFile(_name + "Mapper.xtend", it.generateMapper)
-			fsa.generateFile(_name + "MapperTest.xtend", it.generateMapperTestTemplate)
+			_grammarName = it.name.toCamelCase
+			g4Generator.generate(_grammarName, it);
+			fsa.generateFile(_grammarName + "Mapper.xtend", it.generateMapper)
+			fsa.generateFile(_grammarName + "MapperTest.xtend", it.generateMapperTestTemplate)
 		]
 	}
 
@@ -42,33 +43,42 @@ import org.junit.Test
 import static org.hamcrest.Matchers.*
 import static org.junit.Assert.*
 
-class «_name»MapperTest {
-	val mapper = new «_name»Mapper(true)
+class «_grammarName»MapperTest {
+	val mapper = new «_grammarName»Mapper(true)
 
 	@Test
-	def «_name»Test(){
+	def «_grammarName»Test(){
 		
 	}
 
 }
 	'''
 
-	def generateMapper(Grammar g) {
-		val sb = new StringBuilder
-		sb.append('''package net.unicoen.mapper
+	def generateImports() '''package net.unicoen.mapper
 
 import java.io.FileInputStream
+import java.util.ArrayList
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.ParserRuleContext
+import org.antlr.v4.runtime.RuleContext
 import org.antlr.v4.runtime.tree.ParseTree
-import net.unicoen.parser.«_name»Lexer
-import net.unicoen.parser.«_name»Parser
-import net.unicoen.parser.«_name»BaseVisitor
+import org.antlr.v4.runtime.tree.RuleNode
+import org.antlr.v4.runtime.tree.TerminalNode
+import net.unicoen.parser.«_grammarName»Lexer
+import net.unicoen.parser.«_grammarName»Parser
+import net.unicoen.parser.«_grammarName»BaseVisitor
 import net.unicoen.node.*
+'''
 
-class «_name»Mapper extends «_name»BaseVisitor<Object> {
+	def generateMapper(Grammar g) {
+		val sb = new StringBuilder
+		sb.nl(generateImports)
+		_nonTerminalId = 0
+		_terminalId = 0
+
+		sb.nl('''class «_grammarName»Mapper extends «_grammarName»BaseVisitor<Object> {
 	var _isDebugMode = false
 
 	new(boolean isDebugMode) {
@@ -89,9 +99,9 @@ class «_name»Mapper extends «_name»BaseVisitor<Object> {
 	}
 
 	def parseCore(CharStream chars) {
-		val lexer = new «_name»Lexer(chars)
+		val lexer = new «_grammarName»Lexer(chars)
 		val tokens = new CommonTokenStream(lexer)
-		val parser = new «_name»Parser(tokens)
+		val parser = new «_grammarName»Parser(tokens)
 «IF g.rules.size > 0»		val tree = parser.«IF g.root != null»«g.root.root.name»«ELSE»«g.rules.get(0).name»«ENDIF»
 		tree.visit
 «ENDIF»	}
@@ -114,7 +124,7 @@ class «_name»Mapper extends «_name»BaseVisitor<Object> {
 			if (!(tree instanceof ParserRuleContext)) {
 				return visitTerminal(tree as TerminalNode)
 			}
-			val ruleName = «_name»Parser.ruleNames.get((tree as ParserRuleContext).ruleIndex)
+			val ruleName = «_grammarName»Parser.ruleNames.get((tree as ParserRuleContext).ruleIndex)
 			println("*** visit" + ruleName + " ***")
 			println(tree.text)
 			val ret = tree.accept(this)
@@ -123,17 +133,21 @@ class «_name»Mapper extends «_name»BaseVisitor<Object> {
 		} else {
 			tree.accept(this)
 		}
-	}''' + nl + nl)
+	}''')
+		sb.nl
 		g.rules.forEach [
 			if (it.type != null) {
 				if (it.type.name.endsWith("Literal")) {
 					sb.append(it.makeLiteralMethod)
 				} else {
-					sb.append(it.visitMethod)
+					sb.append(it.makeVisitMethod)
 				}
+			} else {
+				_nonTerminalId += it.eAllContents.filter(RuleRef).size
+				_terminalId += it.eAllContents.filter(Terminal).size
 			}
 		]
-		sb.append('}' + nl)
+		sb.nl('}')
 		sb.toString
 	}
 
@@ -141,73 +155,113 @@ class «_name»Mapper extends «_name»BaseVisitor<Object> {
 		Character.toUpperCase(str.charAt(0)) + str.substring(1)
 	}
 
-	def dispatch visitMethod(ParserRule r) {
+	def dispatch makeVisitMethod(ParserRule r) {
 		val sb = new StringBuilder
-		val name = r.type.name
-		sb.append('''	override public visit«r.name.toCamelCase»(«_name»Parser.«r.name.toCamelCase»Context ctx) {''' +
-			nl)
-		if (name.startsWith("Uni")) {
-			sb.append(r.makeMethodBody(Class.forName(packagePrefix + name)))
-		} else if (name.startsWith("List")) {
-			val itemClassName = name.substring(name.indexOf('<') + 1, name.indexOf('>'))
+		val ruleName = r.name.toCamelCase
+		sb.nl('''	override public visit«ruleName»(«_grammarName»Parser.«ruleName»Context ctx) {''')
+		val typeName = r.type.name
+		if (typeName.startsWith("Uni")) {
+			val packagePrefix = UniNode.package.name + '.'
+			sb.append(r.makeMethodBody(Class.forName(packagePrefix + typeName)))
+		} else if (typeName.startsWith("List")) {
+			_nonTerminalId += r.eAllContents.size
+			val itemClassName = typeName.substring(typeName.indexOf('<') + 1, typeName.indexOf('>'))
 			sb.append(r.makeListMethodBody(itemClassName))
-		} else if (name.equals("String")) {
+		} else if (typeName.equals("String")) {
 			sb.append(r.makeStringMethodBody)
 		} else {
-			throw new RuntimeException("Unknown Class Name: " + name)
+			die("Unknown Class Name: " + typeName)
 		}
-		sb.append('''	}''' + nl + nl)
+		sb.nl('''	}''')
+		sb.nl
 		sb
 	}
 
-	def makeCaseStatement(EObject obj, String type, String variable) '''				«_name»Parser.«obj.eAllContents.toIterable.
-		filter(RuleRef).get(0).reference.name.toCamelCase»Context:
-					ret.«variable» = it.visit as «type»'''
+	def makeCaseStatement(ElementWithDollar obj, String fieldTypeName, String fieldName, StringBuilder sb) {
+		if (!(obj.body.body instanceof Atom)) {
+			die("Internal error: " + obj.body.body)
+		}
+		val rule = obj.eAllContents.toList.filter(RuleRef).head
+		if (rule != null) {
+			val ruleName = rule.reference.name.toCamelCase
+			if (fieldTypeName.contains("List")) {
+				sb.nl('''					case «_nonTerminalId»: {''')
+				val refType = obj.referenceReturnType
+				if (refType == null) {
+					die("Rule " + ruleName + " does not have return type.")
+				}
+				if (refType.contains("List")) {
+					sb.nl('''						if (ret.«fieldName» == null) {''')
+					sb.nl('''							ret.«fieldName» = it.visit as «fieldTypeName»''')
+					sb.nl('''						} else {''')
+					sb.nl('''							ret.«fieldName» += it.visit as «fieldTypeName»''')
+					sb.nl('''						}''')
+				} else {
+					sb.nl('''						if (ret.«fieldName» == null) {''')
+					sb.nl('''							ret.«fieldName» = new ArrayList<«refType»>''')
+					sb.nl('''						}''')
+					sb.nl('''						ret.«fieldName» += it.visit as «fieldTypeName»''')
+				}
+				sb.nl('''					}''')
+			} else {
+				sb.nl('''					case «_nonTerminalId»:''')
+				sb.nl('''						ret.«fieldName» = it.visit as «fieldTypeName»''')
+			}
+			return
+		}
+		die("Unreach")
+	}
 
-	def makeMethodBody(ParserRule r, Class<?> clz) {
+	def makeMethodBody(ParserRule r, Class<?> clazz) {
 		val sb = new StringBuilder
-		println(r.type.name)
-		sb.append('''		val ret = new «r.type.name»
-		ctx.children.forEach [
-			switch it {''' + nl)
+		sb.nl('''		val ret = new «r.type.name»''')
+		sb.nl('''		ctx.children.forEach [''')
+		sb.nl('''			if (it instanceof RuleContext) {''')
+		sb.nl('''				switch (it as RuleContext).invokingState {''')
 		var list = r.eAllContents.toIterable.filter(ElementWithDollar)
 		list.forEach [
 			if (it.op == null) {
+				it.countId
 				return
 			}
 			if (it.op.equals("__merge")) {
-				val fields = clz.fields
+				if (!r.type.name.equals(it.referenceReturnType)) {
+					die("Expected return type: " + r.type.name + " actual type: " + it.referenceReturnType)
+				}
 				val ruleName = it.eAllContents.toIterable.filter(RuleRef).get(0).reference.name.toCamelCase
-				sb.append('''				«_name»Parser.«ruleName»Context: {''' + nl)
-				sb.append('''					val child = it.visit as «r.type.name»''' + nl)
-				fields.forEach [
-					sb.append('''					if (child.«it.name» != null) {''' + nl)
-					if (it.type.simpleName.endsWith("List")) {
-						sb.append('''						if (ret.«it.name» != null) {''' + nl)
-						sb.append('''							ret.«it.name» += child.«it.name»''' + nl)
-						sb.append('''						} else {''' + nl)
-						sb.append('''							ret.«it.name» = child.«it.name»''' + nl)
-						sb.append('''						}''' + nl)
-					} else {
-						sb.append('''						ret.«it.name» = child.«it.name»''' + nl)
-					}
-					sb.append('''					}''' + nl)
-				]
-			}
-			try {
-				val field = clz.getField(it.op)
-				val typeName = field.genericType.typeName
-				sb.append(it.makeCaseStatement(typeName, it.op) + nl)
-			} catch (NoSuchFieldException e) {
+				sb.nl('''				case «_nonTerminalId»: {''')
+				sb.nl('''					val child = it.visit as «r.type.name»''')
+				sb.nl('''					ret.merge(child)''')
+				sb.nl('''				}''')
+				it.countId
 				return
 			}
+			try {
+				val field = clazz.getField(it.op)
+				val fieldTypeName = field.genericType.typeName
+				it.makeCaseStatement(fieldTypeName, it.op, sb)
+				it.countId
+			} catch (NoSuchFieldException e) {
+				die("No such Field: " + it.op)
+			}
 		]
-		sb.append(
-			'''			}
-		]
-		ret
-		''')
+		sb.nl('''				}''')
+		sb.nl('''			}''')
+		sb.nl('''		]''')
+		sb.nl('''		ret''')
 		sb.toString
+	}
+
+	def getReferenceReturnType(ElementWithDollar r) {
+		if (r.body.body instanceof Atom) {
+			val atom = r.body.body as Atom
+			if (atom.body instanceof RuleRef) {
+				val ref = atom.body as RuleRef
+				if (ref.reference.type != null) {
+					ref.reference.type.name
+				}
+			}
+		}
 	}
 
 	def getTypeName(Type type) {
@@ -228,45 +282,68 @@ class «_name»Mapper extends «_name»BaseVisitor<Object> {
 				return sb.toString
 			}
 			default:
-				throw new RuntimeException("Unknown type:" + type.toString)
+				die("Unknown type:" + type.toString)
 		}
 	}
 
-	def makeListMethodBody(ParserRule r, String clz) {
+	def makeListMethodBody(ParserRule r, String itemClassName) {
 		val sb = new StringBuilder
-		sb.append(
-			'''		val list = Lists.newArrayList
+		sb.nl('''		val list = new ArrayList<«itemClassName»>
 		if (ctx.children != null) {
 			ctx.children.forEach [
-				list += it.visit as «clz»
+				list += it.visit as «itemClassName»
 			]
 		}
-		list
-		''')
+		list''')
 		sb.toString
 	}
 
-	def dispatch visitMethod(LexerRule r) {
+	def dispatch makeVisitMethod(LexerRule r) {
 		r.type.name
 	}
 
 	def makeStringMethodBody(ParserRule r) {
 		val sb = new StringBuilder
-		sb.append('''		ctx.text''' + nl)
+		sb.nl('''		ctx.text''')
 		sb.toString
 	}
 
 	def dispatch makeLiteralMethod(ParserRule r) {
 		val sb = new StringBuilder
 		val methodName = "visit" + r.name.toCamelCase
-		sb.append('''	override public «methodName»(«_name»Parser.«r.name.toCamelCase»Context ctx) {''' + nl)
-		sb.append('''		throw new RuntimeException("Unimplemented Method: «methodName»")''' + nl)
-		sb.append('''	}''' + nl + nl)
+		sb.nl('''	override public «methodName»(«_grammarName»Parser.«r.name.toCamelCase»Context ctx) {''')
+		sb.nl('''		throw new RuntimeException("Unimplemented Method: «methodName»")''')
+		sb.nl('''	}''')
+		sb.nl
 		sb.toString
 	}
 
 	def dispatch makeLiteralMethod(LexerRule r) {
-		r.visitMethod
+		r.makeVisitMethod
+	}
+
+	def die(String message) {
+		throw new RuntimeException(message)
+	}
+
+	def nl(StringBuilder sb, CharSequence contents) {
+		sb.append(contents)
+		sb.nl
+	}
+
+	def nl(StringBuilder sb) {
+		sb.append(System.getProperty("line.separator"))
+	}
+
+	def countId(ElementWithDollar e) {
+		if (e.body.body instanceof Atom) {
+			val atom = e.body.body as Atom
+			if (atom.body instanceof RuleRef) {
+				_nonTerminalId++
+			} else if (atom.body instanceof Terminal) {
+				_terminalId++
+			}
+		}
 	}
 
 }

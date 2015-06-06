@@ -8,6 +8,7 @@ public abstract class Traverser {
 	public abstract void traverseDoubleLiteral(UniDoubleLiteral node);
 	public abstract void traverseStringLiteral(UniStringLiteral node);
 	public abstract void traverseIdent(UniIdent node);
+	public abstract void traverseArray(UniArray node);
 	public abstract void traverseFieldAccess(UniFieldAccess node);
 	public abstract void traverseMethodCall(UniMethodCall node);
 	public abstract void traverseUnaryOp(UniUnaryOp node);
@@ -21,8 +22,8 @@ public abstract class Traverser {
 	public abstract void traverseFor(UniFor node);
 	public abstract void traverseWhile(UniWhile node);
 	public abstract void traverseDoWhile(UniDoWhile node);
-	public abstract void traverseVariableDec(UniVariableDec node);
 	public abstract void traverseVariableDecWithValue(UniVariableDecWithValue node);
+	public abstract void traverseFieldDec(UniFieldDec node);
 	public abstract void traverseMethodDec(UniMethodDec node);
 	public abstract void traverseArg(UniArg node);
 	public abstract void traverseClassDec(UniClassDec node);
@@ -50,6 +51,10 @@ public abstract class Traverser {
 		}
 		if (node instanceof UniIdent) {
 			traverseIdent((UniIdent)node);
+			return;
+		}
+		if (node instanceof UniArray) {
+			traverseArray((UniArray)node);
 			return;
 		}
 		if (node instanceof UniFieldAccess) {
@@ -104,10 +109,6 @@ public abstract class Traverser {
 			traverseDoWhile((UniDoWhile)node);
 			return;
 		}
-		if (node instanceof UniVariableDec) {
-			traverseVariableDec((UniVariableDec)node);
-			return;
-		}
 		if (node instanceof UniVariableDecWithValue) {
 			traverseVariableDecWithValue((UniVariableDecWithValue)node);
 			return;
@@ -116,6 +117,10 @@ public abstract class Traverser {
 	}
 
 	public final void traverseMemberDec(UniMemberDec node) {
+		if (node instanceof UniFieldDec) {
+			traverseFieldDec((UniFieldDec)node);
+			return;
+		}
 		if (node instanceof UniMethodDec) {
 			traverseMethodDec((UniMethodDec)node);
 			return;

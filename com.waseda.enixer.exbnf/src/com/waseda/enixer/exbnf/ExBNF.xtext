@@ -198,7 +198,7 @@ UnicoenTypeIdentifiers:
 
 /** Lexer Rule */
 LexerRule:
-	^fragment?='fragment'? name=TOKEN_REF type=UnicoenType? COLON body=LexerRuleBlock semicolonSymbol=SEMICOLON;
+	^fragment?='fragment'? name=TOKEN_REF type=UnicoenType? COLON body=LexerRuleBlock SEMICOLON;
 
 LexerRuleBlock:
 	body=LexerAltList;
@@ -213,7 +213,7 @@ LexerElements:
 	{LexerElements} elements+=LexerElementWithDollar*;
 
 LexerElementWithDollar:
-	body=LexerElement (DOLLAR (num=INT | op=Refs)?)?;
+	body=LexerElement (DOLLAR  op=Refs)?;
 
 LexerElement:
 	body=LabeledLexerElement operator=EbnfSuffix? | body=LexerAtom operator=EbnfSuffix? | body=LexerBlock
