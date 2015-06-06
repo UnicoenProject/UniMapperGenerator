@@ -20,6 +20,15 @@ public class UniIf extends UniExpr {
 	}
 
 	@Override
+	public int hashCode() {
+		int result = 17;
+		result = result * 31 + (cond == null ? 0 : cond.hashCode());
+		result = result * 31 + (trueBlock == null ? 0 : trueBlock.hashCode());
+		result = result * 31 + (falseBlock == null ? 0 : falseBlock.hashCode());
+		return result;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == null || !(obj instanceof UniIf)) return false;
 		UniIf that = (UniIf)obj;
@@ -31,5 +40,17 @@ public class UniIf extends UniExpr {
 	@Override
 	public boolean isStatement() {
 		return true;
+	}
+
+	public void merge(UniIf that) {
+		if (that.cond != null) {
+			this.cond = that.cond;
+		}
+		if (that.trueBlock != null) {
+			this.trueBlock = that.trueBlock;
+		}
+		if (that.falseBlock != null) {
+			this.falseBlock = that.falseBlock;
+		}
 	}
 }

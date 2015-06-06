@@ -16,6 +16,11 @@ public class UniIdent extends UniExpr {
 	}
 
 	@Override
+	public int hashCode() {
+		return (name == null ? 0 : name.hashCode());
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == null || !(obj instanceof UniIdent)) return false;
 		UniIdent that = (UniIdent)obj;
@@ -25,5 +30,11 @@ public class UniIdent extends UniExpr {
 	@Override
 	public boolean isStatement() {
 		return false;
+	}
+
+	public void merge(UniIdent that) {
+		if (that.name != null) {
+			this.name = that.name;
+		}
 	}
 }

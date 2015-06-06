@@ -16,6 +16,11 @@ public class UniIntLiteral extends UniExpr {
 	}
 
 	@Override
+	public int hashCode() {
+		return value;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == null || !(obj instanceof UniIntLiteral)) return false;
 		UniIntLiteral that = (UniIntLiteral)obj;
@@ -25,5 +30,11 @@ public class UniIntLiteral extends UniExpr {
 	@Override
 	public boolean isStatement() {
 		return false;
+	}
+
+	public void merge(UniIntLiteral that) {
+		if (that.value != 0) {
+			this.value = that.value;
+		}
 	}
 }

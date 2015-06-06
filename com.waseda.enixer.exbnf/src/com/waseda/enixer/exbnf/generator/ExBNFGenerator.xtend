@@ -177,7 +177,7 @@ import net.unicoen.node.*
 		sb
 	}
 
-	def makeCaseStatement(ElementWithDollar obj, String fieldTypeName, String fieldName, StringBuilder sb) {
+	def makeCaseStatement(ElementWithDollar obj, String fieldTypeName, String fieldName, StringBuilder sb, String returnType) {
 		if (!(obj.body.body instanceof Atom)) {
 			die("Internal error: " + obj.body.body)
 		}
@@ -186,26 +186,29 @@ import net.unicoen.node.*
 			val ruleName = rule.reference.name.toCamelCase
 			if (fieldTypeName.contains("List")) {
 				sb.nl('''					case «_nonTerminalId»: {''')
+				sb.nl('''						if (bind == null) {''')
+				sb.nl('''							bind = new «returnType»''')
+				sb.nl('''						}''')
 				val refType = obj.referenceReturnType
 				if (refType == null) {
 					die("Rule " + ruleName + " does not have return type.")
 				}
 				if (refType.contains("List")) {
-					sb.nl('''						if (ret.«fieldName» == null) {''')
-					sb.nl('''							ret.«fieldName» = it.visit as «fieldTypeName»''')
+					sb.nl('''						if (bind.«fieldName» == null) {''')
+					sb.nl('''							bind.«fieldName» = it.visit as «fieldTypeName»''')
 					sb.nl('''						} else {''')
-					sb.nl('''							ret.«fieldName» += it.visit as «fieldTypeName»''')
+					sb.nl('''							bind.«fieldName» += it.visit as «fieldTypeName»''')
 					sb.nl('''						}''')
 				} else {
-					sb.nl('''						if (ret.«fieldName» == null) {''')
-					sb.nl('''							ret.«fieldName» = new ArrayList<«refType»>''')
+					sb.nl('''						if (bind.«fieldName» == null) {''')
+					sb.nl('''							bind.«fieldName» = new ArrayList<«refType»>''')
 					sb.nl('''						}''')
-					sb.nl('''						ret.«fieldName» += it.visit as «fieldTypeName»''')
+					sb.nl('''						bind.«fieldName» += it.visit as «fieldTypeName»''')
 				}
 				sb.nl('''					}''')
 			} else {
 				sb.nl('''					case «_nonTerminalId»:''')
-				sb.nl('''						ret.«fieldName» = it.visit as «fieldTypeName»''')
+				sb.nl('''						bind.«fieldName» = it.visit as «fieldTypeName»''')
 			}
 			return
 		}
@@ -214,7 +217,10 @@ import net.unicoen.node.*
 
 	def makeMethodBody(ParserRule r, Class<?> clazz) {
 		val sb = new StringBuilder
-		sb.nl('''		«r.type.list.bind» ret = null''')
+		sb.nl('''		«r.type.list.bind» bind = null''')
+		if (r.type.list.ret != null) {
+			sb.append('''		«r.type.list.ret» ret = null''')
+		}
 		sb.nl('''		ctx.children.forEach [''')
 		sb.nl('''			if (it instanceof RuleContext) {''')
 		sb.nl('''				switch (it as RuleContext).invokingState {''')
@@ -229,28 +235,28 @@ import net.unicoen.node.*
 					die("Expected return type: " + r.type.list.bind + " actual type: " + it.referenceReturnType)
 				}
 				sb.nl('''				case «_nonTerminalId»: {''')
-				sb.nl('''					if (ret == null) {''')
-				sb.nl('''						ret = new «r.type.list.bind»''')
+				sb.nl('''					if (bind == null) {''')
+				sb.nl('''						bind = new «r.type.list.bind»''')
 				sb.nl('''					}''')
 				sb.nl('''					val child = it.visit as «r.type.list.bind»''')
-				sb.nl('''					ret.merge(child)''')
+				sb.nl('''					bind.merge(child)''')
 				sb.nl('''				}''')
 				it.countId
 				return
 			}
 			if (it.op.equals("RETURN")) {
-				if (!r.type.list.bind.equals(it.referenceReturnType)) {
-					die("Expected return type: " + r.type.list.bind + " actual type: " + it.referenceReturnType)
+				if (r.type.list.ret != null) {
+					sb.nl('''				case «_nonTerminalId»: {''')
+					sb.nl('''					ret = it.visit as «r.type.list.ret»''')
+					sb.nl('''				}''')
+					it.countId
+					return
 				}
-				sb.nl('''				case «_nonTerminalId»:''')
-				sb.nl('''					ret = it.visit as «r.type.list.bind»''')
-				it.countId
-				return
 			}
 			try {
 				val field = clazz.getField(it.op)
 				val fieldTypeName = field.genericType.typeName
-				it.makeCaseStatement(fieldTypeName, it.op, sb)
+				it.makeCaseStatement(fieldTypeName, it.op, sb, r.type.list.bind)
 				it.countId
 			} catch (NoSuchFieldException e) {
 				die("No such Field: " + it.op)
@@ -259,8 +265,10 @@ import net.unicoen.node.*
 		sb.nl('''				}''')
 		sb.nl('''			}''')
 		sb.nl('''		]''')
-		sb.nl('''		ret''')
-		sb.toString
+		sb.nl('''		if (ret != null) {''')
+		sb.nl('''			return ret''')
+		sb.nl('''		}''')
+		sb.nl('''		bind''')
 	}
 
 	def getReferenceReturnType(ElementWithDollar r) {

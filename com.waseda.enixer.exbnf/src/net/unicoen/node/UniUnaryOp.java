@@ -19,6 +19,14 @@ public class UniUnaryOp extends UniExpr {
 	}
 
 	@Override
+	public int hashCode() {
+		int result = 17;
+		result = result * 31 + (operator == null ? 0 : operator.hashCode());
+		result = result * 31 + (expr == null ? 0 : expr.hashCode());
+		return result;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == null || !(obj instanceof UniUnaryOp)) return false;
 		UniUnaryOp that = (UniUnaryOp)obj;
@@ -29,5 +37,14 @@ public class UniUnaryOp extends UniExpr {
 	@Override
 	public boolean isStatement() {
 		return false;
+	}
+
+	public void merge(UniUnaryOp that) {
+		if (that.operator != null) {
+			this.operator = that.operator;
+		}
+		if (that.expr != null) {
+			this.expr = that.expr;
+		}
 	}
 }

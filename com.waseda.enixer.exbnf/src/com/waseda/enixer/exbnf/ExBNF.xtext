@@ -392,7 +392,7 @@ terminal fragment ARG_ACTION_CHAR_LITERAL:
 	| !('\\' | "'" | '[' | ']'))*
 	"'";
 
-terminal UNICOEN_ANNOTATIONS:
+UNICOEN_ANNOTATIONS:
 	'MERGE'
 	| 'RETURN'
 	| 'ADD'

@@ -18,6 +18,11 @@ public class UniBlock extends UniExpr {
 	}
 
 	@Override
+	public int hashCode() {
+		return (body == null ? 0 : body.hashCode());
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == null || !(obj instanceof UniBlock)) return false;
 		UniBlock that = (UniBlock)obj;
@@ -27,5 +32,15 @@ public class UniBlock extends UniExpr {
 	@Override
 	public boolean isStatement() {
 		return true;
+	}
+
+	public void merge(UniBlock that) {
+		if (that.body != null) {
+			if (this.body != null) {
+				this.body = that.body;
+			} else {
+				this.body.addAll(that.body);
+			}
+		}
 	}
 }
