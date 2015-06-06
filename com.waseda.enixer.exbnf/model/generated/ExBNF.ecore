@@ -97,7 +97,7 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="prequels" upperBound="-1"
         eType="#//RulePrequel" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//RuleBlock"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//RuleAltList"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="caught" eType="#//ExceptionGroup"
         containment="true"/>
@@ -130,10 +130,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="RuleAction" eSuperTypes="#//RulePrequel">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="body" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RuleBlock">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//RuleAltList"
-        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RuleAltList">
     <eStructuralFeatures xsi:type="ecore:EReference" name="alternatives" upperBound="-1"
@@ -255,10 +251,6 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LexerRule" eSuperTypes="#//Rule #//TokenRef #//LexerCommandArg">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="fragment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//LexerRuleBlock"
-        containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="LexerRuleBlock">
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//LexerAltList"
         containment="true"/>
   </eClassifiers>

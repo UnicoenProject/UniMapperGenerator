@@ -80,7 +80,7 @@ Rule:
 ParserRule:
 	name=RULE_REF args=ARG_OR_CHARSET? return=Return? throws=Exceptions? locals=LocalVars? prequels+=RulePrequel*
 	type=UnicoenType? COLON
-	body=RuleBlock caught=ExceptionGroup semicolonSymbol=SEMICOLON;
+	body=RuleAltList caught=ExceptionGroup semicolonSymbol=SEMICOLON;
 
 ExceptionGroup:
 	{ExceptionGroup} handlers+=ExceptionHandler* finally=FinallyClause?;
@@ -106,9 +106,6 @@ RulePrequel:
 RuleAction:
 	'@' name=Refs body=ACTION;
 
-RuleBlock:
-	body=RuleAltList;
-
 RuleAltList:
 	alternatives+=LabeledAlt ('|' alternatives+=LabeledAlt)*;
 
@@ -119,7 +116,7 @@ Alternative:
 	{Alternative} options=ElementOptions? elements+=ElementWithDollar*;
 
 ElementWithDollar:
-	body=Element (DOLLAR op=('__merge' | Refs))?;
+	body=Element (DOLLAR op=(UNICOEN_ANNOTATIONS | Refs))?;
 
 Element:
 	body=LabeledElement operator=EbnfSuffix? | body=Atom operator=EbnfSuffix? | body=Ebnf | body=ActionElement;
@@ -198,10 +195,7 @@ UnicoenTypeIdentifiers:
 
 /** Lexer Rule */
 LexerRule:
-	^fragment?='fragment'? name=TOKEN_REF type=UnicoenType? COLON body=LexerRuleBlock SEMICOLON;
-
-LexerRuleBlock:
-	body=LexerAltList;
+	^fragment?='fragment'? name=TOKEN_REF type=UnicoenType? COLON body=LexerAltList SEMICOLON;
 
 LexerAltList:
 	alternatives+=LexerAlt ('|' alternatives+=LexerAlt)*;
@@ -213,7 +207,7 @@ LexerElements:
 	{LexerElements} elements+=LexerElementWithDollar*;
 
 LexerElementWithDollar:
-	body=LexerElement (DOLLAR  op=Refs)?;
+	body=LexerElement (DOLLAR op=(UNICOEN_ANNOTATIONS | Refs))?;
 
 LexerElement:
 	body=LabeledLexerElement operator=EbnfSuffix? | body=LexerAtom operator=EbnfSuffix? | body=LexerBlock
@@ -312,12 +306,12 @@ terminal INT returns ecore::EInt:
 
 /** String literal */
 terminal STRING:
-	'\'' LITERAL_CHAR* '\'';
+	"'" LITERAL_CHAR* "'";
 
 terminal fragment LITERAL_CHAR:
 	ESC
 	|
-	!('\''
+	!("'"
 	| '\\');
 
 terminal fragment ESC:
@@ -328,7 +322,7 @@ terminal fragment ESC:
 	| 'b'
 	| 'f'
 	| '"'
-	| '\''
+	| "'"
 	| '\\'
 	| '>'
 	| 'u' XDIGIT XDIGIT XDIGIT XDIGIT
@@ -347,20 +341,6 @@ terminal ACTION:
 terminal fragment NESTED_ACTION:
 	'___nested_action_';
 
-terminal fragment ACTION_STRING_LITERAL:
-	'"'
-	(ACTION_ESC
-	|
-	!('\\' | '"'))*
-	'"';
-
-terminal fragment ACTION_CHAR_LITERAL:
-	'\''
-	(ACTION_ESC
-	|
-	!('\\' | '\''))*
-	'\'';
-
 	// Within literal strings and characters that are not part of the ANTLR
 // syntax, we must allow for escaped character sequences so that we do not
 // inadvertantly recognize the end of a string or character when the terminating
@@ -377,8 +357,7 @@ terminal SEMICOLON:
 /** Argument action (a.k.a language code) */
 terminal ARG_OR_CHARSET:
 	ARG_ACTION
-	|
-	LEXER_CHAR_SET;
+	| LEXER_CHAR_SET;
 
 terminal fragment LEXER_CHAR_SET:
 	'___lexer_char_set_';
@@ -393,10 +372,28 @@ terminal fragment LEXER_CHAR_SET:
 //
 terminal fragment ARG_ACTION:
 	'['
-	(ACTION_STRING_LITERAL
-	| ACTION_CHAR_LITERAL
+	(ARG_ACTION_STRING_LITERAL
+	| ARG_ACTION_CHAR_LITERAL
 	| !('[' | ']'))*
 	']';
+
+terminal fragment ARG_ACTION_STRING_LITERAL:
+	'"'
+	(ACTION_ESC
+	| !('\\' | '"' | '[' | ']'))*
+	'"';
+
+terminal fragment ARG_ACTION_CHAR_LITERAL:
+	"'"
+	(ACTION_ESC
+	| !('\\' | "'" | '[' | ']'))*
+	"'";
+
+terminal UNICOEN_ANNOTATIONS:
+	'__merge'
+	| '__return'
+	| '__add'
+	| '__append';
 
 /** Comments */
 terminal SL_COMMENT:

@@ -116,9 +116,6 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//RuleAction/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//RuleAction/body"/>
     </genClasses>
-    <genClasses ecoreClass="ExBNF.ecore#//RuleBlock">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//RuleBlock/body"/>
-    </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//RuleAltList">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//RuleAltList/alternatives"/>
     </genClasses>
@@ -215,9 +212,6 @@
     <genClasses ecoreClass="ExBNF.ecore#//LexerRule">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//LexerRule/fragment"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//LexerRule/body"/>
-    </genClasses>
-    <genClasses ecoreClass="ExBNF.ecore#//LexerRuleBlock">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//LexerRuleBlock/body"/>
     </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//LexerAltList">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//LexerAltList/alternatives"/>

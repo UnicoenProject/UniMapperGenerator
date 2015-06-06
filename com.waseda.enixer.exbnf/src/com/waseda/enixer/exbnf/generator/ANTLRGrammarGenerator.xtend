@@ -87,8 +87,6 @@ class ANTLRGrammarGenerator {
 
 	def dispatch compile(RuleAction ra) '''@«ra.name» «ra.body»'''
 
-	def dispatch compile(RuleBlock rb) '''«rb.body.compile»'''
-
 	def dispatch compile(RuleAltList ral) '''«FOR a : ral.alternatives»«IF !ral.alternatives.get(0).equals(a)»| «ENDIF»«a.
 		compile»«ENDFOR»'''
 
@@ -140,9 +138,7 @@ class ANTLRGrammarGenerator {
 		assign» «eo.value»«ENDIF»'''
 
 	def dispatch compile(LexerRule lr) '''«IF lr.^fragment»fragment «ENDIF»«lr.name» :
-		«lr.body.compile»;'''
-
-	def dispatch compile(LexerRuleBlock lrb) '''«lrb.body.compile»'''
+	«lr.body.compile»;'''
 
 	def dispatch compile(LexerAltList lal) '''«FOR a : lal.alternatives»«IF !lal.alternatives.get(0).equals(a)»|«ENDIF»«a.
 		compile»«ENDFOR»'''

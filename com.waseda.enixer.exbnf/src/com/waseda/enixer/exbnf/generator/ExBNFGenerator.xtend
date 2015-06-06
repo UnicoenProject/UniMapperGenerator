@@ -218,7 +218,7 @@ import net.unicoen.node.*
 		sb.nl('''		ctx.children.forEach [''')
 		sb.nl('''			if (it instanceof RuleContext) {''')
 		sb.nl('''				switch (it as RuleContext).invokingState {''')
-		var list = r.eAllContents.toIterable.filter(ElementWithDollar)
+		val list = r.eAllContents.toIterable.filter(ElementWithDollar)
 		list.forEach [
 			if (it.op == null) {
 				it.countId
@@ -228,13 +228,20 @@ import net.unicoen.node.*
 				if (!r.type.name.equals(it.referenceReturnType)) {
 					die("Expected return type: " + r.type.name + " actual type: " + it.referenceReturnType)
 				}
-				val ruleName = it.eAllContents.toIterable.filter(RuleRef).get(0).reference.name.toCamelCase
 				sb.nl('''				case «_nonTerminalId»: {''')
 				sb.nl('''					val child = it.visit as «r.type.name»''')
 				sb.nl('''					ret.merge(child)''')
 				sb.nl('''				}''')
 				it.countId
 				return
+			}
+			if (it.op.equals("__return")) {
+				if (!r.type.name.equals(it.referenceReturnType)) {
+					die("Expected return type: " + r.type.name + " actual type: " + it.referenceReturnType)
+				}
+				sb.nl('''				case «_nonTerminalId»:''')
+				sb.nl('''					ret = it.visit as «r.type.name»''')
+				it.countId
 			}
 			try {
 				val field = clazz.getField(it.op)
@@ -288,14 +295,44 @@ import net.unicoen.node.*
 
 	def makeListMethodBody(ParserRule r, String itemClassName) {
 		val sb = new StringBuilder
-		sb.nl('''		val list = new ArrayList<«itemClassName»>
-		if (ctx.children != null) {
-			ctx.children.forEach [
-				list += it.visit as «itemClassName»
-			]
-		}
-		list''')
-		sb.toString
+		sb.nl('''		val list = new ArrayList<«itemClassName»>''')
+		sb.nl('''		if (ctx.children != null) {''')
+		sb.nl('''			ctx.children.forEach [''')
+		sb.nl('''				switch (it) {''')
+		val list = r.eAllContents.toIterable.filter(ElementWithDollar)
+		list.forEach [
+			if (it.op == null) {
+				it.countId
+				return
+			}
+			if (it.op.equals("__add")) {
+				if (!r.type.name.equals(it.referenceReturnType)) {
+					die("Expected return type: " + r.type.name + " actual type: " + it.referenceReturnType)
+				}
+				sb.nl('''				case «_nonTerminalId»:''')
+				sb.nl('''						list += it.visit as «itemClassName»''')
+				it.countId
+				return
+			}
+			if (it.op.equals("__append")) {
+				if (!r.type.name.equals(it.referenceReturnType)) {
+					die("Expected return type: " + r.type.name + " actual type: " + it.referenceReturnType)
+				}
+				sb.nl('''				case «_nonTerminalId»: {''')
+				sb.nl('''					if (ret == null) {''')
+				sb.nl('''						ret = it.visit as «r.type.name»''')
+				sb.nl('''					} else {''')
+				sb.nl('''						ret += it.visit as «r.type.name»''')
+				sb.nl('''					}''')
+				sb.nl('''				}''')
+			}
+
+			sb.nl('''				}''')
+			sb.nl('''			]''')
+			sb.nl('''		}''')
+			sb.nl('''		list''')
+		]
+		sb
 	}
 
 	def dispatch makeVisitMethod(LexerRule r) {
