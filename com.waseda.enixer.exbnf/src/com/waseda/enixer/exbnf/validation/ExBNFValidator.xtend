@@ -4,8 +4,8 @@
 package com.waseda.enixer.exbnf.validation
 
 import org.eclipse.xtext.validation.Check
-import com.waseda.enixer.exbnf.exBNF.Grammar
-import com.waseda.enixer.exbnf.exBNF.ExBNFPackage
+import com.waseda.enixer.exbnf.exBNF.*
+import net.unicoen.node.UniNode
 
 //import org.eclipse.xtext.validation.Check
 /**
@@ -15,12 +15,64 @@ import com.waseda.enixer.exbnf.exBNF.ExBNFPackage
  */
 class ExBNFValidator extends AbstractExBNFValidator {
 
-	public static val INVALID_NAME = 'invalidName'
-
 	@Check
-	def checkGreetingStartsWithCapital(Grammar greeting) {
-		if (!Character.isUpperCase(greeting.name.charAt(0))) {
-			warning('Name should start with a capital', greeting, ExBNFPackage.Literals.GRAMMAR__PREQUELS, INVALID_NAME)
+	def checkNodeMembers(ParserRule r) {
+		val packagePrefix = UniNode.package.name + '.'
+		val clazz = Class.forName(packagePrefix + r.type.list.bind)
+		r.eAllContents.filter(ElementWithDollar).forEach [
+			switch it.op {
+				case "TODO": {
+					val ruleName = ((it.body.body as Atom).body as RuleRef).reference.name
+					warning('not Implemented: ' + ruleName + ' in ' + r.name, it,
+						ExBNFPackage.Literals.ELEMENT_WITH_DOLLAR__OP)
+				}
+				case "ADD":
+					return
+				case "APPEND":
+					return
+				case "RETURN":
+					return
+				case "MERGE": {
+					if (!r.type.list.bind.equals(it.referenceReturnType)) {
+						val ruleName = ((it.body.body as Atom).body as RuleRef).reference.name
+						val sb = new StringBuilder
+						sb.append('Type mismatch: The return type of ').append(r.name).append(' is ').append(
+							r.type.list.bind).append(' but The return type of ').append(ruleName).append(' is ').append(
+							it.referenceReturnType).append('.')
+							error(sb.toString, it,ExBNFPackage.Literals.ELEMENT_WITH_DOLLAR__BODY)
+					}
+				}
+				default: {
+					try {
+						clazz.getField(it.op)
+					} catch (NoSuchFieldException e) {
+						val sb = new StringBuilder
+						sb.append('Field ').append(it.op).append(' is not exist. The fields of class ').append(
+							r.type.list.bind).append(' are')
+						clazz.fields.forEach [
+							sb.append(' ').append(it.name)
+							if (it != clazz.fields.last) {
+								sb.append(',')
+							}
+						]
+						sb.append('.')
+						error(sb.toString, it, ExBNFPackage.Literals.ELEMENT_WITH_DOLLAR__OP)
+					}
+				}
+			}
+		]
+	}
+
+	def getReferenceReturnType(ElementWithDollar r) {
+		if (r.body.body instanceof Atom) {
+			val atom = r.body.body as Atom
+			if (atom.body instanceof RuleRef) {
+				val ref = atom.body as RuleRef
+				if (ref.reference.type != null) {
+					ref.reference.type.list.bind
+				}
+			}
 		}
 	}
+
 }

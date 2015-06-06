@@ -205,9 +205,12 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//ElementOption/assign"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//ElementOption/value"/>
     </genClasses>
-    <genClasses ecoreClass="ExBNF.ecore#//UnicoenType">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//UnicoenType/keyword"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//UnicoenType/name"/>
+    <genClasses ecoreClass="ExBNF.ecore#//UnicoenTypeDec">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ExBNF.ecore#//UnicoenTypeDec/list"/>
+    </genClasses>
+    <genClasses ecoreClass="ExBNF.ecore#//UnicoenTypeList">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//UnicoenTypeList/bind"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//UnicoenTypeList/ret"/>
     </genClasses>
     <genClasses ecoreClass="ExBNF.ecore#//LexerRule">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ExBNF.ecore#//LexerRule/fragment"/>

@@ -79,7 +79,7 @@ Rule:
 /** Parser Rules */
 ParserRule:
 	name=RULE_REF args=ARG_OR_CHARSET? return=Return? throws=Exceptions? locals=LocalVars? prequels+=RulePrequel*
-	type=UnicoenType? COLON
+	type=UnicoenTypeDec? COLON
 	body=RuleAltList caught=ExceptionGroup semicolonSymbol=SEMICOLON;
 
 ExceptionGroup:
@@ -187,15 +187,18 @@ Wildcard:
 ElementOption: // This format indicates the default element option
 	qualifiedId=QualifiedId | id=Refs assign='=' value=OptionValue;
 
-UnicoenType:
-	keyword='=>' name=UnicoenTypeIdentifiers;
+UnicoenTypeDec:
+	'=>' list=UnicoenTypeList;
+
+UnicoenTypeList:
+	bind=UnicoenTypeIdentifiers (',' ret=UnicoenTypeIdentifiers)?;
 
 UnicoenTypeIdentifiers:
 	Refs ('<' UnicoenTypeIdentifiers '>')?;
 
 /** Lexer Rule */
 LexerRule:
-	^fragment?='fragment'? name=TOKEN_REF type=UnicoenType? COLON body=LexerAltList SEMICOLON;
+	^fragment?='fragment'? name=TOKEN_REF type=UnicoenTypeDec? COLON body=LexerAltList SEMICOLON;
 
 LexerAltList:
 	alternatives+=LexerAlt ('|' alternatives+=LexerAlt)*;
@@ -390,10 +393,11 @@ terminal fragment ARG_ACTION_CHAR_LITERAL:
 	"'";
 
 terminal UNICOEN_ANNOTATIONS:
-	'__merge'
-	| '__return'
-	| '__add'
-	| '__append';
+	'MERGE'
+	| 'RETURN'
+	| 'ADD'
+	| 'APPEND'
+	| 'TODO';
 
 /** Comments */
 terminal SL_COMMENT:

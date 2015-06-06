@@ -29,7 +29,7 @@ class ExBNFGenerator implements IGenerator {
 
 	override def doGenerate(Resource resource, IFileSystemAccess fsa) {
 		val g4Generator = new ANTLRGrammarGenerator(fsa)
-		resource.allContents.toIterable.filter(Grammar).forEach [
+		resource.allContents.filter(Grammar).forEach [
 			_grammarName = it.name.toCamelCase
 			g4Generator.generate(_grammarName, it);
 			fsa.generateFile(_grammarName + "Mapper.xtend", it.generateMapper)
@@ -137,7 +137,7 @@ import net.unicoen.node.*
 		sb.nl
 		g.rules.forEach [
 			if (it.type != null) {
-				if (it.type.name.endsWith("Literal")) {
+				if (it.type.list.bind.endsWith("Literal")) {
 					sb.append(it.makeLiteralMethod)
 				} else {
 					sb.append(it.makeVisitMethod)
@@ -159,7 +159,7 @@ import net.unicoen.node.*
 		val sb = new StringBuilder
 		val ruleName = r.name.toCamelCase
 		sb.nl('''	override public visit«ruleName»(«_grammarName»Parser.«ruleName»Context ctx) {''')
-		val typeName = r.type.name
+		val typeName = r.type.list.bind
 		if (typeName.startsWith("Uni")) {
 			val packagePrefix = UniNode.package.name + '.'
 			sb.append(r.makeMethodBody(Class.forName(packagePrefix + typeName)))
@@ -181,7 +181,7 @@ import net.unicoen.node.*
 		if (!(obj.body.body instanceof Atom)) {
 			die("Internal error: " + obj.body.body)
 		}
-		val rule = obj.eAllContents.toList.filter(RuleRef).head
+		val rule = obj.eAllContents.filter(RuleRef).head
 		if (rule != null) {
 			val ruleName = rule.reference.name.toCamelCase
 			if (fieldTypeName.contains("List")) {
@@ -214,36 +214,36 @@ import net.unicoen.node.*
 
 	def makeMethodBody(ParserRule r, Class<?> clazz) {
 		val sb = new StringBuilder
-		sb.nl('''		«r.type.name» ret = null''')
+		sb.nl('''		«r.type.list.bind» ret = null''')
 		sb.nl('''		ctx.children.forEach [''')
 		sb.nl('''			if (it instanceof RuleContext) {''')
 		sb.nl('''				switch (it as RuleContext).invokingState {''')
-		val list = r.eAllContents.toIterable.filter(ElementWithDollar)
+		val list = r.eAllContents.filter(ElementWithDollar)
 		list.forEach [
 			if (it.op == null) {
 				it.countId
 				return
 			}
-			if (it.op.equals("__merge")) {
-				if (!r.type.name.equals(it.referenceReturnType)) {
-					die("Expected return type: " + r.type.name + " actual type: " + it.referenceReturnType)
+			if (it.op.equals("MERGE")) {
+				if (!r.type.list.bind.equals(it.referenceReturnType)) {
+					die("Expected return type: " + r.type.list.bind + " actual type: " + it.referenceReturnType)
 				}
 				sb.nl('''				case «_nonTerminalId»: {''')
 				sb.nl('''					if (ret == null) {''')
-				sb.nl('''						ret = new «r.type.name»''')
+				sb.nl('''						ret = new «r.type.list.bind»''')
 				sb.nl('''					}''')
-				sb.nl('''					val child = it.visit as «r.type.name»''')
+				sb.nl('''					val child = it.visit as «r.type.list.bind»''')
 				sb.nl('''					ret.merge(child)''')
 				sb.nl('''				}''')
 				it.countId
 				return
 			}
-			if (it.op.equals("__return")) {
-				if (!r.type.name.equals(it.referenceReturnType)) {
-					die("Expected return type: " + r.type.name + " actual type: " + it.referenceReturnType)
+			if (it.op.equals("RETURN")) {
+				if (!r.type.list.bind.equals(it.referenceReturnType)) {
+					die("Expected return type: " + r.type.list.bind + " actual type: " + it.referenceReturnType)
 				}
 				sb.nl('''				case «_nonTerminalId»:''')
-				sb.nl('''					ret = it.visit as «r.type.name»''')
+				sb.nl('''					ret = it.visit as «r.type.list.bind»''')
 				it.countId
 				return
 			}
@@ -269,7 +269,7 @@ import net.unicoen.node.*
 			if (atom.body instanceof RuleRef) {
 				val ref = atom.body as RuleRef
 				if (ref.reference.type != null) {
-					ref.reference.type.name
+					ref.reference.type.list.bind
 				}
 			}
 		}
@@ -303,30 +303,30 @@ import net.unicoen.node.*
 		sb.nl('''		if (ctx.children != null) {''')
 		sb.nl('''			ctx.children.forEach [''')
 		sb.nl('''				switch (it) {''')
-		val list = r.eAllContents.toIterable.filter(ElementWithDollar)
+		val list = r.eAllContents.filter(ElementWithDollar)
 		list.forEach [
 			if (it.op == null) {
 				it.countId
 				return
 			}
-			if (it.op.equals("__add")) {
-				if (!r.type.name.contains(it.referenceReturnType)) {
-					die("Expected return type: " + r.type.name + " actual type: " + it.referenceReturnType)
+			if (it.op.equals("ADD")) {
+				if (!r.type.list.bind.contains(it.referenceReturnType)) {
+					die("Expected return type: " + r.type.list.bind + " actual type: " + it.referenceReturnType)
 				}
 				sb.nl('''				case «_nonTerminalId»:''')
 				sb.nl('''						list += it.visit as «itemClassName»''')
 				it.countId
 				return
 			}
-			if (it.op.equals("__append")) {
-				if (!r.type.name.equals(it.referenceReturnType)) {
-					die("Expected return type: " + r.type.name + " actual type: " + it.referenceReturnType)
+			if (it.op.equals("APPEND")) {
+				if (!r.type.list.bind.equals(it.referenceReturnType)) {
+					die("Expected return type: " + r.type.list.bind + " actual type: " + it.referenceReturnType)
 				}
 				sb.nl('''				case «_nonTerminalId»: {''')
 				sb.nl('''					if (ret == null) {''')
-				sb.nl('''						ret = it.visit as «r.type.name»''')
+				sb.nl('''						ret = it.visit as «r.type.list.bind»''')
 				sb.nl('''					} else {''')
-				sb.nl('''						ret += it.visit as «r.type.name»''')
+				sb.nl('''						ret += it.visit as «r.type.list.bind»''')
 				sb.nl('''					}''')
 				sb.nl('''				}''')
 			}
@@ -340,7 +340,7 @@ import net.unicoen.node.*
 	}
 
 	def dispatch makeVisitMethod(LexerRule r) {
-		r.type.name
+		r.type.list.bind
 	}
 
 	def makeStringMethodBody(ParserRule r) {
