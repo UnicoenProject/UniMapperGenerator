@@ -306,7 +306,7 @@ import net.unicoen.node.*
 				return
 			}
 			if (it.op.equals("__add")) {
-				if (!r.type.name.equals(it.referenceReturnType)) {
+				if (!r.type.name.contains(it.referenceReturnType)) {
 					die("Expected return type: " + r.type.name + " actual type: " + it.referenceReturnType)
 				}
 				sb.nl('''				case «_nonTerminalId»:''')
