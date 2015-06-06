@@ -214,7 +214,7 @@ import net.unicoen.node.*
 
 	def makeMethodBody(ParserRule r, Class<?> clazz) {
 		val sb = new StringBuilder
-		sb.nl('''		val ret = new «r.type.name»''')
+		sb.nl('''		«r.type.name» ret = null''')
 		sb.nl('''		ctx.children.forEach [''')
 		sb.nl('''			if (it instanceof RuleContext) {''')
 		sb.nl('''				switch (it as RuleContext).invokingState {''')
@@ -229,6 +229,9 @@ import net.unicoen.node.*
 					die("Expected return type: " + r.type.name + " actual type: " + it.referenceReturnType)
 				}
 				sb.nl('''				case «_nonTerminalId»: {''')
+				sb.nl('''					if (ret == null) {''')
+				sb.nl('''						ret = new «r.type.name»''')
+				sb.nl('''					}''')
 				sb.nl('''					val child = it.visit as «r.type.name»''')
 				sb.nl('''					ret.merge(child)''')
 				sb.nl('''				}''')
@@ -242,6 +245,7 @@ import net.unicoen.node.*
 				sb.nl('''				case «_nonTerminalId»:''')
 				sb.nl('''					ret = it.visit as «r.type.name»''')
 				it.countId
+				return
 			}
 			try {
 				val field = clazz.getField(it.op)
