@@ -4,12 +4,33 @@
 package com.waseda.enixer.exbnf.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.xtext.ui.editor.syntaxcoloring.AbstractAntlrTokenToAttributeIdMapper;
+import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfiguration;
+import org.eclipse.xtext.ui.editor.syntaxcoloring.ISemanticHighlightingCalculator;
+
+import com.waseda.enixer.exbnf.ui.highlighting.ExBNFHighlightingConfiguration;
+import com.waseda.enixer.exbnf.ui.highlighting.ExBNFLexicalTokenToAttributeIdMapper;
+import com.waseda.enixer.exbnf.ui.highlighting.ExBNFSemanticHighlightingCalculator;
 
 /**
  * Use this class to register components to be used within the IDE.
  */
-public class ExBNFUiModule extends com.waseda.enixer.exbnf.ui.AbstractExBNFUiModule {
+public class ExBNFUiModule extends
+		com.waseda.enixer.exbnf.ui.AbstractExBNFUiModule {
 	public ExBNFUiModule(AbstractUIPlugin plugin) {
 		super(plugin);
 	}
+
+	public Class<? extends ISemanticHighlightingCalculator> bindSemanticHighlightingCalculator() {
+		return ExBNFSemanticHighlightingCalculator.class;
+	}
+
+	public Class<? extends AbstractAntlrTokenToAttributeIdMapper> bindTokenToAttributeIdMapper() {
+		return ExBNFLexicalTokenToAttributeIdMapper.class;
+	}
+
+	public Class<? extends IHighlightingConfiguration> bindHighlightingConfiguration() {
+		return ExBNFHighlightingConfiguration.class;
+	}
+
 }
