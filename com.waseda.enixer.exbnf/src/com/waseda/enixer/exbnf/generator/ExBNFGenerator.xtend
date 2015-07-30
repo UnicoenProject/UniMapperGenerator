@@ -5,7 +5,6 @@ package com.waseda.enixer.exbnf.generator
 
 import com.waseda.enixer.exbnf.exBNF.ElementWithDollar
 import com.waseda.enixer.exbnf.exBNF.Grammar
-import com.waseda.enixer.exbnf.exBNF.LexerRule
 import com.waseda.enixer.exbnf.exBNF.ParserRule
 import com.waseda.enixer.exbnf.exBNF.RuleRef
 import org.eclipse.emf.ecore.resource.Resource
@@ -16,6 +15,7 @@ import java.lang.reflect.ParameterizedType
 import net.unicoen.node.UniNode
 import com.waseda.enixer.exbnf.exBNF.Atom
 import com.waseda.enixer.exbnf.exBNF.Terminal
+import java.util.regex.Pattern
 
 /**
  * Generates code from your model files on save.
@@ -26,33 +26,18 @@ class ExBNFGenerator implements IGenerator {
 	private String _grammarName
 	private int _nonTerminalId
 	private int _terminalId
+	private int _indent;
 
 	override def doGenerate(Resource resource, IFileSystemAccess fsa) {
 		val g4Generator = new ANTLRGrammarGenerator(fsa)
+		val testGenerator = new MapperTestGenerator(fsa)
 		resource.allContents.filter(Grammar).forEach [
 			_grammarName = it.name.toCamelCase
 			g4Generator.generate(_grammarName, it);
 			fsa.generateFile(_grammarName + "Mapper.xtend", it.generateMapper)
-			fsa.generateFile(_grammarName + "MapperTest.xtend", it.generateMapperTestTemplate)
+			testGenerator.generate(_grammarName, it)
 		]
 	}
-
-	def generateMapperTestTemplate(Grammar g) '''package net.unicoen.mapper
-
-import org.junit.Test
-import static org.hamcrest.Matchers.*
-import static org.junit.Assert.*
-
-class «_grammarName»MapperTest {
-	val mapper = new «_grammarName»Mapper(true)
-
-	@Test
-	def «_grammarName»Test(){
-		
-	}
-
-}
-	'''
 
 	def generateImports() '''package net.unicoen.mapper
 
@@ -78,35 +63,43 @@ import net.unicoen.node.*
 		_nonTerminalId = 0
 		_terminalId = 0
 
-		sb.nl('''class «_grammarName»Mapper extends «_grammarName»BaseVisitor<Object> {
-	var _isDebugMode = false
-
-	new(boolean isDebugMode) {
-		_isDebugMode = isDebugMode
-	}
-
-	def parseFile(String path) {
-		val inputStream = new FileInputStream(path)
-		try {
-			parseCore(new ANTLRInputStream(inputStream))
-		} finally {
-			inputStream.close
+		sb.nl('''class «_grammarName»Mapper extends «_grammarName»BaseVisitor<Object> {''')
+		sb.nl('''var _isDebugMode = false''')
+		sb.nl
+		sb.nl('''new(boolean isDebugMode) {''')
+		sb.nl('''_isDebugMode = isDebugMode''')
+		sb.nl('''}''')
+		sb.nl
+		sb.nl('''def parseFile(String path) {''')
+		sb.nl('''val inputStream = new FileInputStream(path)''')
+		sb.nl('''try {''')
+		sb.nl('''parseCore(new ANTLRInputStream(inputStream))''')
+		sb.nl('''} finally {''')
+		sb.nl('''inputStream.close''')
+		sb.nl('''}''')
+		sb.nl('''}''')
+		sb.nl
+		sb.nl('''def parse(String code) {''')
+		sb.nl('''parseCore(new ANTLRInputStream(code))''')
+		sb.nl('''}''')
+		sb.nl
+		sb.nl('''def parseCore(CharStream chars) {''')
+		sb.nl('''val lexer = new «_grammarName»Lexer(chars)''')
+		sb.nl('''val tokens = new CommonTokenStream(lexer)''')
+		sb.nl('''val parser = new «_grammarName»Parser(tokens)''')
+		if (g.rules.size > 0) {
+			sb.append('''val tree = parser.''')
+			if (g.root != null) {
+				sb.append(g.root.root.name)
+			} else {
+				sb.append(g.rules.get(0).name)
+			}
+			sb.nl
+			sb.nl('''tree.visit''')
 		}
-	}
-
-	def parse(String code) {
-		parseCore(new ANTLRInputStream(code))
-	}
-
-	def parseCore(CharStream chars) {
-		val lexer = new «_grammarName»Lexer(chars)
-		val tokens = new CommonTokenStream(lexer)
-		val parser = new «_grammarName»Parser(tokens)
-«IF g.rules.size > 0»		val tree = parser.«IF g.root != null»«g.root.root.name»«ELSE»«g.rules.get(0).name»«ENDIF»
-		tree.visit
-«ENDIF»	}
-
-	override public visitChildren(RuleNode node) {
+		sb.nl('''}''')
+		sb.nl
+		sb.nl('''override public visitChildren(RuleNode node) {
 		val n = node.childCount;
 		(0 ..< n).fold(defaultResult) [ acc, i |
 			if (!node.shouldVisitNextChild(acc)) {
@@ -135,7 +128,7 @@ import net.unicoen.node.*
 		}
 	}''')
 		sb.nl
-		g.rules.forEach [
+		g.rules.filter(ParserRule).forEach [
 			if (it.type != null) {
 				if (it.type.list.bind.endsWith("Literal")) {
 					sb.append(it.makeLiteralMethod)
@@ -155,10 +148,10 @@ import net.unicoen.node.*
 		Character.toUpperCase(str.charAt(0)) + str.substring(1)
 	}
 
-	def dispatch makeVisitMethod(ParserRule r) {
+	def makeVisitMethod(ParserRule r) {
 		val sb = new StringBuilder
 		val ruleName = r.name.toCamelCase
-		sb.nl('''	override public visit«ruleName»(«_grammarName»Parser.«ruleName»Context ctx) {''')
+		sb.nl('''override public visit«ruleName»(«_grammarName»Parser.«ruleName»Context ctx) {''')
 		val typeName = r.type.list.bind
 		if (typeName.startsWith("Uni")) {
 			val packagePrefix = UniNode.package.name + '.'
@@ -172,43 +165,42 @@ import net.unicoen.node.*
 		} else {
 			die("Unknown Class Name: " + typeName)
 		}
-		sb.nl('''	}''')
+		sb.nl('''}''')
 		sb.nl
 		sb
 	}
 
-	def makeCaseStatement(ElementWithDollar obj, String fieldTypeName, String fieldName, StringBuilder sb, String returnType) {
-		if (!(obj.body.body instanceof Atom)) {
+	def makeCaseStatement(ElementWithDollar obj, String fieldTypeName, String fieldName, StringBuilder sb,
+		String returnType) {
+		if (!obj.isAtom) {
 			die("Internal error: " + obj.body.body)
 		}
 		val rule = obj.eAllContents.filter(RuleRef).head
 		if (rule != null) {
 			val ruleName = rule.reference.name.toCamelCase
 			if (fieldTypeName.contains("List")) {
-				sb.nl('''					case «_nonTerminalId»: {''')
-				sb.nl('''						if (bind == null) {''')
-				sb.nl('''							bind = new «returnType»''')
-				sb.nl('''						}''')
+				sb.nl('''case «_nonTerminalId»: {''')
 				val refType = obj.referenceReturnType
 				if (refType == null) {
 					die("Rule " + ruleName + " does not have return type.")
 				}
 				if (refType.contains("List")) {
-					sb.nl('''						if (bind.«fieldName» == null) {''')
-					sb.nl('''							bind.«fieldName» = it.visit as «fieldTypeName»''')
-					sb.nl('''						} else {''')
-					sb.nl('''							bind.«fieldName» += it.visit as «fieldTypeName»''')
-					sb.nl('''						}''')
+					sb.nl('''if (bind.«fieldName» == null) {''')
+					sb.nl('''bind.«fieldName» = it.visit as «fieldTypeName»''')
+					sb.nl('''} else {''')
+					sb.nl('''bind.«fieldName» += it.visit as «fieldTypeName»''')
+					sb.nl('''}''')
 				} else {
-					sb.nl('''						if (bind.«fieldName» == null) {''')
-					sb.nl('''							bind.«fieldName» = new ArrayList<«refType»>''')
-					sb.nl('''						}''')
-					sb.nl('''						bind.«fieldName» += it.visit as «fieldTypeName»''')
+					sb.nl('''if (bind.«fieldName» == null) {''')
+					sb.nl('''bind.«fieldName» = new ArrayList<«refType»>''')
+					sb.nl('''}''')
+					sb.nl('''bind.«fieldName» += it.visit as «fieldTypeName»''')
 				}
-				sb.nl('''					}''')
+				sb.nl('''}''')
 			} else {
-				sb.nl('''					case «_nonTerminalId»:''')
-				sb.nl('''						bind.«fieldName» = it.visit as «fieldTypeName»''')
+				sb.nl('''case «_nonTerminalId»: {''')
+				sb.nl('''bind.«fieldName» = it.visit as «fieldTypeName»''')
+				sb.nl('''}''')
 			}
 			return
 		}
@@ -217,13 +209,13 @@ import net.unicoen.node.*
 
 	def makeMethodBody(ParserRule r, Class<?> clazz) {
 		val sb = new StringBuilder
-		sb.nl('''		«r.type.list.bind» bind = null''')
+		sb.nl('''val bind = new «r.type.list.bind»''')
 		if (r.type.list.ret != null) {
-			sb.append('''		«r.type.list.ret» ret = null''')
+			sb.append('''val ret = new «r.type.list.ret»''')
 		}
-		sb.nl('''		ctx.children.forEach [''')
-		sb.nl('''			if (it instanceof RuleContext) {''')
-		sb.nl('''				switch (it as RuleContext).invokingState {''')
+		sb.nl('''ctx.children.forEach [''')
+		sb.nl('''if (it instanceof RuleContext) {''')
+		sb.nl('''switch (it as RuleContext).invokingState {''')
 		val list = r.eAllContents.filter(ElementWithDollar)
 		list.forEach [
 			if (it.op == null) {
@@ -234,21 +226,18 @@ import net.unicoen.node.*
 				if (!r.type.list.bind.equals(it.referenceReturnType)) {
 					die("Expected return type: " + r.type.list.bind + " actual type: " + it.referenceReturnType)
 				}
-				sb.nl('''				case «_nonTerminalId»: {''')
-				sb.nl('''					if (bind == null) {''')
-				sb.nl('''						bind = new «r.type.list.bind»''')
-				sb.nl('''					}''')
-				sb.nl('''					val child = it.visit as «r.type.list.bind»''')
-				sb.nl('''					bind.merge(child)''')
-				sb.nl('''				}''')
+				sb.nl('''case «_nonTerminalId»: {''')
+				sb.nl('''val child = it.visit as «r.type.list.bind»''')
+				sb.nl('''bind.merge(child)''')
+				sb.nl('''}''')
 				it.countId
 				return
 			}
 			if (it.op.equals("RETURN")) {
 				if (r.type.list.ret != null) {
-					sb.nl('''				case «_nonTerminalId»: {''')
-					sb.nl('''					ret = it.visit as «r.type.list.ret»''')
-					sb.nl('''				}''')
+					sb.nl('''case «_nonTerminalId»: {''')
+					sb.nl('''ret = it.visit as «r.type.list.ret»''')
+					sb.nl('''}''')
 					it.countId
 					return
 				}
@@ -262,13 +251,15 @@ import net.unicoen.node.*
 				die("No such Field: " + it.op)
 			}
 		]
-		sb.nl('''				}''')
-		sb.nl('''			}''')
-		sb.nl('''		]''')
-		sb.nl('''		if (ret != null) {''')
-		sb.nl('''			return ret''')
-		sb.nl('''		}''')
-		sb.nl('''		bind''')
+		sb.nl('''}''')
+		sb.nl('''}''')
+		sb.nl(''']''')
+		if (r.type.list.ret != null) {
+			sb.nl('''if (ret != null) {''')
+			sb.nl('''return ret''')
+			sb.nl('''}''')
+		}
+		sb.nl('''bind''')
 	}
 
 	def getReferenceReturnType(ElementWithDollar r) {
@@ -307,10 +298,10 @@ import net.unicoen.node.*
 
 	def makeListMethodBody(ParserRule r, String itemClassName) {
 		val sb = new StringBuilder
-		sb.nl('''		val list = new ArrayList<«itemClassName»>''')
-		sb.nl('''		if (ctx.children != null) {''')
-		sb.nl('''			ctx.children.forEach [''')
-		sb.nl('''				switch (it) {''')
+		sb.nl('''val list = new ArrayList<«itemClassName»>''')
+		sb.nl('''if (ctx.children != null) {''')
+		sb.nl('''ctx.children.forEach [''')
+		sb.nl('''switch (it) {''')
 		val list = r.eAllContents.filter(ElementWithDollar)
 		list.forEach [
 			if (it.op == null) {
@@ -318,11 +309,9 @@ import net.unicoen.node.*
 				return
 			}
 			if (it.op.equals("ADD")) {
-				if (!r.type.list.bind.contains(it.referenceReturnType)) {
-					die("Expected return type: " + r.type.list.bind + " actual type: " + it.referenceReturnType)
-				}
-				sb.nl('''				case «_nonTerminalId»:''')
-				sb.nl('''						list += it.visit as «itemClassName»''')
+				sb.nl('''case «_nonTerminalId»: {''')
+				sb.nl('''list += it.visit as «itemClassName»''')
+				sb.nl('''}''')
 				it.countId
 				return
 			}
@@ -330,45 +319,37 @@ import net.unicoen.node.*
 				if (!r.type.list.bind.equals(it.referenceReturnType)) {
 					die("Expected return type: " + r.type.list.bind + " actual type: " + it.referenceReturnType)
 				}
-				sb.nl('''				case «_nonTerminalId»: {''')
-				sb.nl('''					if (ret == null) {''')
-				sb.nl('''						ret = it.visit as «r.type.list.bind»''')
-				sb.nl('''					} else {''')
-				sb.nl('''						ret += it.visit as «r.type.list.bind»''')
-				sb.nl('''					}''')
-				sb.nl('''				}''')
+				sb.nl('''case «_nonTerminalId»: {''')
+				sb.nl('''if (ret == null) {''')
+				sb.nl('''ret = it.visit as «r.type.list.bind»''')
+				sb.nl('''} else {''')
+				sb.nl('''ret += it.visit as «r.type.list.bind»''')
+				sb.nl('''}''')
+				sb.nl('''}''')
 			}
 
-			sb.nl('''				}''')
-			sb.nl('''			]''')
-			sb.nl('''		}''')
-			sb.nl('''		list''')
 		]
+		sb.nl('''}''')
+		sb.nl(''']''')
+		sb.nl('''}''')
+		sb.nl('''list''')
 		sb
-	}
-
-	def dispatch makeVisitMethod(LexerRule r) {
-		r.type.list.bind
 	}
 
 	def makeStringMethodBody(ParserRule r) {
 		val sb = new StringBuilder
-		sb.nl('''		ctx.text''')
+		sb.nl('''ctx.text''')
 		sb.toString
 	}
 
-	def dispatch makeLiteralMethod(ParserRule r) {
+	def makeLiteralMethod(ParserRule r) {
 		val sb = new StringBuilder
 		val methodName = "visit" + r.name.toCamelCase
-		sb.nl('''	override public «methodName»(«_grammarName»Parser.«r.name.toCamelCase»Context ctx) {''')
-		sb.nl('''		throw new RuntimeException("Unimplemented Method: «methodName»")''')
-		sb.nl('''	}''')
+		sb.nl('''override public «methodName»(«_grammarName»Parser.«r.name.toCamelCase»Context ctx) {''')
+		sb.nl('''throw new RuntimeException("Unimplemented Method: «methodName»")''')
+		sb.nl('''}''')
 		sb.nl
 		sb.toString
-	}
-
-	def dispatch makeLiteralMethod(LexerRule r) {
-		r.makeVisitMethod
 	}
 
 	def die(String message) {
@@ -376,12 +357,21 @@ import net.unicoen.node.*
 	}
 
 	def nl(StringBuilder sb, CharSequence contents) {
+		if (Pattern.compile("[}\\]]").matcher(contents).find) {
+			_indent--;
+		}
+		for (var i = 0; i < _indent; i++) {
+			sb.append('\t')
+		}
+		if (Pattern.compile("[{\\[]").matcher(contents).find) {
+			_indent++;
+		}
 		sb.append(contents)
 		sb.nl
 	}
 
 	def nl(StringBuilder sb) {
-		sb.append(System.getProperty("line.separator"))
+		sb.append(System.lineSeparator)
 	}
 
 	def countId(ElementWithDollar e) {
@@ -393,6 +383,10 @@ import net.unicoen.node.*
 				_terminalId++
 			}
 		}
+	}
+
+	def isAtom(ElementWithDollar obj) {
+		return obj.body.body instanceof Atom
 	}
 
 }

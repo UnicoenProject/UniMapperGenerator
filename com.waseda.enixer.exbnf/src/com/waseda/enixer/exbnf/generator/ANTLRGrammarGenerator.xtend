@@ -7,14 +7,15 @@ class ANTLRGrammarGenerator {
 	private IFileSystemAccess _fsa
 	private val ext = ".g4";
 	private val nl = System.getProperty("line.separator")
-	new(IFileSystemAccess fsa){
+
+	new(IFileSystemAccess fsa) {
 		_fsa = fsa
 	}
-	
+
 	def generate(String name, Grammar grammar) {
-		_fsa.generateFile(name+ext, grammar.compile)
+		_fsa.generateFile(name + ext, grammar.compile)
 	}
-	
+
 	def dispatch compile(Grammar g) {
 		val sb = new StringBuilder
 		sb.append(g.nameCompile + nl + nl)
@@ -31,7 +32,7 @@ class ANTLRGrammarGenerator {
 		sb.toString
 	}
 
-	def nameCompile(Grammar g) '''«IF g.type != null»«IF !g.type.equals(GrammarType.DEFAULT)»«g.type» «ENDIF»«ENDIF»grammar «g.
+	def nameCompile(Grammar g) '''«IF g.type != null && !g.type.equals(GrammarType.DEFAULT)»«g.type» «ENDIF»grammar «g.
 		name»;'''
 
 	def header() '''@header{
@@ -44,7 +45,8 @@ class ANTLRGrammarGenerator {
 
 	def dispatch compile(TokenVocab tv) '''«tv.name» = «tv.importURI»'''
 
-	def dispatch compile(OptionValue opv) '''«IF opv.qopValue != null»«opv.qopValue»«ELSEIF opv.strValue != null»'«opv.strValue»'«ELSEIF opv.
+	def dispatch compile(
+		OptionValue opv) '''«IF opv.qopValue != null»«opv.qopValue»«ELSEIF opv.strValue != null»'«opv.strValue»'«ELSEIF opv.
 		aopValue != null»«ELSE»«ENDIF»'''
 
 	def dispatch compile(Imports im) '''«im.keyword» «FOR i : im.imports»«IF !im.imports.get(0).equals(i)», «ENDIF»«i.
@@ -68,11 +70,14 @@ class ANTLRGrammarGenerator {
 
 	def dispatch compile(Mode m) '''mode «m.id»;«FOR lr : m.rules»«lr.compile»«ENDFOR»'''
 
-	def dispatch compile(ParserRule pr) '''«pr.name»«IF pr.^return != null» «pr.^return.compile»«ENDIF»«IF pr.throws !=
+	def dispatch compile(
+		ParserRule pr
+	) '''«pr.name»«IF pr.^return != null» «pr.^return.compile»«ENDIF»«IF pr.throws !=
 		null» «pr.throws.compile»«ENDIF»«IF pr.locals != null» «pr.locals.compile»«ENDIF»«FOR p : pr.prequels» «p.compile»«ENDFOR» :
 		«pr.body.compile»«pr.caught.compile»«pr.semicolonSymbol»'''
 
-	def dispatch compile(ExceptionGroup eg) '''«FOR e : eg.handlers»«ENDFOR»«IF eg.^finally != null»«eg.^finally.compile»«ENDIF»'''
+	def dispatch compile(
+		ExceptionGroup eg) '''«FOR e : eg.handlers»«ENDFOR»«IF eg.^finally != null»«eg.^finally.compile»«ENDIF»'''
 
 	def dispatch compile(ExceptionHandler eh) '''catch «eh.exception» «eh.body»'''
 
@@ -115,21 +120,28 @@ class ANTLRGrammarGenerator {
 
 	def dispatch compile(Atom at) '''«at.body.compile»'''
 
-	def dispatch compile(RuleRef rr) '''«rr.reference.name»«rr.args»«IF rr.options != null»«rr.options.compile»«ENDIF»'''
+	def dispatch compile(
+		RuleRef rr) '''«rr.reference.name»«rr.args»«IF rr.options != null»«rr.options.compile»«ENDIF»'''
 
 	def dispatch compile(ElementOptions eo) '''<«FOR o : eo.options»«o.compile»,«ENDFOR»>'''
 
 	def dispatch compile(Range ra) ''''«ra.from»'..'«ra.to»' '''
 
-	def dispatch compile(Terminal te) '''«IF te.reference != null»«te.reference.refCompile»«IF te.options != null»«te.
-		options.compile»«ENDIF»«ELSEIF te.literal != null»'«te.literal»'«IF te.options != null» «te.options.compile»«ENDIF»«ELSE»«te.
+	def dispatch compile(
+		Terminal te
+	) '''«IF te.reference != null»«te.reference.refCompile»«IF te.options != null»«te.
+		options.compile»«ENDIF»«ELSEIF te.literal != null»'«te.literal»'«IF te.options != null» «te.options.compile»«ENDIF»«
+	ELSE»«te.
 		eof»«ENDIF»'''
 
 	def dispatch compile(NotSet ns) '''~«ns.body.compile»'''
 
-	def dispatch compile(BlockSet bs) '''(«FOR e : bs.elements»«IF !bs.elements.get(0).equals(e)»|«ENDIF»«e.compile»«ENDFOR»)'''
+	def dispatch compile(
+		BlockSet bs) '''(«FOR e : bs.elements»«IF !bs.elements.get(0).equals(e)»|«ENDIF»«e.compile»«ENDFOR»)'''
 
-	def dispatch compile(SetElement se) '''«IF se.tokenRef != null»«se.tokenRef»«ELSEIF se.stringLiteral != null»'«se.stringLiteral»'«ELSEIF se.
+	def dispatch compile(
+		SetElement se
+	) '''«IF se.tokenRef != null»«se.tokenRef»«ELSEIF se.stringLiteral != null»'«se.stringLiteral»'«ELSEIF se.
 		range != null»«se.range»«ELSE»«se.charSet»«ENDIF»'''
 
 	def dispatch compile(Wildcard wi) '''«wi.dot»«IF wi.options != null»«wi.options.compile»«ENDIF»'''

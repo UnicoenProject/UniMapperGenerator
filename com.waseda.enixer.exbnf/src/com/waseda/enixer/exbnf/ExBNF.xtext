@@ -116,7 +116,7 @@ Alternative:
 	{Alternative} options=ElementOptions? elements+=ElementWithDollar*;
 
 ElementWithDollar:
-	body=Element (DOLLAR op=(UNICOEN_ANNOTATIONS | Refs))?;
+	body=Element (DOLLAR op=Refs)?;
 
 Element:
 	body=LabeledElement operator=EbnfSuffix? | body=Atom operator=EbnfSuffix? | body=Ebnf | body=ActionElement;
@@ -210,7 +210,7 @@ LexerElements:
 	{LexerElements} elements+=LexerElementWithDollar*;
 
 LexerElementWithDollar:
-	body=LexerElement (DOLLAR op=(UNICOEN_ANNOTATIONS | Refs))?;
+	body=LexerElement (DOLLAR op=Refs)?;
 
 LexerElement:
 	body=LabeledLexerElement operator=EbnfSuffix? | body=LexerAtom operator=EbnfSuffix? | body=LexerBlock
@@ -391,13 +391,6 @@ terminal fragment ARG_ACTION_CHAR_LITERAL:
 	(ACTION_ESC
 	| !('\\' | "'" | '[' | ']'))*
 	"'";
-
-terminal UNICOEN_ANNOTATIONS:
-	'MERGE'
-	| 'RETURN'
-	| 'ADD'
-	| 'APPEND'
-	| 'TODO';
 
 /** Comments */
 terminal SL_COMMENT:
