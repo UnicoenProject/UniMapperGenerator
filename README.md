@@ -4,6 +4,7 @@ UniMapperGenerator
 Requirements
 ---
 
+* [Eclipse](https://eclipse.org/)
 * [Xtext](http://www.eclipse.org/Xtext/)
 * [Xtend](http://www.eclipse.org/xtend/)
 
