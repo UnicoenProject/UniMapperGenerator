@@ -1,4 +1,4 @@
-UniMapperGenerator
+UniMapperGenerator [![Build Status](https://travis-ci.org/UnicoenProject/UniMapperGenerator.svg)](https://travis-ci.org/UnicoenProject/UniMapperGenerator)
 ===
 
 Requirements
@@ -11,11 +11,12 @@ Requirements
 How to Develop
 ---
 
-1. clone this project
-2. import 4 projects into eclipse
-    * com.waseda.enixer.exbnf
-    * com.waseda.enixer.exbnf.sdk
-    * com.waseda.enixer.exbnf.tests
-    * com.waseda.enixer.exbnf.ui
-3. run com.waseda.enixer.exbnf/src/com.waseda.enixer.exbnf/ExBNF.xtext
-    * if you are asked to install some plugins, hit 'y'
+1. Import > Maven > Exisiting Maven Projects
+2. Import 5 projects (1 parent project and 4 sub projects)
+   - `parent`
+      - `net.unicoen.unimappergenerator`
+      - `net.unicoen.unimappergenerator.sdk`
+      - `net.unicoen.unimappergenerator.tests`
+      - `net.unicoen.unimappergenerator.ui`
+3. Run `src/net.unicoen/UniMapperGenerator.xtext` in `net.unicoen.unimappergenerator` project
+   - if you are asked to install some plugins, hit 'y'
