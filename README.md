@@ -1,13 +1,14 @@
 UniMapperGenerator
 ===
 
-requires
+Requirements
 ---
 
+* [Eclipse](https://eclipse.org/)
 * [Xtext](http://www.eclipse.org/Xtext/)
 * [Xtend](http://www.eclipse.org/xtend/)
 
-Import
+How to Develop
 ---
 
 1. clone this project
