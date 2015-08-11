@@ -16,6 +16,7 @@ import net.unicoen.node.UniNode
 import com.waseda.enixer.exbnf.exBNF.Atom
 import com.waseda.enixer.exbnf.exBNF.Terminal
 import java.util.regex.Pattern
+import java.io.File
 
 /**
  * Generates code from your model files on save.
@@ -24,9 +25,8 @@ import java.util.regex.Pattern
  */
 class ExBNFGenerator implements IGenerator {
 	private String _grammarName
-	private int _nonTerminalId
-	private int _terminalId
 	private int _indent;
+	private File file = new File("../Junicoen/src/main/java/net/unicoen/parser/Java8Parser.java")
 
 	override def doGenerate(Resource resource, IFileSystemAccess fsa) {
 		val g4Generator = new ANTLRGrammarGenerator(fsa)
@@ -60,8 +60,7 @@ import net.unicoen.node.*
 	def generateMapper(Grammar g) {
 		val sb = new StringBuilder
 		sb.nl(generateImports)
-		_nonTerminalId = 0
-		_terminalId = 0
+		_indent = 0;
 
 		sb.nl('''class «_grammarName»Mapper extends «_grammarName»BaseVisitor<Object> {''')
 		sb.nl('''var _isDebugMode = false''')
@@ -88,12 +87,7 @@ import net.unicoen.node.*
 		sb.nl('''val tokens = new CommonTokenStream(lexer)''')
 		sb.nl('''val parser = new «_grammarName»Parser(tokens)''')
 		if (g.rules.size > 0) {
-			sb.append('''val tree = parser.''')
-			if (g.root != null) {
-				sb.append(g.root.root.name)
-			} else {
-				sb.append(g.rules.get(0).name)
-			}
+			sb.nl('''val tree = parser.«IF g.root != null»«g.root.root.name»«ELSE»«g.rules.get(0).name»«ENDIF»''')
 			sb.nl
 			sb.nl('''tree.visit''')
 		}
@@ -135,9 +129,6 @@ import net.unicoen.node.*
 				} else {
 					sb.append(it.makeVisitMethod)
 				}
-			} else {
-				_nonTerminalId += it.eAllContents.filter(RuleRef).size
-				_terminalId += it.eAllContents.filter(Terminal).size
 			}
 		]
 		sb.nl('}')
@@ -157,7 +148,6 @@ import net.unicoen.node.*
 			val packagePrefix = UniNode.package.name + '.'
 			sb.append(r.makeMethodBody(Class.forName(packagePrefix + typeName)))
 		} else if (typeName.startsWith("List")) {
-			_nonTerminalId += r.eAllContents.size
 			val itemClassName = typeName.substring(typeName.indexOf('<') + 1, typeName.indexOf('>'))
 			sb.append(r.makeListMethodBody(itemClassName))
 		} else if (typeName.equals("String")) {
@@ -219,34 +209,28 @@ import net.unicoen.node.*
 		val list = r.eAllContents.filter(ElementWithDollar)
 		list.forEach [
 			if (it.op == null) {
-				it.countId
 				return
 			}
 			if (it.op.equals("MERGE")) {
 				if (!r.type.list.bind.equals(it.referenceReturnType)) {
 					die("Expected return type: " + r.type.list.bind + " actual type: " + it.referenceReturnType)
 				}
-				sb.nl('''case «_nonTerminalId»: {''')
+				sb.nl('''case «r.getInvokingState(it)»: {''')
 				sb.nl('''val child = it.visit as «r.type.list.bind»''')
 				sb.nl('''bind.merge(child)''')
 				sb.nl('''}''')
-				it.countId
 				return
 			}
 			if (it.op.equals("RETURN")) {
-				if (r.type.list.ret != null) {
-					sb.nl('''case «_nonTerminalId»: {''')
-					sb.nl('''ret = it.visit as «r.type.list.ret»''')
-					sb.nl('''}''')
-					it.countId
-					return
-				}
+				sb.nl('''case «_nonTerminalId»: {''')
+				sb.nl('''bind = it.visit as «r.type.list.ret»''')
+				sb.nl('''}''')
+				return
 			}
 			try {
 				val field = clazz.getField(it.op)
 				val fieldTypeName = field.genericType.typeName
 				it.makeCaseStatement(fieldTypeName, it.op, sb, r.type.list.bind)
-				it.countId
 			} catch (NoSuchFieldException e) {
 				die("No such Field: " + it.op)
 			}
@@ -305,14 +289,12 @@ import net.unicoen.node.*
 		val list = r.eAllContents.filter(ElementWithDollar)
 		list.forEach [
 			if (it.op == null) {
-				it.countId
 				return
 			}
 			if (it.op.equals("ADD")) {
 				sb.nl('''case «_nonTerminalId»: {''')
 				sb.nl('''list += it.visit as «itemClassName»''')
 				sb.nl('''}''')
-				it.countId
 				return
 			}
 			if (it.op.equals("APPEND")) {
@@ -374,19 +356,12 @@ import net.unicoen.node.*
 		sb.append(System.lineSeparator)
 	}
 
-	def countId(ElementWithDollar e) {
-		if (e.body.body instanceof Atom) {
-			val atom = e.body.body as Atom
-			if (atom.body instanceof RuleRef) {
-				_nonTerminalId++
-			} else if (atom.body instanceof Terminal) {
-				_terminalId++
-			}
-		}
-	}
-
 	def isAtom(ElementWithDollar obj) {
 		return obj.body.body instanceof Atom
+	}
+	
+	def getInvokingState(ParserRule r, ElementWithDollar e){
+		
 	}
 
 }

@@ -52,7 +52,7 @@
 Total lexer+parser time 30844ms.
  */
 grammar Java8;
-root compilationUnit;
+root normalClassDeclaration;
 
 /*
  * Productions from §3 (Lexical Structure)
@@ -457,25 +457,33 @@ result => String
 	;
 
 methodDeclarator => UniMethodDec
-	:	methodName$methodName '(' formalParameterList? ')' dims?$returnType
+	:	methodName$methodName '(' formalParameterList?$args ')' dims?$returnType
 	;
 	
 methodName => String
 	:	Identifier
 	;
 
-formalParameterList
-	:	formalParameters ',' lastFormalParameter
-	|	lastFormalParameter
+formalParameterList => List<UniArg>
+	:	formalParameters$APPEND ',' lastFormalParameter$ADD
+	|	lastFormalParameter$ADD
 	;
 
-formalParameters
-	:	formalParameter (',' formalParameter)*
+formalParameters => List<UniArg>
+	:	formalParameter$ADD (',' formalParameter$ADD)*
 	|	receiverParameter (',' formalParameter)*
 	;
 
-formalParameter
-	:	variableModifier* unannType variableDeclaratorId
+formalParameter => UniArg
+	:	variableModifier* unannType$type parameterDeclaratorId$MERGE
+	;
+	
+parameterDeclaratorId => UniArg
+	:	parameterName$name dims?$type
+	;
+	
+parameterName => String
+	:	Identifier
 	;
 
 variableModifier
