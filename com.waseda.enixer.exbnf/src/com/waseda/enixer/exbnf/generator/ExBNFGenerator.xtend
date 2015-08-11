@@ -99,34 +99,34 @@ import net.unicoen.node.*
 		}
 		sb.nl('''}''')
 		sb.nl
-		sb.nl('''override public visitChildren(RuleNode node) {
-		val n = node.childCount;
-		(0 ..< n).fold(defaultResult) [ acc, i |
-			if (!node.shouldVisitNextChild(acc)) {
-				acc
-			} else {
-				val c = node.getChild(i);
-				val childResult = c.visit;
-				acc.aggregateResult(childResult);
-			}
-		]
-	}
-
-	override public visit(ParseTree tree) {
-		if (_isDebugMode) {
-			if (!(tree instanceof ParserRuleContext)) {
-				return visitTerminal(tree as TerminalNode)
-			}
-			val ruleName = «_grammarName»Parser.ruleNames.get((tree as ParserRuleContext).ruleIndex)
-			println("*** visit" + ruleName + " ***")
-			println(tree.text)
-			val ret = tree.accept(this)
-			println("returned: " + ret)
-			ret
-		} else {
-			tree.accept(this)
-		}
-	}''')
+		sb.nl('''override public visitChildren(RuleNode node) {''')
+		sb.nl('''val n = node.childCount;''')
+		sb.nl('''(0 ..< n).fold(defaultResult) [ acc, i |''')
+		sb.nl('''if (!node.shouldVisitNextChild(acc)) {''')
+		sb.nl('''acc''')
+		sb.nl('''} else {''')
+		sb.nl('''val c = node.getChild(i)''')
+		sb.nl('''val childResult = c.visit''')
+		sb.nl('''acc.aggregateResult(childResult)''')
+		sb.nl('''}''')
+		sb.nl(''']''')
+		sb.nl('''}''')
+		sb.nl
+		sb.nl('''override public visit(ParseTree tree) {''')
+		sb.nl('''if (_isDebugMode) {''')
+		sb.nl('''if (!(tree instanceof ParserRuleContext)) {''')
+		sb.nl('''return visitTerminal(tree as TerminalNode)''')
+		sb.nl('''}''')
+		sb.nl('''val ruleName = «_grammarName»Parser.ruleNames.get((tree as ParserRuleContext).ruleIndex)''')
+		sb.nl('''println("*** visit" + ruleName + " ***")''')
+		sb.nl('''println(tree.text)''')
+		sb.nl('''val ret = tree.accept(this)''')
+		sb.nl('''println("returned: " + ret)''')
+		sb.nl('''ret''')
+		sb.nl('''} else {''')
+		sb.nl('''tree.accept(this)''')
+		sb.nl('''}''')
+		sb.nl('''}''')
 		sb.nl
 		g.rules.filter(ParserRule).forEach [
 			if (it.type != null) {

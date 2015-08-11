@@ -1,18 +1,18 @@
-grammar com.waseda.enixer.exbnf.ExBNF with org.eclipse.xtext.common.Terminals hidden(WS, ML_COMMENT, SL_COMMENT)
+grammar com.waseda.enixer.exbnf.ExBNF hidden(WS, ML_COMMENT, SL_COMMENT)
 
 import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 generate exBNF "http://www.waseda.com/enixer/exbnf/ExBNF"
 
 /** Grammar */
 Grammar:
-	type=GrammarType? 'grammar' name=Refs SEMICOLON
-	root=rootSelection?
+	type=GrammarType? 'grammar' name=Id SEMICOLON
+	root=rootSelection
 	prequels+=PrequelConstruct*
 	rules+=Rule*
 	modes+=Mode*;
 
 enum GrammarType:
-	DEFAULT='___default_hack_'
+	DEFAULT='default_hack_'
 	| LEXER='lexer'
 	| PARSER='parser'
 	| TREE='tree';
@@ -28,10 +28,10 @@ Options:
 	{Options} keyword=OPTIONS_SPEC (options+=Option SEMICOLON)* '}';
 
 Option:
-	TokenVocab | name=Refs '=' value=OptionValue;
+	TokenVocab | name=Id '=' value=OptionValue;
 
 TokenVocab:
-	name=TOKEN_VOCAB '=' importURI=[Grammar|Refs];
+	name=TOKEN_VOCAB '=' importURI=[Grammar|Id];
 
 OptionValue:
 	qopValue=QualifiedId | strValue=STRING | aopValue=ACTION | intValue=INT;
@@ -41,7 +41,7 @@ Imports:
 	keyword='import' imports+=Import (',' imports+=Import)* SEMICOLON;
 
 Import:
-	alias=Refs '=' importURI=[Grammar|Refs] | importURI=[Grammar|Refs];
+	alias=Id '=' importURI=[Grammar|Id] | importURI=[Grammar|Id];
 
 /** Tokens */
 Tokens:
@@ -51,7 +51,7 @@ V4Tokens:
 	keyword=TOKENS_SPEC tokens+=V4Token (',' tokens+=V4Token)* '}';
 
 V4Token:
-	name=Refs;
+	name=Id;
 
 EmptyTokens:
 	{EmptyTokens} keyword=TOKENS_SPEC '}';
@@ -60,17 +60,17 @@ V3Tokens:
 	keyword=TOKENS_SPEC tokens+=V3Token+ '}';
 
 V3Token:
-	name=Refs ('=' value=STRING)? SEMICOLON;
+	name=Id ('=' value=STRING)? SEMICOLON;
 
 /** Grammar Actions */
 GrammarAction:
-	'@' (scope=ActionScope colonSymbol='::')? name=Refs action=ACTION;
+	'@' (scope=ActionScope colonSymbol='::')? name=Id action=ACTION;
 
 ActionScope:
-	'parser' | 'lexer' | 'tree' | Refs;
+	'parser' | 'lexer' | 'tree' | Id;
 
 Mode:
-	'mode' id=Refs SEMICOLON rules+=LexerRule*;
+	'mode' id=Id SEMICOLON rules+=LexerRule*;
 
 /** Rules */
 Rule:
@@ -104,19 +104,19 @@ RulePrequel:
 	Options | RuleAction;
 
 RuleAction:
-	'@' name=Refs body=ACTION;
+	'@' name=Id body=ACTION;
 
 RuleAltList:
 	alternatives+=LabeledAlt ('|' alternatives+=LabeledAlt)*;
 
 LabeledAlt:
-	body=Alternative ('#' label=Refs)?;
+	body=Alternative ('#' label=Id)?;
 
 Alternative:
 	{Alternative} options=ElementOptions? elements+=ElementWithDollar*;
 
 ElementWithDollar:
-	body=Element (DOLLAR op=Refs)?;
+	body=Element (DOLLAR op=Id)?;
 
 Element:
 	body=LabeledElement operator=EbnfSuffix? | body=Atom operator=EbnfSuffix? | body=Ebnf | body=ActionElement;
@@ -129,7 +129,7 @@ ActionElement:
 	body=ACTION options=ElementOptions?;
 
 LabeledElement:
-	name=Refs op=('=' | '+=') (body=Atom | body=Block);
+	name=Id op=('=' | '+=') (body=Atom | body=Block);
 
 EbnfSuffix:
 	operator='?' nongreedy='?'? | operator='*' nongreedy='?'? | operator='+' nongreedy='?'?;
@@ -185,7 +185,7 @@ Wildcard:
 	// When used with elements we can specify what the tree node type can
 // be and also assign settings of various options  (which we do not check here)
 ElementOption: // This format indicates the default element option
-	qualifiedId=QualifiedId | id=Refs assign='=' value=OptionValue;
+	qualifiedId=QualifiedId | id=Id assign='=' value=OptionValue;
 
 UnicoenTypeDec:
 	'=>' list=UnicoenTypeList;
@@ -194,7 +194,7 @@ UnicoenTypeList:
 	bind=UnicoenTypeIdentifiers (',' ret=UnicoenTypeIdentifiers)?;
 
 UnicoenTypeIdentifiers:
-	Refs ('<' UnicoenTypeIdentifiers '>')?;
+	Id ('<' UnicoenTypeIdentifiers '>')?;
 
 /** Lexer Rule */
 LexerRule:
@@ -210,14 +210,14 @@ LexerElements:
 	{LexerElements} elements+=LexerElementWithDollar*;
 
 LexerElementWithDollar:
-	body=LexerElement (DOLLAR op=Refs)?;
+	body=LexerElement (DOLLAR op=Id)?;
 
 LexerElement:
 	body=LabeledLexerElement operator=EbnfSuffix? | body=LexerAtom operator=EbnfSuffix? | body=LexerBlock
 	operator=EbnfSuffix? | body=ActionElement;
 
 LabeledLexerElement:
-	label=Refs op=('=' | '+=') (body=LexerAtom | body=LexerBlock);
+	label=Id op=('=' | '+=') (body=LexerAtom | body=LexerBlock);
 
 LexerAtom:
 	body=(Range | Terminal | RuleRef | NotSet | Wildcard | LexerCharSet);
@@ -236,19 +236,19 @@ LexerCommand:
 	name=LexerCommandName '(' args=LexerCommandExpr ')' | name=LexerCommandName;
 
 LexerCommandName:
-	'mode' | Refs;
+	'mode' | Id;
 
 LexerCommandExpr:
-	ref=[LexerCommandArg|Refs] | value=INT;
+	ref=[LexerCommandArg|Id] | value=INT;
 
 LexerCommandArg:
 	Mode | LexerRule | V3Token | V4Token;
 
 /** ID */
 QualifiedId:
-	name+=Refs ('.' name+=Refs)*;
+	name+=Id ('.' name+=Id)*;
 
-Refs:
+Id:
 	TOKEN_REF | RULE_REF;
 
 /** tokenVocab */
@@ -344,6 +344,20 @@ terminal ACTION:
 terminal fragment NESTED_ACTION:
 	'___nested_action_';
 
+terminal fragment ACTION_STRING_LITERAL:
+	'"'
+	(ACTION_ESC
+	|
+	!('\\' | '"'))*
+	'"';
+
+terminal fragment ACTION_CHAR_LITERAL:
+	"'"
+	(ACTION_ESC
+	|
+	!('\\' | "'"))*
+	"'";
+
 	// Within literal strings and characters that are not part of the ANTLR
 // syntax, we must allow for escaped character sequences so that we do not
 // inadvertantly recognize the end of a string or character when the terminating
@@ -375,22 +389,10 @@ terminal fragment LEXER_CHAR_SET:
 //
 terminal fragment ARG_ACTION:
 	'['
-	(ARG_ACTION_STRING_LITERAL
-	| ARG_ACTION_CHAR_LITERAL
+	(ACTION_STRING_LITERAL
+	| ACTION_CHAR_LITERAL
 	| !('[' | ']'))*
 	']';
-
-terminal fragment ARG_ACTION_STRING_LITERAL:
-	'"'
-	(ACTION_ESC
-	| !('\\' | '"' | '[' | ']'))*
-	'"';
-
-terminal fragment ARG_ACTION_CHAR_LITERAL:
-	"'"
-	(ACTION_ESC
-	| !('\\' | "'" | '[' | ']'))*
-	"'";
 
 /** Comments */
 terminal SL_COMMENT:

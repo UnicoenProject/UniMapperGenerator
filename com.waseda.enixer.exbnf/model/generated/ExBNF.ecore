@@ -14,7 +14,7 @@
         eType="#//Mode" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="GrammarType">
-    <eLiterals name="DEFAULT" literal="___default_hack_"/>
+    <eLiterals name="DEFAULT" literal="default_hack_"/>
     <eLiterals name="LEXER" value="1" literal="lexer"/>
     <eLiterals name="PARSER" value="2" literal="parser"/>
     <eLiterals name="TREE" value="3" literal="tree"/>
