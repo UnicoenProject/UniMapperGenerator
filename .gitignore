@@ -1,22 +1,17 @@
-OperatorCounter/.classpath
-OperatorCounter/.project
-OperatorCounter/.settings
-com.waseda.enixer.exbnf/.launch
+# Eclipse
+.settings
+.classpath
+.project
 
-# for Maven
-target
-bin
-*.class
+# Maven
+bin/
+target/
 
-# Package Files #
-*.jar
-*.war
-*.ear
+# Xtext and Xtend
+generated/
+generated-sources/
+src-gen/
+xtend-gen/
 
-# for ExBNF
-*/src-gen/*
-!*/src-gen/.keep
-xtend-gen
-
-# for Mac
-*.DS_Store
+# Mac
+.DS_Store
