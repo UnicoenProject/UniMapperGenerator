@@ -3,7 +3,6 @@
  */
 package net.unicoen.generator
 
-import java.io.File
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import java.util.regex.Pattern
@@ -16,6 +15,7 @@ import net.unicoen.uniMapperGenerator.RuleRef
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
+import java.util.List
 
 /**
  * Generates code from your model files on save.
@@ -25,7 +25,8 @@ import org.eclipse.xtext.generator.IGenerator
 class UniMapperGeneratorGenerator implements IGenerator {
 	private String _grammarName
 	private int _indent;
-	private File file = new File("../Junicoen/src/main/java/net/unicoen/parser/Java8Parser.java")
+	private List<String> program = java.nio.file.Files.readAllLines(
+		java.nio.file.Paths.get("../Junicoen/src/main/java/net/unicoen/parser/Java8Parser.java"));
 
 	override def doGenerate(Resource resource, IFileSystemAccess fsa) {
 		val g4Generator = new ANTLRGrammarGenerator(fsa)
@@ -159,7 +160,7 @@ import net.unicoen.node.*
 		sb
 	}
 
-	def makeCaseStatement(ElementWithDollar obj, String fieldTypeName, String fieldName, StringBuilder sb,
+	def makeCaseStatement(ParserRule r, ElementWithDollar obj, String fieldTypeName, String fieldName, StringBuilder sb,
 		String returnType) {
 		if (!obj.isAtom) {
 			die("Internal error: " + obj.body.body)
@@ -168,7 +169,7 @@ import net.unicoen.node.*
 		if (rule != null) {
 			val ruleName = rule.reference.name.toCamelCase
 			if (fieldTypeName.contains("List")) {
-				sb.nl('''case «_nonTerminalId»: {''')
+				sb.nl('''case «r.getInvokingState(obj)»: {''')
 				val refType = obj.referenceReturnType
 				if (refType == null) {
 					die("Rule " + ruleName + " does not have return type.")
@@ -187,7 +188,7 @@ import net.unicoen.node.*
 				}
 				sb.nl('''}''')
 			} else {
-				sb.nl('''case «_nonTerminalId»: {''')
+				sb.nl('''case «r.getInvokingState(obj)»: {''')
 				sb.nl('''bind.«fieldName» = it.visit as «fieldTypeName»''')
 				sb.nl('''}''')
 			}
@@ -221,7 +222,7 @@ import net.unicoen.node.*
 				return
 			}
 			if (it.op.equals("RETURN")) {
-				sb.nl('''case «_nonTerminalId»: {''')
+				sb.nl('''case «r.getInvokingState(it)»: {''')
 				sb.nl('''bind = it.visit as «r.type.list.ret»''')
 				sb.nl('''}''')
 				return
@@ -229,7 +230,7 @@ import net.unicoen.node.*
 			try {
 				val field = clazz.getField(it.op)
 				val fieldTypeName = field.genericType.typeName
-				it.makeCaseStatement(fieldTypeName, it.op, sb, r.type.list.bind)
+				r.makeCaseStatement(it, fieldTypeName, it.op, sb, r.type.list.bind)
 			} catch (NoSuchFieldException e) {
 				die("No such Field: " + it.op)
 			}
@@ -291,7 +292,7 @@ import net.unicoen.node.*
 				return
 			}
 			if (it.op.equals("ADD")) {
-				sb.nl('''case «_nonTerminalId»: {''')
+				sb.nl('''case «r.getInvokingState(it)»: {''')
 				sb.nl('''list += it.visit as «itemClassName»''')
 				sb.nl('''}''')
 				return
@@ -300,7 +301,7 @@ import net.unicoen.node.*
 				if (!r.type.list.bind.equals(it.referenceReturnType)) {
 					die("Expected return type: " + r.type.list.bind + " actual type: " + it.referenceReturnType)
 				}
-				sb.nl('''case «_nonTerminalId»: {''')
+				sb.nl('''case «r.getInvokingState(it)»: {''')
 				sb.nl('''if (ret == null) {''')
 				sb.nl('''ret = it.visit as «r.type.list.bind»''')
 				sb.nl('''} else {''')
@@ -356,7 +357,7 @@ import net.unicoen.node.*
 	}
 
 	def isAtom(ElementWithDollar obj) {
-		return obj.body.body instanceof Atom
+		obj.body.body instanceof Atom
 	}
 
 	def getInvokingState(ParserRule r, ElementWithDollar e) {
