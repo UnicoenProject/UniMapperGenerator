@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: net.unicoen.unimappergenerator.ui
-Bundle-Vendor: UNICOEN Project
+Bundle-Vendor: My Company
 Bundle-Version: 1.0.0.qualifier
-Bundle-SymbolicName: net.unicoen.unimappergenerator.ui;singleton:=true
+Bundle-SymbolicName: net.unicoen.unimappergenerator.ui; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: net.unicoen.unimappergenerator;visibility:=reexport,
  org.eclipse.xtext.ui,
@@ -12,19 +12,14 @@ Require-Bundle: net.unicoen.unimappergenerator;visibility:=reexport,
  org.eclipse.xtext.ui.shared,
  org.eclipse.ui,
  org.eclipse.xtext.builder,
- org.antlr.runtime,
+ org.eclipse.xtext.xbase.lib,
  org.eclipse.xtext.common.types.ui,
  org.eclipse.xtext.ui.codetemplates.ui,
- org.eclipse.compare,
- org.eclipse.xtext.xbase.ui,
- org.eclipse.xtext.xbase.lib,
- org.eclipse.jdt.debug.ui
-Import-Package: org.apache.log4j,
- org.eclipse.xtext.xbase.lib
+ org.eclipse.compare
+Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: 
+Export-Package: net.unicoen.ui.quickfix,
  net.unicoen.ui.contentassist,
- net.unicoen.ui.contentassist.antlr,
  net.unicoen.ui.internal,
- net.unicoen.ui.quickfix
+ net.unicoen.ui.contentassist.antlr
 Bundle-Activator: net.unicoen.ui.internal.UniMapperGeneratorActivator

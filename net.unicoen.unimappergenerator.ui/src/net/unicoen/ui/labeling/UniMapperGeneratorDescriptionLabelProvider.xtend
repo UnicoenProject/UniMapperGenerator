@@ -10,7 +10,7 @@ package net.unicoen.ui.labeling
  * 
  * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#label-provider
  */
-class UniMapperGeneratorDescriptionLabelProvider extends org.eclipse.xtext.xbase.ui.labeling.XbaseDescriptionLabelProvider {
+class UniMapperGeneratorDescriptionLabelProvider extends org.eclipse.xtext.ui.label.DefaultDescriptionLabelProvider {
 
 	// Labels and icons can be computed like this:
 	
