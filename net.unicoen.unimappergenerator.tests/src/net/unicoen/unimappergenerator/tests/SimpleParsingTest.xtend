@@ -19,8 +19,16 @@ class SimpleParsingTest {
 
 	@Test def void testParse() {
 		val grammars = '''
-			hero superman can FLY
-			hero iceman can ICE
+grammar Test;
+root literal;
+
+literal
+	:	'boolean'
+	;
+
+literal2
+	:	'boolean2'
+	;
 		'''.parse
 		assertEquals(2, grammars.rules.size)
 	}
