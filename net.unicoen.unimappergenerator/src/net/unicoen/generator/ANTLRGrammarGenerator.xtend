@@ -1,5 +1,7 @@
 package net.unicoen.generator
 
+import java.io.File
+import java.io.FileOutputStream
 import net.unicoen.uniMapperGenerator.ActionElement
 import net.unicoen.uniMapperGenerator.AltList
 import net.unicoen.uniMapperGenerator.Alternative
@@ -57,9 +59,12 @@ import net.unicoen.uniMapperGenerator.V3Tokens
 import net.unicoen.uniMapperGenerator.V4Token
 import net.unicoen.uniMapperGenerator.V4Tokens
 import net.unicoen.uniMapperGenerator.Wildcard
+import org.eclipse.core.resources.ResourcesPlugin
+import org.eclipse.core.runtime.Path
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IFileSystemAccessExtension2
+import java.util.Scanner
 
 class ANTLRGrammarGenerator {
 	private val Resource _resource
@@ -75,13 +80,24 @@ class ANTLRGrammarGenerator {
 	def generate(String name, Grammar grammar) {
 		val path = name + _fileExtension;
 		_fsa.generateFile(path, grammar.compile)
-		val platformString = _resource.getURI().toPlatformString(true);
-		// val file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(platformString));		(_fsa as IFileSystemAccessExtension2).
-		System.out.println((_fsa as IFileSystemAccessExtension2).getURI(path))
-		System.out.println((_fsa as IFileSystemAccessExtension2).getURI(path).path)
-		System.out.println(_resource.getURI())
-		System.out.println(platformString)
-	// org.antlr.v4.Tool.main(#[path])
+		val platformString = (_fsa as IFileSystemAccessExtension2).getURI(path).toPlatformString(true)
+		val file = ResourcesPlugin.workspace.root.getFile(new Path(platformString))
+		val antlrJar = new File("antlr-4.5.1-complete.jar")
+		if (!antlrJar.exists) {
+			val array = newByteArrayOfSize(1024 * 1024)
+			val input = this.class.getResource("/antlr-4.5.1-complete.jar").openStream
+			val output = new FileOutputStream(antlrJar)
+			var size = 0
+			while ((size = input.read(array)) > 0) {
+				output.write(array, 0, size)
+			}
+			input.close
+			output.close
+		}
+		val pb = new ProcessBuilder("java", "-cp", antlrJar.absolutePath, "org.antlr.v4.Tool", "-o",
+			file.parent.rawLocation.toOSString, file.rawLocation.toOSString)
+		pb.start.waitFor
+		file.parent.getFile(new Path(name + "Parser.java"))
 	}
 
 	def dispatch compile(Grammar g) {
@@ -120,16 +136,26 @@ class ANTLRGrammarGenerator {
 	def dispatch compile(Imports im) '''«im.keyword» «FOR i : im.imports»«IF !im.imports.get(0).equals(i)», «ENDIF»«i.
 		compile»«ENDFOR»'''
 
-	def dispatch compile(Import i) '''«IF !i.alias.empty»«i.alias» = «ENDIF»«i.importURI»'''
+	def dispatch compile(
+		Import i
+	) '''«IF !i.alias.empty»«i.alias» = «ENDIF»«i.importURI»'''
 
-	def dispatch compile(V4Tokens v4) '''«v4.keyword» «FOR t : v4.tokens»«IF !v4.tokens.get(0).equals(t)», «ENDIF»«t.
+	def dispatch compile(
+		V4Tokens v4
+	) '''«v4.keyword» «FOR t : v4.tokens»«IF !v4.tokens.get(0).equals(t)», «ENDIF»«t.
 		compile»«ENDFOR»'''
 
-	def dispatch compile(V4Token v4) '''«v4.name»'''
+	def dispatch compile(
+		V4Token v4
+	) '''«v4.name»'''
 
-	def dispatch compile(EmptyTokens et) '''«et.keyword»}'''
+	def dispatch compile(
+		EmptyTokens et
+	) '''«et.keyword»}'''
 
-	def dispatch compile(V3Tokens v3) '''«v3.keyword»«FOR t : v3.tokens» «t.compile»«ENDFOR»}'''
+	def dispatch compile(
+		V3Tokens v3
+	) '''«v3.keyword»«FOR t : v3.tokens» «t.compile»«ENDFOR»}'''
 
 	def dispatch compile(
 		V3Token v3
@@ -180,17 +206,27 @@ class ANTLRGrammarGenerator {
 
 	def dispatch compile(ActionElement ae) '''«ae.body»«IF ae.options != null»«ae.options.compile»«ENDIF»'''
 
-	def dispatch compile(LabeledElement le) '''«le.name» «le.op» «le.body.compile»'''
+	def dispatch compile(
+		LabeledElement le
+	) '''«le.name» «le.op» «le.body.compile»'''
 
-	def dispatch compile(EbnfSuffix es) '''«es.operator»«IF es.nongreedy != null» «es.nongreedy»«ENDIF»'''
+	def dispatch compile(
+		EbnfSuffix es
+	) '''«es.operator»«IF es.nongreedy != null» «es.nongreedy»«ENDIF»'''
 
-	def dispatch compile(Block bl) '''(«IF bl.colon != null»«IF bl.options != null»«bl.options.compile»«ENDIF»«FOR a : bl.
+	def dispatch compile(
+		Block bl
+	) '''(«IF bl.colon != null»«IF bl.options != null»«bl.options.compile»«ENDIF»«FOR a : bl.
 		actions» «a.compile»«ENDFOR»:«ENDIF» «bl.body.compile»)'''
 
-	def dispatch compile(AltList al) '''«FOR a : al.alternatives»«IF !al.alternatives.get(0).equals(a)»|«ENDIF» «a.
+	def dispatch compile(
+		AltList al
+	) '''«FOR a : al.alternatives»«IF !al.alternatives.get(0).equals(a)»|«ENDIF» «a.
 		compile»«ENDFOR»'''
 
-	def dispatch compile(Atom at) '''«at.body.compile»'''
+	def dispatch compile(
+		Atom at
+	) '''«at.body.compile»'''
 
 	def dispatch compile(
 		RuleRef rr

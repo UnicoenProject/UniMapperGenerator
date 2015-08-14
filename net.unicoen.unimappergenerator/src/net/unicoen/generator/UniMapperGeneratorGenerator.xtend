@@ -8,13 +8,13 @@ import java.lang.reflect.Type
 import java.util.regex.Pattern
 import net.unicoen.node.UniNode
 import net.unicoen.uniMapperGenerator.Atom
+import net.unicoen.uniMapperGenerator.Element
 import net.unicoen.uniMapperGenerator.Grammar
 import net.unicoen.uniMapperGenerator.ParserRule
 import net.unicoen.uniMapperGenerator.RuleRef
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
-import net.unicoen.uniMapperGenerator.Element
 
 /**
  * Generates code from your model files on save.
