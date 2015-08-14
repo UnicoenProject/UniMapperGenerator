@@ -11,7 +11,6 @@ import net.unicoen.uniMapperGenerator.EbnfSuffix
 import net.unicoen.uniMapperGenerator.Element
 import net.unicoen.uniMapperGenerator.ElementOption
 import net.unicoen.uniMapperGenerator.ElementOptions
-import net.unicoen.uniMapperGenerator.ElementWithDollar
 import net.unicoen.uniMapperGenerator.EmptyTokens
 import net.unicoen.uniMapperGenerator.ExceptionGroup
 import net.unicoen.uniMapperGenerator.ExceptionHandler
@@ -174,8 +173,6 @@ class ANTLRGrammarGenerator {
 
 	def dispatch compile(Alternative al) '''«IF al.options != null»«al.options.compile» «ENDIF»«FOR e : al.elements»«e.
 		compile»«ENDFOR»'''
-
-	def dispatch compile(ElementWithDollar lad) '''«lad.body.compile»'''
 
 	def dispatch compile(Element el) '''«el.body.compile»«IF el.operator != null»«el.operator.compile»«ENDIF» '''
 

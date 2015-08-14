@@ -8,13 +8,13 @@ import java.lang.reflect.Type
 import java.util.regex.Pattern
 import net.unicoen.node.UniNode
 import net.unicoen.uniMapperGenerator.Atom
-import net.unicoen.uniMapperGenerator.ElementWithDollar
 import net.unicoen.uniMapperGenerator.Grammar
 import net.unicoen.uniMapperGenerator.ParserRule
 import net.unicoen.uniMapperGenerator.RuleRef
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
+import net.unicoen.uniMapperGenerator.Element
 
 /**
  * Generates code from your model files on save.
@@ -159,11 +159,8 @@ import net.unicoen.node.*
 		sb
 	}
 
-	def makeCaseStatement(ParserRule r, ElementWithDollar obj, String fieldTypeName, String fieldName, StringBuilder sb,
+	def makeCaseStatement(ParserRule r, Element obj, String fieldTypeName, String fieldName, StringBuilder sb,
 		String returnType) {
-		if (!obj.isAtom) {
-			die("Internal error: " + obj.body.body)
-		}
 		val rule = obj.eAllContents.filter(RuleRef).head
 		if (rule != null) {
 			val ruleName = rule.reference.name.toCamelCase
@@ -205,7 +202,7 @@ import net.unicoen.node.*
 		sb.nl('''ctx.children.forEach [''')
 		sb.nl('''if (it instanceof RuleContext) {''')
 		sb.nl('''switch (it as RuleContext).invokingState {''')
-		val list = r.eAllContents.filter(ElementWithDollar)
+		val list = r.eAllContents.filter(Element)
 		list.forEach [
 			if (it.op == null) {
 				return
@@ -245,14 +242,12 @@ import net.unicoen.node.*
 		sb.nl('''bind''')
 	}
 
-	def getReferenceReturnType(ElementWithDollar r) {
-		if (r.body.body instanceof Atom) {
-			val atom = r.body.body as Atom
-			if (atom.body instanceof RuleRef) {
-				val ref = atom.body as RuleRef
-				if (ref.reference.type != null) {
-					ref.reference.type.list.bind
-				}
+	def getReferenceReturnType(Element r) {
+		val atom = r.body as Atom
+		if (atom.body instanceof RuleRef) {
+			val ref = atom.body as RuleRef
+			if (ref.reference.type != null) {
+				ref.reference.type.list.bind
 			}
 		}
 	}
@@ -285,7 +280,7 @@ import net.unicoen.node.*
 		sb.nl('''if (ctx.children != null) {''')
 		sb.nl('''ctx.children.forEach [''')
 		sb.nl('''switch (it) {''')
-		val list = r.eAllContents.filter(ElementWithDollar)
+		val list = r.eAllContents.filter(Element)
 		list.forEach [
 			if (it.op == null) {
 				return
@@ -355,10 +350,7 @@ import net.unicoen.node.*
 		sb.append(System.lineSeparator)
 	}
 
-	def isAtom(ElementWithDollar obj) {
-		obj.body.body instanceof Atom
+	def getInvokingState(ParserRule r, Element obj) {
 	}
 
-	def getInvokingState(ParserRule r, ElementWithDollar e) {
-	}
 }
