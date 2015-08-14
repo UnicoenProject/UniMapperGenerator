@@ -1,3 +1,9 @@
+# Binary files
+bin/
+target/
+*.class
+*.jar
+
 # Xtext and Xtend
 generated/
 generated-sources/
