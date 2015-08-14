@@ -12,7 +12,7 @@ package net.unicoen.ui.quickfix
  *
  * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#quick-fixes
  */
-class UniMapperGeneratorQuickfixProvider extends org.eclipse.xtext.xbase.ui.quickfix.XbaseQuickfixProvider {
+class UniMapperGeneratorQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider {
 
 //	@Fix(MyDslValidator::INVALID_NAME)
 //	def capitalizeName(Issue issue, IssueResolutionAcceptor acceptor) {

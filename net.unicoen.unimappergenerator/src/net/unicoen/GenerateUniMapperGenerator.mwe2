@@ -5,7 +5,7 @@ import org.eclipse.xtext.generator.*
 import org.eclipse.xtext.ui.generator.*
 
 var fileExtensions = "ug4"
-var projectName = "net.unicoen.unimappergenerator"// grammarURI has to be platform:/resource as it is not on the classpath
+var projectName = "net.unicoen.unimappergenerator"
 var grammarURI = "platform:/resource/${projectName}/src/net/unicoen/UniMapperGenerator.xtext"
 var runtimeProject = "../${projectName}"
 var generateXtendStub = true
@@ -13,20 +13,7 @@ var encoding = "UTF-8"
 
 Workflow {
 	bean = StandaloneSetup {
-	// use an XtextResourceset throughout the process, which is able to resolve classpath:/ URIs.
-		resourceSet = org.eclipse.xtext.resource.XtextResourceSet : theResourceSet {}
-
-		// add mappings from platform:/resource to classpath:/
-		uriMap = {
-			from = "platform:/resource/org.eclipse.xtext.xbase/"
-			to = "classpath:/"
-		}
-		uriMap = {
-			from = "platform:/resource/org.eclipse.xtext.common.types/"
-			to = "classpath:/"
-		}
-
-		// register current projects and its siblings for platform URI map, as they are not on the classpath.
+		scanClassPath = true
 		platformUri = "${runtimeProject}/.."// The following two lines can be removed, if Xbase is not used.
 		registerGeneratedEPackage = "org.eclipse.xtext.xbase.XbasePackage"
 		registerGenModelFile = "platform:/resource/org.eclipse.xtext.xbase/model/Xbase.genmodel"
@@ -37,7 +24,7 @@ Workflow {
 	}
 
 	component = DirectoryCleaner {
-		directory = "${runtimeProject}/model"
+		directory = "${runtimeProject}/model/generated"
 	}
 
 	component = DirectoryCleaner {
@@ -56,17 +43,13 @@ Workflow {
 		projectNameUi = "${projectName}.ui"
 		encoding = encoding
 		language = auto-inject {
-		// make sure we use the resourceSet created during standalone setup.
-			forcedResourceSet = theResourceSet
 			uri = grammarURI
 
 			// Java API to access grammar elements (required by several other fragments)
 			fragment = grammarAccess.GrammarAccessFragment auto-inject {}
 
 			// generates Java API for the generated EPackages
-			fragment = ecore.EMFGeneratorFragment auto-inject {
-				javaModelDirectory = "/${projectName}/src-gen"
-			}
+			fragment = ecore.EMFGeneratorFragment auto-inject {}
 
 			// the old serialization component
 			// fragment = parseTreeConstructor.ParseTreeConstructorFragment auto-inject {}    
@@ -81,9 +64,9 @@ Workflow {
 
 			// The antlr parser generator fragment.
 			fragment = parser.antlr.XtextAntlrGeneratorFragment auto-inject {
-			// For the very slow servers
-				antlrParam = "-Xconversiontimeout"
-				antlrParam = "5000"
+			//  options = {
+			//      backtrack = true
+			//  }
 			}
 
 			// Xtend-based API for validation
@@ -134,6 +117,9 @@ Workflow {
 
 			// generates the required bindings only if the grammar inherits from Xbase
 			fragment = xbase.XbaseGeneratorFragment auto-inject {}
+
+			// generates the required bindings only if the grammar inherits from Xtype
+			fragment = xbase.XtypeGeneratorFragment auto-inject {}
 
 			// provides a preference page for template proposals
 			fragment = templates.CodetemplatesGeneratorFragment auto-inject {}

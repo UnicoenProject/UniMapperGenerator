@@ -9,7 +9,7 @@
             class="net.unicoen.ui.UniMapperGeneratorExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
             contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
             default="true"
-            extensions="hero"
+            extensions="ug4"
             id="net.unicoen.UniMapperGenerator"
             name="UniMapperGenerator Editor">
         </editor>
@@ -213,34 +213,34 @@
 		point="org.eclipse.emf.ecore.extension_parser">
 		<parser
 			class="net.unicoen.ui.UniMapperGeneratorExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
-			type="hero">
+			type="ug4">
 		</parser>
 	</extension>
 	<extension point="org.eclipse.xtext.extension_resourceServiceProvider">
         <resourceServiceProvider
             class="net.unicoen.ui.UniMapperGeneratorExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
-            uriExtension="hero">
+            uriExtension="ug4">
         </resourceServiceProvider>
     </extension>
 
 
 	<!-- marker definitions for net.unicoen.UniMapperGenerator -->
 	<extension
-	        id="herolanguage.check.fast"
+	        id="unimappergenerator.check.fast"
 	        name="UniMapperGenerator Problem"
 	        point="org.eclipse.core.resources.markers">
 	    <super type="org.eclipse.xtext.ui.check.fast"/>
 	    <persistent value="true"/>
 	</extension>
 	<extension
-	        id="herolanguage.check.normal"
+	        id="unimappergenerator.check.normal"
 	        name="UniMapperGenerator Problem"
 	        point="org.eclipse.core.resources.markers">
 	    <super type="org.eclipse.xtext.ui.check.normal"/>
 	    <persistent value="true"/>
 	</extension>
 	<extension
-	        id="herolanguage.check.expensive"
+	        id="unimappergenerator.check.expensive"
 	        name="UniMapperGenerator Problem"
 	        point="org.eclipse.core.resources.markers">
 	    <super type="org.eclipse.xtext.ui.check.expensive"/>
@@ -250,7 +250,9 @@
    <extension
          point="org.eclipse.xtext.builder.participant">
       <participant
-            class="net.unicoen.ui.UniMapperGeneratorExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant">
+            class="net.unicoen.ui.UniMapperGeneratorExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
+            fileExtensions="ug4"
+            >
       </participant>
    </extension>
    <extension
@@ -277,6 +279,27 @@
 	        <filter name="projectNature" value="org.eclipse.xtext.ui.shared.xtextNature"/>
         </page>
     </extension>
+    <extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="popup:#TextEditorContext?after=xtext.ui.openDeclaration">
+			<command
+				commandId="org.eclipse.xtext.ui.OpenGeneratedFileCommand"
+				id="net.unicoen.UniMapperGenerator.OpenGeneratedCode"
+				style="push">
+					<visibleWhen checkEnabled="false">
+						<reference definitionId="net.unicoen.UniMapperGenerator.Editor.opened" />
+					</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
+	<extension point="org.eclipse.ui.handlers">
+		<handler
+			class="net.unicoen.ui.UniMapperGeneratorExecutableExtensionFactory:org.eclipse.xtext.ui.generator.trace.OpenGeneratedFileHandler"
+			commandId="org.eclipse.xtext.ui.OpenGeneratedFileCommand">
+				<activeWhen>
+					<reference definitionId="net.unicoen.UniMapperGenerator.Editor.opened" />
+				</activeWhen>
+		</handler>
+	</extension>
 
 	<!-- Quick Outline -->
 	<extension
@@ -316,7 +339,7 @@
             point="org.eclipse.ui.ide.markerResolution">
         <markerResolutionGenerator
             class="net.unicoen.ui.UniMapperGeneratorExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
-            markerType="net.unicoen.ui.herolanguage.check.fast">
+            markerType="net.unicoen.ui.unimappergenerator.check.fast">
             <attribute
                 name="FIXABLE_KEY"
                 value="true">
@@ -324,7 +347,7 @@
         </markerResolutionGenerator>
         <markerResolutionGenerator
             class="net.unicoen.ui.UniMapperGeneratorExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
-            markerType="net.unicoen.ui.herolanguage.check.normal">
+            markerType="net.unicoen.ui.unimappergenerator.check.normal">
             <attribute
                 name="FIXABLE_KEY"
                 value="true">
@@ -332,7 +355,7 @@
         </markerResolutionGenerator>
         <markerResolutionGenerator
             class="net.unicoen.ui.UniMapperGeneratorExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
-            markerType="net.unicoen.ui.herolanguage.check.expensive">
+            markerType="net.unicoen.ui.unimappergenerator.check.expensive">
             <attribute
                 name="FIXABLE_KEY"
                 value="true">
@@ -377,20 +400,26 @@
   <extension point="org.eclipse.compare.contentViewers">
     <viewer id="net.unicoen.UniMapperGenerator.compare.contentViewers"
             class="net.unicoen.ui.UniMapperGeneratorExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-            extensions="hero">
+            extensions="ug4">
     </viewer>
   </extension>
   <extension point="org.eclipse.compare.contentMergeViewers">
     <viewer id="net.unicoen.UniMapperGenerator.compare.contentMergeViewers"
             class="net.unicoen.ui.UniMapperGeneratorExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-            extensions="hero" label="UniMapperGenerator Compare">
+            extensions="ug4" label="UniMapperGenerator Compare">
      </viewer>
   </extension>
   <extension point="org.eclipse.ui.editors.documentProviders">
     <provider id="net.unicoen.UniMapperGenerator.editors.documentProviders"
             class="net.unicoen.ui.UniMapperGeneratorExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
-            extensions="hero">
+            extensions="ug4">
     </provider>
+  </extension>
+  <extension point="org.eclipse.team.core.fileTypes">
+    <fileTypes
+            extension="ug4"
+            type="text">
+    </fileTypes>
   </extension>
 
 </plugin>

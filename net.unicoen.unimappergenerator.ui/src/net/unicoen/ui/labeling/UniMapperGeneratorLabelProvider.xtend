@@ -10,7 +10,7 @@ import com.google.inject.Inject
  * 
  * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#label-provider
  */
-class UniMapperGeneratorLabelProvider extends org.eclipse.xtext.xbase.ui.labeling.XbaseLabelProvider {
+class UniMapperGeneratorLabelProvider extends org.eclipse.xtext.ui.label.DefaultEObjectLabelProvider {
 
 	@Inject
 	new(org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider delegate) {

@@ -5,37 +5,26 @@ package net.unicoen.formatting
 
 import org.eclipse.xtext.formatting.impl.AbstractDeclarativeFormatter
 import org.eclipse.xtext.formatting.impl.FormattingConfig
-import com.google.inject.Inject;
-import net.unicoen.services.UniMapperGeneratorGrammarAccess
+// import com.google.inject.Inject;
+// import net.unicoen.services.UniMapperGeneratorGrammarAccess
 
 /**
- * This class contains custom formatting description.
+ * This class contains custom formatting declarations.
  * 
- * see : http://www.eclipse.org/Xtext/documentation.html#formatting
- * on how and when to use it 
+ * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#formatting
+ * on how and when to use it.
  * 
  * Also see {@link org.eclipse.xtext.xtext.XtextFormattingTokenSerializer} as an example
  */
 class UniMapperGeneratorFormatter extends AbstractDeclarativeFormatter {
 
-	@Inject extension UniMapperGeneratorGrammarAccess exBNFGrammarAccess
-
+//	@Inject extension UniMapperGeneratorGrammarAccess
+	
 	override protected void configureFormatting(FormattingConfig c) {
-
-		// It's usually a good idea to activate the following three statements.
-		// They will add and preserve newlines around comments
-		c.setLinewrap(0, 1, 2).before(SL_COMMENTRule)
-		c.setLinewrap(0, 1, 2).before(ML_COMMENTRule)
-		c.setLinewrap(0, 1, 1).after(ML_COMMENTRule)
-
-		c.setLinewrap(2, 2, 2).before(exBNFGrammarAccess.ruleRule)
-		c.setLinewrap.after(exBNFGrammarAccess.COLONRule)
-		c.setNoSpace.around(exBNFGrammarAccess.DOLLARRule)
-		c.setNoSpace.before(exBNFGrammarAccess.ebnfSuffixRule)
-		c.setNoSpace.before(exBNFGrammarAccess.COLONRule)
-		c.setNoSpace.before(exBNFGrammarAccess.SEMICOLONRule)
-
-		c.setIndentationIncrement.before(exBNFGrammarAccess.COLONRule)
-		c.setIndentationDecrement.after(exBNFGrammarAccess.ruleRule)
+// It's usually a good idea to activate the following three statements.
+// They will add and preserve newlines around comments
+//		c.setLinewrap(0, 1, 2).before(SL_COMMENTRule)
+//		c.setLinewrap(0, 1, 2).before(ML_COMMENTRule)
+//		c.setLinewrap(0, 1, 1).after(ML_COMMENTRule)
 	}
 }

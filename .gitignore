@@ -1,11 +1,8 @@
-# Eclipse
-.settings
-.classpath
-.project
-
-# Maven
+# Binary files
 bin/
 target/
+*.class
+*.jar
 
 # Xtext and Xtend
 generated/

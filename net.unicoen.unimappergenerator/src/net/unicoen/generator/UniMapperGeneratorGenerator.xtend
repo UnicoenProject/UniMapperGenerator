@@ -5,6 +5,9 @@ package net.unicoen.generator
 
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.util.List
 import java.util.regex.Pattern
 import net.unicoen.node.UniNode
 import net.unicoen.uniMapperGenerator.Atom
@@ -15,7 +18,6 @@ import net.unicoen.uniMapperGenerator.RuleRef
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
-import java.util.List
 
 /**
  * Generates code from your model files on save.
@@ -25,8 +27,8 @@ import java.util.List
 class UniMapperGeneratorGenerator implements IGenerator {
 	private String _grammarName
 	private int _indent;
-	private List<String> program = java.nio.file.Files.readAllLines(
-		java.nio.file.Paths.get("../Junicoen/src/main/java/net/unicoen/parser/Java8Parser.java"));
+//	private List<String> program = Files.readAllLines(
+//		Paths.get("../Junicoen/src/main/java/net/unicoen/parser/Java8Parser.java"));
 
 	override def doGenerate(Resource resource, IFileSystemAccess fsa) {
 		val g4Generator = new ANTLRGrammarGenerator(fsa)
