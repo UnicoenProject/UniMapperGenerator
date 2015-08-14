@@ -113,13 +113,10 @@ LabeledAlt:
 	body=Alternative ('#' label=Id)?;
 
 Alternative:
-	{Alternative} options=ElementOptions? elements+=ElementWithDollar*;
-
-ElementWithDollar:
-	body=Element (DOLLAR op=Id)?;
+	{Alternative} options=ElementOptions? elements+=Element*;
 
 Element:
-	body=LabeledElement operator=EbnfSuffix? | body=Atom operator=EbnfSuffix? | body=Ebnf | body=ActionElement;
+	body=LabeledElement operator=EbnfSuffix? | body=Atom operator=EbnfSuffix? (DOLLAR op=Id)? | body=Ebnf | body=ActionElement;
 
 Ebnf:
 	body=Block
