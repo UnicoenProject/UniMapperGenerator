@@ -1,12 +1,3 @@
-# Eclipse
-.settings
-.classpath
-.project
-
-# Maven
-bin/
-target/
-
 # Xtext and Xtend
 generated/
 generated-sources/
