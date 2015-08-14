@@ -5,9 +5,6 @@ package net.unicoen.generator
 
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
-import java.nio.file.Files
-import java.nio.file.Paths
-import java.util.List
 import java.util.regex.Pattern
 import net.unicoen.node.UniNode
 import net.unicoen.uniMapperGenerator.Atom
@@ -27,11 +24,11 @@ import org.eclipse.xtext.generator.IGenerator
 class UniMapperGeneratorGenerator implements IGenerator {
 	private String _grammarName
 	private int _indent;
+
 //	private List<String> program = Files.readAllLines(
 //		Paths.get("../Junicoen/src/main/java/net/unicoen/parser/Java8Parser.java"));
-
 	override def doGenerate(Resource resource, IFileSystemAccess fsa) {
-		val g4Generator = new ANTLRGrammarGenerator(fsa)
+		val g4Generator = new ANTLRGrammarGenerator(resource, fsa)
 		val testGenerator = new MapperTestGenerator(fsa)
 		resource.allContents.filter(Grammar).forEach [
 			_grammarName = it.name.toCamelCase

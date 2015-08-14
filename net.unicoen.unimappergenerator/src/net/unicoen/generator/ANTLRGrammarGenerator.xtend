@@ -15,6 +15,7 @@ import net.unicoen.uniMapperGenerator.ElementWithDollar
 import net.unicoen.uniMapperGenerator.EmptyTokens
 import net.unicoen.uniMapperGenerator.ExceptionGroup
 import net.unicoen.uniMapperGenerator.ExceptionHandler
+import net.unicoen.uniMapperGenerator.Exceptions
 import net.unicoen.uniMapperGenerator.FinallyClause
 import net.unicoen.uniMapperGenerator.Grammar
 import net.unicoen.uniMapperGenerator.GrammarAction
@@ -57,33 +58,45 @@ import net.unicoen.uniMapperGenerator.V3Tokens
 import net.unicoen.uniMapperGenerator.V4Token
 import net.unicoen.uniMapperGenerator.V4Tokens
 import net.unicoen.uniMapperGenerator.Wildcard
+import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
+import org.eclipse.xtext.generator.IFileSystemAccessExtension2
 
 class ANTLRGrammarGenerator {
-	private IFileSystemAccess _fsa
-	private val ext = ".g4";
-	private val nl = System.getProperty("line.separator")
+	private val Resource _resource
+	private val IFileSystemAccess _fsa
+	private val _fileExtension = ".g4";
+	private val _newLine = System.getProperty("line.separator")
 
-	new(IFileSystemAccess fsa) {
+	new(Resource resource, IFileSystemAccess fsa) {
+		_resource = resource
 		_fsa = fsa
 	}
 
 	def generate(String name, Grammar grammar) {
-		_fsa.generateFile(name + ext, grammar.compile)
+		val path = name + _fileExtension;
+		_fsa.generateFile(path, grammar.compile)
+		val platformString = _resource.getURI().toPlatformString(true);
+		// val file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(platformString));		(_fsa as IFileSystemAccessExtension2).
+		System.out.println((_fsa as IFileSystemAccessExtension2).getURI(path))
+		System.out.println((_fsa as IFileSystemAccessExtension2).getURI(path).path)
+		System.out.println(_resource.getURI())
+		System.out.println(platformString)
+	// org.antlr.v4.Tool.main(#[path])
 	}
 
 	def dispatch compile(Grammar g) {
 		val sb = new StringBuilder
-		sb.append(g.nameCompile + nl + nl)
-		sb.append(header + nl + nl)
+		sb.append(g.nameCompile + _newLine + _newLine)
+		sb.append(header + _newLine + _newLine)
 		g.prequels.forEach [
-			sb.append(it.compile + nl)
+			sb.append(it.compile + _newLine)
 		]
 		g.rules.forEach [
-			sb.append(it.compile + nl)
+			sb.append(it.compile + _newLine)
 		]
 		g.modes.forEach [
-			sb.append(it.compile + nl)
+			sb.append(it.compile + _newLine)
 		]
 		sb.toString
 	}
@@ -119,12 +132,18 @@ class ANTLRGrammarGenerator {
 
 	def dispatch compile(V3Tokens v3) '''«v3.keyword»«FOR t : v3.tokens» «t.compile»«ENDFOR»}'''
 
-	def dispatch compile(V3Token v3) '''«v3.name»«IF !v3.value.empty» = «v3.value»«ENDIF»;'''
+	def dispatch compile(
+		V3Token v3
+	) '''«v3.name»«IF !v3.value.empty» = «v3.value»«ENDIF»;'''
 
-	def dispatch compile(GrammarAction ga) '''@«IF !ga.scope.empty»«ga.scope» «ga.colonSymbol» «ENDIF»«ga.
+	def dispatch compile(
+		GrammarAction ga
+	) '''@«IF !ga.scope.empty»«ga.scope» «ga.colonSymbol» «ENDIF»«ga.
 		name» «ga.action»'''
 
-	def dispatch compile(Mode m) '''mode «m.id»;«FOR lr : m.rules»«lr.compile»«ENDFOR»'''
+	def dispatch compile(
+		Mode m
+	) '''mode «m.id»;«FOR lr : m.rules»«lr.compile»«ENDFOR»'''
 
 	def dispatch compile(
 		ParserRule pr
@@ -141,7 +160,7 @@ class ANTLRGrammarGenerator {
 
 	def dispatch compile(Return re) '''returns «re.body»'''
 
-	def dispatch compile(net.unicoen.uniMapperGenerator.Exceptions ex) '''throws «FOR e : ex.exceptions»«IF !ex.
+	def dispatch compile(Exceptions ex) '''throws «FOR e : ex.exceptions»«IF !ex.
 		exceptions.get(0).equals(e)»,«ENDIF» «e»«ENDFOR»'''
 
 	def dispatch compile(LocalVars lv) '''locals «lv.body»'''
@@ -177,11 +196,16 @@ class ANTLRGrammarGenerator {
 	def dispatch compile(Atom at) '''«at.body.compile»'''
 
 	def dispatch compile(
-		RuleRef rr) '''«rr.reference.name»«rr.args»«IF rr.options != null»«rr.options.compile»«ENDIF»'''
+		RuleRef rr
+	) '''«rr.reference.name»«rr.args»«IF rr.options != null»«rr.options.compile»«ENDIF»'''
 
-	def dispatch compile(ElementOptions eo) '''<«FOR o : eo.options»«o.compile»,«ENDFOR»>'''
+	def dispatch compile(
+		ElementOptions eo
+	) '''<«FOR o : eo.options»«o.compile»,«ENDFOR»>'''
 
-	def dispatch compile(Range ra) ''''«ra.from»'..'«ra.to»' '''
+	def dispatch compile(
+		Range ra
+	) ''''«ra.from»'..'«ra.to»' '''
 
 	def dispatch compile(
 		Terminal te
