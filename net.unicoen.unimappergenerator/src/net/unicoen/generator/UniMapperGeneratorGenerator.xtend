@@ -15,6 +15,9 @@ import net.unicoen.uniMapperGenerator.RuleRef
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
+import java.util.Scanner
+import org.eclipse.xtext.xbase.typesystem.^override.InvokedResolvedOperation
+import net.unicoen.util.InvokingStateAnalyzer
 
 /**
  * Generates code from your model files on save.
@@ -24,15 +27,20 @@ import org.eclipse.xtext.generator.IGenerator
 class UniMapperGeneratorGenerator implements IGenerator {
 	private String _grammarName
 	private int _indent;
+	private InvokingStateAnalyzer _analyzer;
 
-//	private List<String> program = Files.readAllLines(
-//		Paths.get("../Junicoen/src/main/java/net/unicoen/parser/Java8Parser.java"));
 	override def doGenerate(Resource resource, IFileSystemAccess fsa) {
 		val g4Generator = new ANTLRGrammarGenerator(resource, fsa)
 		val testGenerator = new MapperTestGenerator(fsa)
 		resource.allContents.filter(Grammar).forEach [
 			_grammarName = it.name.toCamelCase
-			g4Generator.generate(_grammarName, it);
+			val parser = g4Generator.generate(_grammarName, it)
+			val sc = new Scanner(parser.contents)
+			val sb = new StringBuilder
+			while(sc.hasNext){
+				sb.append(sc.nextLine)
+			}
+			_analyzer = new InvokingStateAnalyzer(sb.toString, it)
 			fsa.generateFile(_grammarName + "Mapper.xtend", it.generateMapper)
 			testGenerator.generate(_grammarName, it)
 		]

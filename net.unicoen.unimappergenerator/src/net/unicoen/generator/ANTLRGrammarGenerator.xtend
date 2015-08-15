@@ -64,7 +64,6 @@ import org.eclipse.core.runtime.Path
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IFileSystemAccessExtension2
-import java.util.Scanner
 
 class ANTLRGrammarGenerator {
 	private val Resource _resource
