@@ -64,7 +64,6 @@ import org.eclipse.core.runtime.Path
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IFileSystemAccessExtension2
-import java.util.Scanner
 
 class ANTLRGrammarGenerator {
 	private val Resource _resource
@@ -133,7 +132,9 @@ class ANTLRGrammarGenerator {
 		OptionValue opv) '''«IF opv.qopValue != null»«opv.qopValue»«ELSEIF opv.strValue != null»'«opv.strValue»'«ELSEIF opv.
 		aopValue != null»«ELSE»«ENDIF»'''
 
-	def dispatch compile(Imports im) '''«im.keyword» «FOR i : im.imports»«IF !im.imports.get(0).equals(i)», «ENDIF»«i.
+	def dispatch compile(
+		Imports im
+	) '''«im.keyword» «FOR i : im.imports»«IF !im.imports.get(0).equals(i)», «ENDIF»«i.
 		compile»«ENDFOR»'''
 
 	def dispatch compile(
@@ -204,7 +205,9 @@ class ANTLRGrammarGenerator {
 
 	def dispatch compile(Ebnf eb) '''«eb.body.compile»«IF eb.operator != null» «eb.operator.compile»«ENDIF»'''
 
-	def dispatch compile(ActionElement ae) '''«ae.body»«IF ae.options != null»«ae.options.compile»«ENDIF»'''
+	def dispatch compile(
+		ActionElement ae
+	) '''«ae.body»«IF ae.options != null»«ae.options.compile»«ENDIF»'''
 
 	def dispatch compile(
 		LabeledElement le
