@@ -64,6 +64,8 @@ import org.eclipse.core.runtime.Path
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IFileSystemAccessExtension2
+import com.google.common.io.Files
+import java.nio.charset.StandardCharsets
 
 class ANTLRGrammarGenerator {
 	private val Resource _resource
@@ -79,6 +81,10 @@ class ANTLRGrammarGenerator {
 	def generate(String name, Grammar grammar) {
 		val path = name + _fileExtension;
 		_fsa.generateFile(path, grammar.compile)
+		generateParserCode(name, path)
+	}
+
+	def generateParserCode(String name, String path) {
 		val platformString = (_fsa as IFileSystemAccessExtension2).getURI(path).toPlatformString(true)
 		val file = ResourcesPlugin.workspace.root.getFile(new Path(platformString))
 		val antlrJar = new File("antlr-4.5.1-complete.jar")
@@ -96,7 +102,16 @@ class ANTLRGrammarGenerator {
 		val pb = new ProcessBuilder("java", "-cp", antlrJar.absolutePath, "org.antlr.v4.Tool", "-o",
 			file.parent.rawLocation.toOSString, file.rawLocation.toOSString)
 		pb.start.waitFor
-		file.parent.getFile(new Path(name + "Parser.java"))
+		val parserFile = new File(file.parent.rawLocation.toOSString + File.separator + name + "Parser.java")
+		val reader = Files.newReader(parserFile, StandardCharsets.UTF_8)
+		val builder = new StringBuilder
+		var line = ""
+		while ((line = reader.readLine) != null) {
+			builder.append(line)
+			builder.append('\n')
+		}
+		reader.close
+		builder.toString
 	}
 
 	def dispatch compile(Grammar g) {
@@ -130,7 +145,8 @@ class ANTLRGrammarGenerator {
 
 	def dispatch compile(
 		OptionValue opv) '''«IF opv.qopValue != null»«opv.qopValue»«ELSEIF opv.strValue != null»'«opv.strValue»'«ELSEIF opv.
-		aopValue != null»«ELSE»«ENDIF»'''
+		aopValue != null»«
+	ELSE»«ENDIF»'''
 
 	def dispatch compile(
 		Imports im
@@ -203,7 +219,9 @@ class ANTLRGrammarGenerator {
 
 	def dispatch compile(Element el) '''«el.body.compile»«IF el.operator != null»«el.operator.compile»«ENDIF» '''
 
-	def dispatch compile(Ebnf eb) '''«eb.body.compile»«IF eb.operator != null» «eb.operator.compile»«ENDIF»'''
+	def dispatch compile(
+		Ebnf eb
+	) '''«eb.body.compile»«IF eb.operator != null» «eb.operator.compile»«ENDIF»'''
 
 	def dispatch compile(
 		ActionElement ae

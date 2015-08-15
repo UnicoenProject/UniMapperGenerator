@@ -34,13 +34,8 @@ class UniMapperGeneratorGenerator implements IGenerator {
 		val testGenerator = new MapperTestGenerator(fsa)
 		resource.allContents.filter(Grammar).forEach [
 			_grammarName = it.name.toCamelCase
-			val parser = g4Generator.generate(_grammarName, it)
-			val sc = new Scanner(parser.contents)
-			val sb = new StringBuilder
-			while(sc.hasNext){
-				sb.append(sc.nextLine)
-			}
-			_analyzer = new InvokingStateAnalyzer(sb.toString, it)
+			val parserCode = g4Generator.generate(_grammarName, it)
+			_analyzer = new InvokingStateAnalyzer(parserCode, it)
 			fsa.generateFile(_grammarName + "Mapper.xtend", it.generateMapper)
 			testGenerator.generate(_grammarName, it)
 		]
