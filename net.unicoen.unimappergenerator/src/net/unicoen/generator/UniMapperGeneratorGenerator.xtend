@@ -282,7 +282,8 @@ import net.unicoen.node.*
 		sb.nl('''val list = new ArrayList<«itemClassName»>''')
 		sb.nl('''if (ctx.children != null) {''')
 		sb.nl('''ctx.children.forEach [''')
-		sb.nl('''switch (it) {''')
+		sb.nl('''if (it instanceof RuleContext) {''')
+		sb.nl('''switch (it as RuleContext).invokingState {''')
 		val list = r.eAllContents.filter(Element)
 		list.forEach [
 			if (it.op == null) {
@@ -308,6 +309,7 @@ import net.unicoen.node.*
 			}
 
 		]
+		sb.nl('''}''')
 		sb.nl('''}''')
 		sb.nl(''']''')
 		sb.nl('''}''')
@@ -354,6 +356,7 @@ import net.unicoen.node.*
 	}
 
 	def getInvokingState(ParserRule r, Element obj) {
+		_analyzer.getInvokingState(r, obj)
 	}
 
 }

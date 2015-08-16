@@ -39,19 +39,11 @@ class InvokingStateAnalyzer {
 	}
 
 	public def getInvokingState(ParserRule rule, Element element) {
-		val atom = element.body
-		if (atom instanceof Atom) {
-			val ref = atom.body
-			if (ref instanceof RuleRef) {
-				val ruleName = rule.name
-				val states = invokingStates.get(ruleName)
-				val refName = ref.reference.name
-				for(state:states){
-					if(state.isName(refName)){
-						return state.invokingState
-					}
-				}
-			}
+		val body = element.body
+		if (body instanceof Atom) {
+			val b = body.body
+			val ruleName = rule.name
+			val states = invokingStates.get(ruleName)
 		}
 	}
 }
