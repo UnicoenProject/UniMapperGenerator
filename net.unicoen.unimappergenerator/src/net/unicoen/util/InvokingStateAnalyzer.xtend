@@ -18,22 +18,21 @@ class InvokingStateAnalyzer {
 				return
 			}
 			val ruleName = rule.name
-			val pos = code.indexOf('''«ruleName»() throws''')
+			var pos = code.indexOf('''«ruleName»() throws''')
 			val list = new ArrayList<InvokingState>
-			rule.eAllContents.filter(Element).forEach [ element |
-				if (element.op == null) {
-					return
+			for (element : rule.eAllContents.filter(Element).toList) {
+				if (element.op != null) {
+					val body = (element.body as Atom).body
+					if (body instanceof RuleRef) {
+						val refName = body.reference.name
+						pos = code.indexOf(refName, pos)
+						val start = code.lastIndexOf('(', pos)
+						val last = code.indexOf(')', start)
+						val state = Integer.valueOf(code.substring(start + 1, last))
+						list.add(new InvokingState(body.reference.name, state))
+					}
 				}
-				val body = (element.body as Atom).body
-				if (body instanceof RuleRef) {
-					val refName = body.reference.name
-					val i = code.indexOf(refName, pos)
-					val start = code.lastIndexOf('(', i)
-					val last = code.indexOf(')', start)
-					val state = Integer.valueOf(code.substring(start + 1, last))
-					list.add(new InvokingState(body.reference.name, state))
-				}
-			]
+			}
 			invokingStates.put(ruleName, list)
 		]
 	}
@@ -42,8 +41,15 @@ class InvokingStateAnalyzer {
 		val body = element.body
 		if (body instanceof Atom) {
 			val b = body.body
-			val ruleName = rule.name
-			val states = invokingStates.get(ruleName)
+			if (b instanceof RuleRef) {
+				val ruleName = rule.name
+				val states = invokingStates.get(ruleName)
+				for (state : states) {
+					if(state.isName(b.reference.name)){
+						state.invokingState
+					}
+				}
+			}
 		}
 	}
 }
