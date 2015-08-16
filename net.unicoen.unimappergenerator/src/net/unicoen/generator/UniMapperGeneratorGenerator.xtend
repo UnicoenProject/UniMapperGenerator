@@ -15,8 +15,6 @@ import net.unicoen.uniMapperGenerator.RuleRef
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
-import java.util.Scanner
-import org.eclipse.xtext.xbase.typesystem.^override.InvokedResolvedOperation
 import net.unicoen.util.InvokingStateAnalyzer
 
 /**
@@ -45,6 +43,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 
 import java.io.FileInputStream
 import java.util.ArrayList
+import java.util.List
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CommonTokenStream
@@ -300,11 +299,7 @@ import net.unicoen.node.*
 					die("Expected return type: " + r.type.list.bind + " actual type: " + it.referenceReturnType)
 				}
 				sb.nl('''case «r.getInvokingState(it)»: {''')
-				sb.nl('''if (ret == null) {''')
-				sb.nl('''ret = it.visit as «r.type.list.bind»''')
-				sb.nl('''} else {''')
-				sb.nl('''ret += it.visit as «r.type.list.bind»''')
-				sb.nl('''}''')
+				sb.nl('''list += it.visit as «r.type.list.bind»''')
 				sb.nl('''}''')
 			}
 

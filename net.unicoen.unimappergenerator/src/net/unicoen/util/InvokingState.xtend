@@ -19,4 +19,12 @@ class InvokingState {
 	public def getInvokingState(){
 		state
 	}
+
+	override public equals(Object o){
+		if(o==null ||!(o instanceof InvokingState)){
+			return false
+		}
+		val object = o as InvokingState
+		object.ruleName.equals(ruleName) && object.state.equals(state)
+	}
 }

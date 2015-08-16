@@ -25,11 +25,13 @@ class InvokingStateAnalyzer {
 					val body = (element.body as Atom).body
 					if (body instanceof RuleRef) {
 						val refName = body.reference.name
-						pos = code.indexOf(refName, pos)
+						pos = code.indexOf('''«refName»()''', pos)
 						val start = code.lastIndexOf('(', pos)
 						val last = code.indexOf(')', start)
-						val state = Integer.valueOf(code.substring(start + 1, last))
+						val str = code.substring(start + 1, last)
+						val state = Integer.parseInt(str)
 						list.add(new InvokingState(body.reference.name, state))
+						pos++
 					}
 				}
 			}
@@ -45,8 +47,9 @@ class InvokingStateAnalyzer {
 				val ruleName = rule.name
 				val states = invokingStates.get(ruleName)
 				for (state : states) {
-					if(state.isName(b.reference.name)){
-						state.invokingState
+					if (state.isName(b.reference.name)) {
+						states.remove(state)
+						return state.invokingState
 					}
 				}
 			}
