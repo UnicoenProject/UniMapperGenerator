@@ -111,7 +111,7 @@ class ANTLRGrammarGenerator {
 		var line = ""
 		while ((line = reader.readLine) != null) {
 			builder.append(line)
-			builder.append('\n')
+			builder.append(_newLine)
 		}
 		reader.close
 		builder.toString
@@ -178,8 +178,10 @@ class ANTLRGrammarGenerator {
 
 	def dispatch compile(ParserRule pr) {
 		'''«pr.name»«IF pr.^return != null» «pr.^return.compile»«ENDIF»«IF pr.throws !=
-		null» «pr.throws.compile»«ENDIF»«IF pr.locals != null» «pr.locals.compile»«ENDIF»«FOR p : pr.prequels» «p.compile»«ENDFOR» :
-		«pr.body.compile»«pr.caught.compile»«pr.semicolonSymbol»'''
+		null» «pr.throws.compile»«ENDIF»«IF pr.locals != null» «pr.locals.compile»«ENDIF»«FOR p : pr.prequels» «p.compile»«ENDFOR»
+	:«pr.body.compile»«pr.caught.compile»
+	«pr.semicolonSymbol»
+'''
 
 	}
 
@@ -202,7 +204,8 @@ class ANTLRGrammarGenerator {
 	def dispatch compile(RuleAction ra) '''@«ra.name» «ra.body»'''
 
 	def dispatch compile(RuleAltList ral) {
-		'''«FOR a : ral.alternatives»«IF !ral.alternatives.get(0).equals(a)»| «ENDIF»«a.compile»«ENDFOR»'''
+		'''«FOR a : ral.alternatives»«IF !ral.alternatives.get(0).equals(a)»
+	|«ENDIF»	«a.compile»«ENDFOR»'''
 	}
 
 	def dispatch compile(LabeledAlt la) '''«la.body.compile»«IF la.label != null» #«la.label»«ENDIF»'''
@@ -215,7 +218,7 @@ class ANTLRGrammarGenerator {
 
 	def dispatch compile(Element el) '''«el.body.compile»«IF el.operator != null»«el.operator.compile»«ENDIF» '''
 
-	def dispatch compile(Ebnf eb) '''«eb.body.compile»«IF eb.operator != null» «eb.operator.compile»«ENDIF»'''
+	def dispatch compile(Ebnf eb) '''«eb.body.compile»«IF eb.operator != null»«eb.operator.compile»«ENDIF»'''
 
 	def dispatch compile(ActionElement ae) '''«ae.body»«IF ae.options != null»«ae.options.compile»«ENDIF»'''
 
@@ -223,13 +226,11 @@ class ANTLRGrammarGenerator {
 
 	def dispatch compile(EbnfSuffix es) '''«es.operator»«IF es.nongreedy != null» «es.nongreedy»«ENDIF»'''
 
-	def dispatch compile(Block bl) {
-		'''(«IF bl.colon != null»«IF bl.options != null»«bl.options.compile»«ENDIF»«FOR a : bl.actions» «a.compile»«ENDFOR»:«ENDIF» «bl.body.compile»)'''
-	}
+	def dispatch compile(Block bl)
+		'''(«IF bl.colon != null»«IF bl.options != null»«bl.options.compile»«ENDIF»«FOR a : bl.actions» «a.compile»«ENDFOR»: «ENDIF»«bl.body.compile»)'''
 
-	def dispatch compile(AltList al) {
-		'''«FOR a : al.alternatives»«IF !al.alternatives.get(0).equals(a)»|«ENDIF» «a.compile»«ENDFOR»'''
-	}
+	def dispatch compile(AltList al)
+		'''«FOR a : al.alternatives»«IF !al.alternatives.get(0).equals(a)»|«ENDIF»«a.compile»«ENDFOR»'''
 
 	def dispatch compile(Atom at) '''«at.body.compile»'''
 
@@ -243,9 +244,7 @@ class ANTLRGrammarGenerator {
 
 	def dispatch compile(Terminal te) {
 		'''«IF te.reference != null»«te.reference.refCompile»«IF te.options != null»«te.
-		options.compile»«ENDIF»«ELSEIF te.literal != null»«te.literal»«IF te.options != null» «te.options.compile»«ENDIF»«
-		ELSE»«te.
-		eof»«ENDIF»'''
+		options.compile»«ENDIF»«ELSEIF te.literal != null»«te.literal»«IF te.options != null» «te.options.compile»«ENDIF»«ENDIF»'''
 	}
 
 	def dispatch compile(NotSet ns) '''~«ns.body.compile»'''
@@ -264,13 +263,17 @@ class ANTLRGrammarGenerator {
 	def dispatch compile(ElementOption eo) '''«IF eo.qualifiedId != null»«eo.qualifiedId.compile»«ELSE»«eo.id» «eo.
 		assign» «eo.value»«ENDIF»'''
 
-	def dispatch compile(LexerRule lr) '''«IF lr.^fragment»fragment «ENDIF»«lr.name» :
-	«lr.body.compile»;'''
+	def dispatch compile(LexerRule lr) '''«IF lr.^fragment»fragment
+«ENDIF»«lr.name»
+	:«lr.body.compile»
+	;
+'''
 
-	def dispatch compile(LexerAltList lal) '''«FOR a : lal.alternatives»«IF !lal.alternatives.get(0).equals(a)»|«ENDIF»«a.
-		compile»«ENDFOR»'''
+	def dispatch compile(LexerAltList lal) '''«FOR a : lal.alternatives»«IF !lal.alternatives.get(0).equals(a)»|«ENDIF»	«a.
+		compile»
+«ENDFOR»'''
 
-	def dispatch compile(LexerAlt la) '''«la.body.compile» «IF la.commands != null»«la.commands.compile»«ENDIF»'''
+	def dispatch compile(LexerAlt la) '''«la.body.compile»«IF la.commands != null» «la.commands.compile»«ENDIF»'''
 
 	def dispatch compile(LexerElements le) '''«FOR e : le.elements»«e.compile»«ENDFOR»'''
 

@@ -1640,7 +1640,7 @@ CharacterLiteral
 
 fragment
 SingleCharacter
-	:	~[\\]
+	:	~['\\]
 	;
 
 // §3.10.5 String Literals
@@ -1656,7 +1656,7 @@ StringCharacters
 
 fragment
 StringCharacter
-	:	~[\\]
+	:	~["\\]
 	|	EscapeSequence
 	;
 
@@ -1664,7 +1664,7 @@ StringCharacter
 
 fragment
 EscapeSequence
-	:	'\\' [btnfr\\]
+	:	'\\' [btnfr'"\\]
 	|	OctalEscape
     |   UnicodeEscape // This is not in the spec but prevents having to preprocess the input
 	;

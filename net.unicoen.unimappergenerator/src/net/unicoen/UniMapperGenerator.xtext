@@ -116,7 +116,8 @@ Alternative:
 	{Alternative} options=ElementOptions? elements+=Element*;
 
 Element:
-	body=LabeledElement operator=EbnfSuffix? | body=Atom operator=EbnfSuffix? (DOLLAR op=Id)? | body=Ebnf | body=ActionElement;
+	body=LabeledElement operator=EbnfSuffix? | body=Atom operator=EbnfSuffix? (DOLLAR op=Id)? | body=Ebnf |
+	body=ActionElement;
 
 Ebnf:
 	body=Block
@@ -369,9 +370,11 @@ terminal SEMICOLON:
 	';';
 
 /** Argument action (a.k.a language code) */
-terminal ARG_OR_CHARSET:
-	ARG_ACTION
-	| LEXER_CHAR_SET;
+terminal
+ARG_OR_CHARSET:
+	'[' ARG_ACTION
+	|
+	LEXER_CHAR_SET;
 
 terminal fragment LEXER_CHAR_SET:
 	'___lexer_char_set_';

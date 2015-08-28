@@ -63,10 +63,10 @@ Workflow {
 			fragment = resourceFactory.ResourceFactoryFragment auto-inject {}
 
 			// The antlr parser generator fragment.
-			fragment = parser.antlr.XtextAntlrGeneratorFragment auto-inject {
-			//  options = {
-			//      backtrack = true
-			//  }
+			fragment = org.eclipse.xtext.generator.parser.antlr.ex.rt.AntlrGeneratorFragment auto-inject {
+			//				options = {
+			//					backtrack = true
+			//				}
 			}
 
 			// Xtend-based API for validation
@@ -104,7 +104,7 @@ Workflow {
 			fragment = contentAssist.ContentAssistFragment auto-inject {}
 
 			// generates a more lightweight Antlr parser and lexer tailored for content assist
-			fragment = parser.antlr.XtextAntlrUiGeneratorFragment auto-inject {}
+			fragment = org.eclipse.xtext.generator.parser.antlr.ex.ca.ContentAssistParserGeneratorFragment auto-inject {}
 
 			// generates junit test support classes into Generator#pathTestProject
 			fragment = junit.Junit4Fragment auto-inject {}
