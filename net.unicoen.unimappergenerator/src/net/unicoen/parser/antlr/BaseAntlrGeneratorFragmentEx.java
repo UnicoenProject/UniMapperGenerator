@@ -20,28 +20,16 @@ public abstract class BaseAntlrGeneratorFragmentEx extends AbstractAntlrGenerato
 	private Logger log = Logger.getLogger(getClass());
 
 	protected void copy(final File source, final File dest) {
-		FileInputStream sourceStream = null;
-		FileInputStream destStream = null;
-		FileChannel sourceChannel = null;
-		FileChannel destChannel = null;
 		try {
 			log.info("copying: " + source.getCanonicalPath() + " to " + dest);
-			sourceStream = new FileInputStream(source);
-			destStream = new FileInputStream(dest);
-			sourceChannel = sourceStream.getChannel();
-			destChannel = destStream.getChannel();
-			destChannel.transferFrom(sourceChannel, 0, sourceChannel.size());
+			try (FileInputStream inputStream = new FileInputStream(source);
+					FileOutputStream outputStream = new FileOutputStream(dest);
+					FileChannel sourceChannel = inputStream.getChannel();
+					FileChannel destChannel = outputStream.getChannel()) {
+				destChannel.transferFrom(sourceChannel, 0, sourceChannel.size());
+			}
 		} catch (IOException ex) {
 			throw new IllegalStateException("Can't copy: " + source, ex);
-		} finally {
-			try {
-				sourceStream.close();
-				destStream.close();
-				sourceChannel.close();
-				destChannel.close();
-			} catch (IOException ex) {
-				throw new IllegalStateException("Can't close: " + source, ex);
-			}
 		}
 	}
 
@@ -59,8 +47,8 @@ public abstract class BaseAntlrGeneratorFragmentEx extends AbstractAntlrGenerato
 	protected String readFile(final String fileName) {
 		BufferedReader br = null;
 		try {
-			br = new BufferedReader(
-					new InputStreamReader(getClass().getResourceAsStream("InternalUniMapperGeneratorLexer.g")));
+			br = new BufferedReader(new InputStreamReader(
+					getClass().getResourceAsStream("/net/unicoen/parser/antlr/InternalUniMapperGenetatorLexer.g")));
 			StringBuilder sb = new StringBuilder();
 			String line = br.readLine();
 
