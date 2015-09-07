@@ -48,7 +48,7 @@ public abstract class BaseAntlrGeneratorFragmentEx extends AbstractAntlrGenerato
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new InputStreamReader(
-					getClass().getResourceAsStream("/net/unicoen/parser/antlr/InternalUniMapperGenetatorLexer.g")));
+					getClass().getResourceAsStream("/net/unicoen/parser/antlr/InternalUniMapperGeneratorLexer.g")));
 			StringBuilder sb = new StringBuilder();
 			String line = br.readLine();
 

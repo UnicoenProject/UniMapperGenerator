@@ -76,7 +76,7 @@ public class AntlrUiGeneratorFragmentWithCustomLexer extends BaseAntlrGeneratorF
     copy(new File(absoluteLexerFileName), new File(absoluteLexerFileName.replace(".g", ".gxtext")));
     writeFile(
         absoluteLexerFileName,
-        readFile("/src-gen/net/unicoen/parser/antlr/lexer/InternalUniMapperGeneratorLexer.g"));
+        readFile("../net.unicoen.unimappergenerator/src/net/unicoen/parser/antlr/lexer/InternalUniMapperGeneratorLexer.g"));
 
     getAntlrTool().runWithEncodingAndParams(absoluteLexerFileName, encoding, lexerAntlrParams);
     addAntlrParam("-lib");

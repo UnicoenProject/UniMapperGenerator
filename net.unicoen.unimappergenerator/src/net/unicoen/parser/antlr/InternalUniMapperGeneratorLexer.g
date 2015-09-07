@@ -47,13 +47,19 @@ Lexer : 'lexer';
 
 Mode : 'mode';
 
+Root : 'root';
+
 Tree : 'tree';
+
+EOF : 'EOF';
 
 PlusSignEqualsSign : '+=';
 
 FullStopFullStop : '..';
 
 ColonColon : '::';
+
+EqualsSignGreaterThanSign : '=>';
 
 NumberSign : '#';
 
@@ -68,8 +74,6 @@ PlusSign : '+';
 Comma : ',';
 
 FullStop : '.';
-
-Semicolon : ';' {isLexerRule=null;};
 
 LessThanSign : '<';
 
@@ -128,6 +132,10 @@ fragment RULE_ACTION_CHAR_LITERAL : '\'' (('\\')=>RULE_ACTION_ESC | ~'\'' )* '\'
 fragment RULE_ACTION_ESC : '\\' .;
 
 RULE_ARG_OR_CHARSET : ({isLexerRule==Boolean.TRUE}?=>RULE_LEXER_CHAR_SET|{isLexerRule==Boolean.FALSE}?=> RULE_ARG_ACTION);
+
+RULE_DOLLAR : '$' {isLexerRule=null;};
+
+RULE_SEMICOLON : ';' {isLexerRule=null;};
 
 fragment RULE_LEXER_CHAR_SET : '[' ('\\' ~(('\r'|'\n'))|~(('\r'|'\n'|'\\'|']')))* ']';
 

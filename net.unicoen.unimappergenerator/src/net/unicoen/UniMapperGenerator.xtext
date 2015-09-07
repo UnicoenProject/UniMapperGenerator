@@ -370,8 +370,7 @@ terminal SEMICOLON:
 	';';
 
 /** Argument action (a.k.a language code) */
-terminal
-ARG_OR_CHARSET:
+terminal ARG_OR_CHARSET:
 	'[' ARG_ACTION
 	|
 	LEXER_CHAR_SET;
@@ -389,7 +388,8 @@ terminal fragment LEXER_CHAR_SET:
 //
 terminal fragment ARG_ACTION:
 	'['
-	(ACTION_STRING_LITERAL
+	(ARG_ACTION
+	| ACTION_STRING_LITERAL
 	| ACTION_CHAR_LITERAL
 	| !('[' | ']'))*
 	']';
