@@ -158,7 +158,7 @@ Range:
 	from=STRING '..' to=STRING;
 
 Terminal:
-	reference=[TokenRef|TOKEN_REF] options=ElementOptions? | literal=STRING options=ElementOptions? | eof='EOF';
+	reference=[TokenRef|TOKEN_REF] options=ElementOptions? | literal=STRING options=ElementOptions? | eof='EOF2';
 
 TokenRef:
 	V3Token | V4Token | LexerRule;

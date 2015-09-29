@@ -51,7 +51,7 @@ Root : 'root';
 
 Tree : 'tree';
 
-EOF : 'EOF';
+EOF2 : 'EOF2';
 
 PlusSignEqualsSign : '+=';
 
