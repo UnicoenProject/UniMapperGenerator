@@ -52,7 +52,7 @@
 Total lexer+parser time 30844ms.
  */
 grammar Java8;
-root normalClassDeclaration;
+root compilationUnit;
 
 /*
  * Productions from §3 (Lexical Structure)
@@ -225,8 +225,8 @@ ambiguousName
  * Productions from §7 (Packages)
  */
 
-compilationUnit
-	:	packageDeclaration? importDeclaration* typeDeclaration* EOF2
+compilationUnit => UniClassDec
+	:	packageDeclaration? importDeclaration* typeDeclaration*$MERGE EOF2
 	;
 
 packageDeclaration
@@ -260,8 +260,8 @@ staticImportOnDemandDeclaration
 	:	'import' 'static' typeName '.' '*' ';'
 	;
 
-typeDeclaration
-	:	classDeclaration
+typeDeclaration => UniClassDec
+	:	classDeclaration$MERGE
 	|	interfaceDeclaration
 	|	';'
 	;
@@ -270,8 +270,8 @@ typeDeclaration
  * Productions from §8 (Classes)
  */
 
-classDeclaration
-	:	normalClassDeclaration
+classDeclaration=>UniClassDec
+	:	normalClassDeclaration$MERGE
 	|	enumDeclaration
 	;
 

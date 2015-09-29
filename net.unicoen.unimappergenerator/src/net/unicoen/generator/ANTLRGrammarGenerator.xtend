@@ -1,8 +1,11 @@
 package net.unicoen.generator
 
+import com.google.common.io.Files
 import java.io.File
 import java.io.FileOutputStream
+import java.nio.charset.StandardCharsets
 import net.unicoen.uniMapperGenerator.ActionElement
+import net.unicoen.uniMapperGenerator.ActionOption
 import net.unicoen.uniMapperGenerator.AltList
 import net.unicoen.uniMapperGenerator.Alternative
 import net.unicoen.uniMapperGenerator.Atom
@@ -23,6 +26,7 @@ import net.unicoen.uniMapperGenerator.GrammarAction
 import net.unicoen.uniMapperGenerator.GrammarType
 import net.unicoen.uniMapperGenerator.Import
 import net.unicoen.uniMapperGenerator.Imports
+import net.unicoen.uniMapperGenerator.IntOption
 import net.unicoen.uniMapperGenerator.LabeledAlt
 import net.unicoen.uniMapperGenerator.LabeledElement
 import net.unicoen.uniMapperGenerator.LabeledLexerElement
@@ -42,16 +46,17 @@ import net.unicoen.uniMapperGenerator.LocalVars
 import net.unicoen.uniMapperGenerator.Mode
 import net.unicoen.uniMapperGenerator.NotSet
 import net.unicoen.uniMapperGenerator.Option
-import net.unicoen.uniMapperGenerator.OptionValue
 import net.unicoen.uniMapperGenerator.Options
 import net.unicoen.uniMapperGenerator.ParserRule
 import net.unicoen.uniMapperGenerator.QualifiedId
+import net.unicoen.uniMapperGenerator.QualifiedOption
 import net.unicoen.uniMapperGenerator.Range
 import net.unicoen.uniMapperGenerator.Return
 import net.unicoen.uniMapperGenerator.RuleAction
 import net.unicoen.uniMapperGenerator.RuleAltList
 import net.unicoen.uniMapperGenerator.RuleRef
 import net.unicoen.uniMapperGenerator.SetElement
+import net.unicoen.uniMapperGenerator.StringOption
 import net.unicoen.uniMapperGenerator.Terminal
 import net.unicoen.uniMapperGenerator.TokenVocab
 import net.unicoen.uniMapperGenerator.V3Token
@@ -64,8 +69,6 @@ import org.eclipse.core.runtime.Path
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IFileSystemAccessExtension2
-import com.google.common.io.Files
-import java.nio.charset.StandardCharsets
 
 class ANTLRGrammarGenerator {
 	private val Resource _resource
@@ -146,10 +149,10 @@ class ANTLRGrammarGenerator {
 
 	def dispatch compile(TokenVocab tv) '''«tv.name» = «tv.importURI»'''
 
-	def dispatch compile(OptionValue opv) {
-		'''«IF opv.qopValue != null»«opv.qopValue»«ELSEIF opv.strValue != null»«opv.strValue»«ELSEIF opv.
-		aopValue != null»«ELSE»«ENDIF»'''
-	}
+	def dispatch compile(QualifiedOption qop) '''«qop.value»'''
+	def dispatch compile(StringOption qop) '''«qop.value»'''
+	def dispatch compile(ActionOption qop) '''«qop.value»'''
+	def dispatch compile(IntOption qop) '''«qop.value»'''
 
 	def dispatch compile(Imports im) {
 		'''«im.keyword» «FOR i : im.imports»«IF !im.imports.get(0).equals(i)», «ENDIF»«i.compile»«ENDFOR»'''

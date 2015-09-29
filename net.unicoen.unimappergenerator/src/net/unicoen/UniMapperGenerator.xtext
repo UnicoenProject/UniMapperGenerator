@@ -34,7 +34,19 @@ TokenVocab:
 	name=TOKEN_VOCAB '=' importURI=[Grammar|Id];
 
 OptionValue:
-	qopValue=QualifiedId | strValue=STRING | aopValue=ACTION | intValue=INT;
+	QualifiedOption | StringOption | ActionOption | IntOption;
+
+QualifiedOption:
+	value=QualifiedId;
+
+StringOption:
+	value=STRING;
+
+ActionOption:
+	value=ACTION;
+
+IntOption:
+	value=INT;
 
 /** Imports */
 Imports:
