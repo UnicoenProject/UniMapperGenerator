@@ -114,7 +114,7 @@ classOrInterfaceType
 		)*
 	;
 
-classType
+classType => String
 	:	annotation* Identifier typeArguments?
 	|	classOrInterfaceType '.' annotation* Identifier typeArguments?
 	;
@@ -276,11 +276,15 @@ classDeclaration=>UniClassDec
 	;
 
 normalClassDeclaration => UniClassDec
-	:	classModifier*$modifiers 'class' className$className typeParameters? superclass? superinterfaces? classBody$members
+	:	classModifiers$modifiers 'class' className$className typeParameters? superclass?$superClass superinterfaces?$interfaces classBody$members
 	;
 
 className => String
 	:	Identifier
+	;
+	
+classModifiers => List<String>
+	:	classModifier*$ADD
 	;
 	
 classModifier => String
@@ -302,15 +306,15 @@ typeParameterList
 	:	typeParameter (',' typeParameter)*
 	;
 
-superclass
-	:	'extends' classType
+superclass => List<String>
+	:	'extends' classType$ADD
 	;
 
-superinterfaces
-	:	'implements' interfaceTypeList
+superinterfaces => List<String>
+	:	'implements' interfaceTypeList$ADD
 	;
 
-interfaceTypeList
+interfaceTypeList => String
 	:	interfaceType (',' interfaceType)*
 	;
 
@@ -333,8 +337,11 @@ classMemberDeclaration
 	|	';'
 	;
 
-fieldDeclaration => UniFieldDec
-	:	fieldModifier*$modifiers unannType$type variableDeclaratorList$MERGE ';'
+fieldDeclaration => List<UniFieldDec>
+	:	fieldModifiers$modifiers unannType$type fieldVariableDeclaratorList$APPEND ';'
+	;
+fieldModifiers =>List<String>
+	:	fieldModifier*$ADD
 	;
 
 fieldModifier => String
@@ -347,17 +354,33 @@ fieldModifier => String
 	|	'transient'
 	|	'volatile'
 	;
+	
+	
+fieldVariableDeclaratorList=>List<UniFieldDec>
+	:	fieldVariableDeclarator$ADD (',' fieldVariableDeclarator$ADD)*
+	;
+fieldVariableDeclarator=>UniFieldDec
+	:	fieldVariableDeclaratorId$name ('=' fieldVariableInitializer$value)?
+	;
+fieldVariableDeclaratorId=>String
+	:	Identifier dims?
+	;
+fieldVariableInitializer=>UniExpr
+	:	expression
+	|	arrayInitializer
+	;
 
-variableDeclaratorList => UniFieldDec
+
+variableDeclaratorList
 	:	variableDeclarator (',' variableDeclarator)*
 	;
 
-variableDeclarator => UniFieldDec
-	:	variableDeclaratorId$MERGE ('=' variableInitializer$value)?
+variableDeclarator
+	:	variableDeclaratorId ('=' variableInitializer)?
 	;
 
-variableDeclaratorId => UniFieldDec
-	:	Identifier dims?$type
+variableDeclaratorId
+	:	Identifier dims?
 	;
 
 variableInitializer
