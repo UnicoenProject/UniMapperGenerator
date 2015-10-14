@@ -279,6 +279,9 @@ import net.unicoen.node.*
 	def makeListMethodBody(ParserRule r, String itemClassName) {
 		val sb = new StringBuilder
 		sb.nl('''val list = new ArrayList<«itemClassName»>''')
+		if (r.hasItemClassField(itemClassName)) {
+			sb.nl('''val tNode = new «itemClassName»''')
+		}
 		sb.nl('''if (ctx.children != null) {''')
 		sb.nl('''ctx.children.forEach [''')
 		sb.nl('''if (it instanceof RuleContext) {''')
@@ -302,11 +305,30 @@ import net.unicoen.node.*
 				sb.nl('''list += it.visit as «r.type.list.bind»''')
 				sb.nl('''}''')
 			}
+			if (r.hasItemClassField(itemClassName)) {
+				try {
+					val clazz = Class.forName(itemClassName)
+					val field = clazz.getField(it.op)
+					val fieldTypeName = field.genericType.typeName
+					sb.nl('''case «r.getInvokingState(it)»: {''')
+					sb.nl('''tNode.«field.name» = it.visit as «fieldTypeName»''')
+					sb.nl('''}''')
+				} catch (NoSuchFieldException e) {
+					die("No such Field: " + it.op)
+				} catch (ClassNotFoundException e) {
+					die("No such class: " + itemClassName)
+				}
 
+			}
 		]
 		sb.nl('''}''')
 		sb.nl('''}''')
 		sb.nl(''']''')
+		if(r.hasItemClassField(itemClassName)){
+			sb.nl('''list.forEach[''')
+			sb.nl('''it.merge(tNode)''')
+			sb.nl(''']''')
+		}
 		sb.nl('''}''')
 		sb.nl('''list''')
 		sb
@@ -352,6 +374,26 @@ import net.unicoen.node.*
 
 	def getInvokingState(ParserRule r, Element obj) {
 		_analyzer.getInvokingState(r, obj)
+	}
+
+	def hasItemClassField(ParserRule r, String itemClassName) {
+		val list = r.eAllContents.filter(Element).toIterable
+		for (elem : list) {
+			if (itemClassName.hasField(elem.op)) {
+				return true
+			}
+		}
+		return false
+	}
+
+	def hasField(String itemClass, String fieldName) {
+		try {
+			val clazz = Class.forName(itemClass)
+			clazz.getField(fieldName)
+		} catch (Exception e) {
+			return false
+		}
+		return true
 	}
 
 }

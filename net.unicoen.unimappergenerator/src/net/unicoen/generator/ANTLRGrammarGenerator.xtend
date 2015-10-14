@@ -81,9 +81,6 @@ class ANTLRGrammarGenerator {
 		_fsa = fsa
 	}
 
-	def escape(String literal) {
-	}
-
 	def generate(String name, Grammar grammar) {
 		val path = name + _fileExtension;
 		_fsa.generateFile(path, grammar.compile)
@@ -123,7 +120,6 @@ class ANTLRGrammarGenerator {
 	def dispatch compile(Grammar g) {
 		val sb = new StringBuilder
 		sb.append(g.nameCompile + _newLine + _newLine)
-		sb.append(header + _newLine + _newLine)
 		g.prequels.forEach [
 			sb.append(it.compile + _newLine)
 		]
@@ -138,10 +134,6 @@ class ANTLRGrammarGenerator {
 
 	def nameCompile(Grammar g) '''«IF g.type != null && !g.type.equals(GrammarType.DEFAULT)»«g.type» «ENDIF»grammar «g.
 		name»;'''
-
-	def header() '''@header{
-	package net.unicoen.parser;
-}'''
 
 	def dispatch compile(Options op) '''«op.keyword»«FOR o : op.options» «o.compile»;«ENDFOR»}'''
 
@@ -173,9 +165,8 @@ class ANTLRGrammarGenerator {
 
 	def dispatch compile(V3Token v3) '''«v3.name»«IF !v3.value.empty» = «v3.value»«ENDIF»;'''
 
-	def dispatch compile(GrammarAction ga) {
-		'''@«IF !ga.scope.empty»«ga.scope» «ga.colonSymbol» «ENDIF»«ga.name» «ga.action»'''
-	}
+	def dispatch compile(GrammarAction ga) '''@«IF !ga.scope.nullOrEmpty»«ga.scope» «ga.colonSymbol» «ENDIF»«ga.name» «ga.action»
+'''
 
 	def dispatch compile(Mode m) '''mode «m.id»;«FOR lr : m.rules»«lr.compile»«ENDFOR»'''
 

@@ -10,7 +10,6 @@ import com.google.inject.Inject
 
 // import com.google.inject.Inject;
 // import net.unicoen.services.UniMapperGeneratorGrammarAccess
-
 /**
  * This class contains custom formatting declarations.
  * 
@@ -32,6 +31,9 @@ class UniMapperGeneratorFormatter extends AbstractDeclarativeFormatter {
 		c.setLinewrap(0, 1, 1).after(ML_COMMENTRule)
 
 		c.setLinewrap(2, 2, 2).before(UniMapperGeneratorGrammarAccess.ruleRule)
+		c.setLinewrap.after(UniMapperGeneratorGrammarAccess.labeledAltRule)
+		c.setLinewrap.after(UniMapperGeneratorGrammarAccess.lexerAltRule)
+
 		c.setLinewrap.after(UniMapperGeneratorGrammarAccess.COLONRule)
 		c.setNoSpace.around(UniMapperGeneratorGrammarAccess.DOLLARRule)
 		c.setNoSpace.before(UniMapperGeneratorGrammarAccess.ebnfSuffixRule)
