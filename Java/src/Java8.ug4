@@ -63,14 +63,44 @@ root compilationUnit;
  */
 
 literal
-	:	IntegerLiteral
-	|	FloatingPointLiteral
-	|	BooleanLiteral
-	|	CharacterLiteral
-	|	StringLiteral
-	|	NullLiteral
+	:	integerLiteral
+	|	floatingPointLiteral
+	|	booleanLiteral
+	|	characterLiteral
+	|	stringLiteral
+	|	nullLiteral
 	;
-
+integerLiteral=>UniIntLiteral
+	:	integerLiteralValue$value
+	;
+integerLiteralValue
+	:	IntegerLiteral
+	;
+floatingPointLiteral=>UniDoubleLiteral
+	:	floatingPointLiteralValue$value
+	;
+floatingPointLiteralValue
+	:	FloatingPointLiteral
+	;
+booleanLiteral=>UniBoolLiteral
+	:	booleanLiteralValue
+	;
+booleanLiteralValue
+	:	BooleanLiteral
+	;
+stringLiteral=>UniStringLiteral
+	:	stringLiteralValue
+	;
+stringLiteralValue
+	:	StringLiteral
+	;
+	
+characterLiteral
+	:	CharacterLiteral
+	;
+nullLiteral
+	:	NullLiteral
+	;
 /*
  * Productions from §4 (Types, Values, and Variables)
  */
@@ -369,9 +399,15 @@ fieldVariableDeclarator=>UniFieldDec
 fieldVariableDeclaratorId=>String
 	:	Identifier dims?
 	;
-fieldVariableInitializer=>UniExpr
-	:	expression
-	|	arrayInitializer
+fieldVariableInitializer
+	:	fieldAssignmentExpression
+	|	fieldArrayInitializer
+	;
+fieldAssignmentExpression
+	:	expression	//mainly use assignmentExpression
+	;
+fieldArrayInitializer
+	:	arrayInitializer	//list of assignmentExpressions
 	;
 
 
