@@ -34,7 +34,7 @@ How to Develop
     + net.unicoen.unimappergenerator.ui
 5. Right click the GeneratorUniMapperGenerator.mwe2 file in net.unicoen.unimappergenerator/src/net.unicoen directory
 6. Select "Run as" -> "MWE2 Workflow"
-    + If you can't build correctly, see [here](http://stackoverflow.com/questions/30889847/match-string-in-xtext-regardless-of-upper-lower-case).
+    + If you can't build correctly, see [here](https://github.com/UnicoenProject/UniMapperGenerator/issues/3).
 
 ### 3. Import ANTLR4 binary file into project
 1. Visit [download page](http://www.antlr.org/download.html) in ANTLR web site
