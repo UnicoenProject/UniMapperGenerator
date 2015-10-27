@@ -28,7 +28,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 	private InvokingStateAnalyzer _analyzer;
 
 	override def doGenerate(Resource resource, IFileSystemAccess fsa) {
-		val g4Generator = new ANTLRGrammarGenerator(resource, fsa)
+		val g4Generator = new ANTLRGrammarGenerator(fsa)
 		val testGenerator = new MapperTestGenerator(fsa)
 		resource.allContents.filter(Grammar).forEach [
 			_grammarName = it.name.toCamelCase
