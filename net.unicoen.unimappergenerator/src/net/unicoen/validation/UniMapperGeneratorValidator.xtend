@@ -50,7 +50,6 @@ class UniMapperGeneratorValidator extends AbstractUniMapperGeneratorValidator {
 		if (!rule.type.list.bind.contains("List")) {
 			error('Type ' + rule.type.list.bind + ' is not List.', elem, Literals.UNICOEN_TYPE_LIST__BIND)
 		}
-
 	}
 
 	def checkMergeTarget(ParserRule rule, Element elem, String ruleName) {
