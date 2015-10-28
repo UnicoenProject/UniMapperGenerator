@@ -70,31 +70,30 @@ literal
 	|	stringLiteral
 	|	nullLiteral
 	;
-integerLiteral=>UniIntLiteral
+integerLiteral => UniIntLiteral
 	:	integerLiteralValue$value
 	;
 integerLiteralValue
 	:	IntegerLiteral
 	;
-floatingPointLiteral=>UniDoubleLiteral
+floatingPointLiteral => UniDoubleLiteral
 	:	floatingPointLiteralValue$value
 	;
 floatingPointLiteralValue
 	:	FloatingPointLiteral
 	;
-booleanLiteral=>UniBoolLiteral
+booleanLiteral => UniBoolLiteral
 	:	booleanLiteralValue
 	;
 booleanLiteralValue
 	:	BooleanLiteral
 	;
-stringLiteral=>UniStringLiteral
+stringLiteral => UniStringLiteral
 	:	stringLiteralValue
 	;
 stringLiteralValue
 	:	StringLiteral
 	;
-	
 characterLiteral
 	:	CharacterLiteral
 	;
@@ -304,13 +303,14 @@ typeDeclaration => UniClassDec
  * Productions from §8 (Classes)
  */
 
-classDeclaration=>UniClassDec
+classDeclaration => UniClassDec
 	:	normalClassDeclaration$MERGE
 	|	enumDeclaration
 	;
 
 normalClassDeclaration => UniClassDec
-	:	classModifiers$modifiers 'class' className$className typeParameters? superclass?$superClass superinterfaces?$interfaces classBody$members
+	:	classModifiers$modifiers 'class' className$className typeParameters?
+		superclass?$superClass superinterfaces?$interfaces classBody$members
 	;
 
 className => String
@@ -390,13 +390,13 @@ fieldModifier => String
 	;
 	
 	
-fieldVariableDeclaratorList=>List<UniFieldDec>
+fieldVariableDeclaratorList => List<UniFieldDec>
 	:	fieldVariableDeclarator$ADD (',' fieldVariableDeclarator$ADD)*
 	;
-fieldVariableDeclarator=>UniFieldDec
+fieldVariableDeclarator => UniFieldDec
 	:	fieldVariableDeclaratorId$name ('=' fieldVariableInitializer$value)?
 	;
-fieldVariableDeclaratorId=>String
+fieldVariableDeclaratorId => String
 	:	Identifier dims?
 	;
 fieldVariableInitializer
@@ -492,7 +492,7 @@ methodDeclaration => UniMethodDec
 	:	methodModifier*$modifiers methodHeader$MERGE methodBody$block
 	;
 
-methodModifier => String
+methodModifier => List<String>
 	:	annotation
 	|	'public'
 	|	'protected'

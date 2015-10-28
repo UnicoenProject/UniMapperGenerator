@@ -166,6 +166,7 @@ import net.unicoen.node.*
 		val rule = obj.eAllContents.filter(RuleRef).head
 		if (rule != null) {
 			val ruleName = rule.reference.name.toCamelCase
+			// TODO: should consider a class name including List (e.g. UniList)
 			if (fieldTypeName.contains("List")) {
 				sb.nl('''case «r.getInvokingState(obj)»: {''')
 				val refType = obj.referenceReturnType

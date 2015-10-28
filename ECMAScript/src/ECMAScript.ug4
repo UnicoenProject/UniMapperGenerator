@@ -182,7 +182,7 @@ root program;
 
 /// Program :
 ///     SourceElements?
-program
+program => UniClassDec
  : sourceElements? EOF2
  ;
 
