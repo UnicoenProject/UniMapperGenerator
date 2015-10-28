@@ -182,7 +182,7 @@ import net.unicoen.node.*
 					sb.nl('''if (bind.«fieldName» == null) {''')
 					sb.nl('''bind.«fieldName» = new ArrayList<«refType»>''')
 					sb.nl('''}''')
-					sb.nl('''bind.«fieldName».add(it.visit as «refType»)''')
+					sb.nl('''bind.«fieldName» += it.visit as «refType»''')
 				}
 				sb.nl('''}''')
 			} else {
