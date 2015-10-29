@@ -492,7 +492,7 @@ methodDeclaration => UniMethodDec
 	:	methodModifier*$modifiers methodHeader$MERGE methodBody$block
 	;
 
-methodModifier => List<String>
+methodModifier => String
 	:	annotation
 	|	'public'
 	|	'protected'

@@ -166,14 +166,13 @@ import net.unicoen.node.*
 		val rule = obj.eAllContents.filter(RuleRef).head
 		if (rule != null) {
 			val ruleName = rule.reference.name.toCamelCase
-			// TODO: should consider a class name including List (e.g. UniList)
-			if (fieldTypeName.contains("List")) {
+			if (fieldTypeName.startsWith("java.util.List")) {
 				sb.nl('''case «r.getInvokingState(obj)»: {''')
 				val refType = obj.referenceReturnType
 				if (refType == null) {
 					die("Rule " + ruleName + " does not have return type.")
 				}
-				if (refType.contains("List")) {
+				if (refType.startsWith("List")) {
 					sb.nl('''if (bind.«fieldName» == null) {''')
 					sb.nl('''bind.«fieldName» = it.visit as «fieldTypeName»''')
 					sb.nl('''} else {''')
@@ -183,7 +182,7 @@ import net.unicoen.node.*
 					sb.nl('''if (bind.«fieldName» == null) {''')
 					sb.nl('''bind.«fieldName» = new ArrayList<«refType»>''')
 					sb.nl('''}''')
-					sb.nl('''bind.«fieldName» += it.visit as «fieldTypeName»''')
+					sb.nl('''bind.«fieldName» += it.visit as «refType»''')
 				}
 				sb.nl('''}''')
 			} else {
