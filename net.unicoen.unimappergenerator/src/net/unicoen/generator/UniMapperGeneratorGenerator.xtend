@@ -174,8 +174,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 		'''
 	}
 
-	def makeCaseStatement(ParserRule r, Element obj, String fieldTypeName, String fieldName, StringBuilder sb,
-		String returnType) {
+	def makeCaseStatement(ParserRule r, Element obj, String fieldTypeName, String fieldName, String returnType) {
 		val rule = obj.eAllContents.filter(RuleRef).head
 		if (rule == null) { die("Unreach") }
 		val ruleName = rule.reference.name.toCamelCase
@@ -205,54 +204,48 @@ class UniMapperGeneratorGenerator implements IGenerator {
 		'''
 	}
 
-	def makeMethodBody(ParserRule r, Class<?> clazz) {
-		val sb = new StringBuilder
-		sb.nl('''val bind = new «r.type.list.bind»''')
-		if (r.type.list.ret != null) {
-			sb.append('''val ret = new «r.type.list.ret»''')
-		}
-		sb.nl('''ctx.children.forEach [''')
-		sb.nl('''if (it instanceof RuleContext) {''')
-		sb.nl('''switch (it as RuleContext).invokingState {''')
-		val list = r.eAllContents.filter(Element)
-		list.forEach [
-			if (it.op == null) {
-				return
-			}
-			if (it.op.equals("MERGE")) {
-				if (!r.type.list.bind.equals(it.referenceReturnType)) {
-					die("Expected return type: " + r.type.list.bind + " actual type: " + it.referenceReturnType)
+	def makeMethodBody(ParserRule r, Class<?> clazz) '''
+		val bind = new «r.type.list.bind»
+		«IF r.type.list.ret != null»
+			val ret = new «r.type.list.ret»
+		«ENDIF»
+		ctx.children.forEach [
+			if (it instanceof RuleContext) {
+				switch (it as RuleContext).invokingState {
+					«FOR it : r.eAllContents.filter(Element).toList»
+						«IF it != null»
+							«IF it.op == "MERGE"»
+								«IF !r.type.list.bind.equals(it.referenceReturnType)»
+									«die("Expected return type: " + r.type.list.bind + " actual type: " + it.referenceReturnType)»
+								«ENDIF»
+								case «r.getInvokingState(it)»: {
+									val child = it.visit as «r.type.list.bind»
+									bind.merge(child)
+								}
+							«ELSEIF it.op == "RETURN"»
+								case «r.getInvokingState(it)»: {
+									bind = it.visit as «r.type.list.ret»
+								}
+							«ENDIF»
+							«try {
+								val field = clazz.getField(it.op)
+								val fieldTypeName = field.genericType.typeName
+								r.makeCaseStatement(it, fieldTypeName, it.op, r.type.list.bind)
+							} catch (NoSuchFieldException e) {
+								die("No such Field: " + it.op)
+							}»
+						«ENDIF»
+					«ENDFOR»
 				}
-				sb.nl('''case «r.getInvokingState(it)»: {''')
-				sb.nl('''val child = it.visit as «r.type.list.bind»''')
-				sb.nl('''bind.merge(child)''')
-				sb.nl('''}''')
-				return
-			}
-			if (it.op.equals("RETURN")) {
-				sb.nl('''case «r.getInvokingState(it)»: {''')
-				sb.nl('''bind = it.visit as «r.type.list.ret»''')
-				sb.nl('''}''')
-				return
-			}
-			try {
-				val field = clazz.getField(it.op)
-				val fieldTypeName = field.genericType.typeName
-				r.makeCaseStatement(it, fieldTypeName, it.op, sb, r.type.list.bind)
-			} catch (NoSuchFieldException e) {
-				die("No such Field: " + it.op)
 			}
 		]
-		sb.nl('''}''')
-		sb.nl('''}''')
-		sb.nl(''']''')
-		if (r.type.list.ret != null) {
-			sb.nl('''if (ret != null) {''')
-			sb.nl('''return ret''')
-			sb.nl('''}''')
-		}
-		sb.nl('''bind''')
-	}
+		«IF r.type.list.ret != null»
+			if (ret != null) {
+				return ret
+			}
+		«ENDIF»		
+		bind
+	'''
 
 	def getReferenceReturnType(Element r) {
 		val atom = r.body as Atom
