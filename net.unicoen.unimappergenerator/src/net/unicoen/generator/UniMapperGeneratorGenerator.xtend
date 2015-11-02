@@ -5,17 +5,18 @@ package net.unicoen.generator
 
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
-import java.util.regex.Pattern
 import net.unicoen.node.UniNode
 import net.unicoen.uniMapperGenerator.Atom
 import net.unicoen.uniMapperGenerator.Element
 import net.unicoen.uniMapperGenerator.Grammar
+import net.unicoen.uniMapperGenerator.LexerRule
 import net.unicoen.uniMapperGenerator.ParserRule
 import net.unicoen.uniMapperGenerator.RuleRef
+import net.unicoen.uniMapperGenerator.Terminal
+import net.unicoen.util.InvokingStateAnalyzer
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
-import net.unicoen.util.InvokingStateAnalyzer
 
 /**
  * Generates code from your model files on save.
@@ -24,7 +25,6 @@ import net.unicoen.util.InvokingStateAnalyzer
  */
 class UniMapperGeneratorGenerator implements IGenerator {
 	private String _grammarName
-	private int _indent;
 	private InvokingStateAnalyzer _analyzer;
 
 	override def doGenerate(Resource resource, IFileSystemAccess fsa) {
@@ -45,6 +45,10 @@ class UniMapperGeneratorGenerator implements IGenerator {
 		import java.io.FileInputStream
 		import java.util.ArrayList
 		import java.util.List
+		import net.unicoen.node.*
+		import net.unicoen.parser.«_grammarName»Lexer
+		import net.unicoen.parser.«_grammarName»Parser
+		import net.unicoen.parser.«_grammarName»BaseVisitor
 		import org.antlr.v4.runtime.ANTLRInputStream
 		import org.antlr.v4.runtime.CharStream
 		import org.antlr.v4.runtime.CommonTokenStream
@@ -53,10 +57,8 @@ class UniMapperGeneratorGenerator implements IGenerator {
 		import org.antlr.v4.runtime.tree.ParseTree
 		import org.antlr.v4.runtime.tree.RuleNode
 		import org.antlr.v4.runtime.tree.TerminalNode
-		import net.unicoen.parser.«_grammarName»Lexer
-		import net.unicoen.parser.«_grammarName»Parser
-		import net.unicoen.parser.«_grammarName»BaseVisitor
-		import net.unicoen.node.*
+		import org.antlr.v4.runtime.tree.TerminalNodeImpl
+		import org.eclipse.xtext.xbase.lib.Functions.Function1
 	'''
 
 	def generateMapper(Grammar g) '''
@@ -99,7 +101,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 				}
 			}
 		
-			def parseCore(CharStream chars, Function1<JavaParser, ParseTree> parseAction) {
+			def parseCore(CharStream chars, Function1<«_grammarName»Parser, ParseTree> parseAction) {
 				val lexer = new «_grammarName»Lexer(chars);
 				val tokens = new CommonTokenStream(lexer);
 				val parser = new «_grammarName»Parser(tokens);
@@ -137,9 +139,9 @@ class UniMapperGeneratorGenerator implements IGenerator {
 					tree.accept(this)
 				}
 			}
-			
 			«FOR r : g.rules.filter(ParserRule)»
 				«IF r.type != null»
+
 					«IF r.type.list.bind.endsWith("Literal")»
 						«r.makeLiteralMethod»
 					«ELSE»
@@ -211,11 +213,11 @@ class UniMapperGeneratorGenerator implements IGenerator {
 		«ENDIF»
 		ctx.children.forEach [
 			if (it instanceof RuleContext) {
-				switch (it as RuleContext).invokingState {
+				switch it.invokingState {
 					«FOR it : r.eAllContents.filter(Element).toList»
-						«IF it != null»
+						«IF it.op != null»
 							«IF it.op == "MERGE"»
-								«IF !r.type.list.bind.equals(it.referenceReturnType)»
+								«IF r.type.list.bind != it.referenceReturnType»
 									«die("Expected return type: " + r.type.list.bind + " actual type: " + it.referenceReturnType)»
 								«ENDIF»
 								case «r.getInvokingState(it)»: {
@@ -226,14 +228,15 @@ class UniMapperGeneratorGenerator implements IGenerator {
 								case «r.getInvokingState(it)»: {
 									bind = it.visit as «r.type.list.ret»
 								}
+							«ELSE»
+								«try {
+									val field = clazz.getField(it.op)
+									val fieldTypeName = field.genericType.typeName
+									r.makeCaseStatement(it, fieldTypeName, it.op, r.type.list.bind)
+								} catch (NoSuchFieldException e) {
+									die("No such Field: " + it.op)
+								}»
 							«ENDIF»
-							«try {
-								val field = clazz.getField(it.op)
-								val fieldTypeName = field.genericType.typeName
-								r.makeCaseStatement(it, fieldTypeName, it.op, r.type.list.bind)
-							} catch (NoSuchFieldException e) {
-								die("No such Field: " + it.op)
-							}»
 						«ENDIF»
 					«ENDFOR»
 				}
@@ -243,17 +246,23 @@ class UniMapperGeneratorGenerator implements IGenerator {
 			if (ret != null) {
 				return ret
 			}
-		«ENDIF»		
+		«ENDIF»
 		bind
 	'''
 
 	def getReferenceReturnType(Element r) {
-		val atom = r.body as Atom
-		if (atom.body instanceof RuleRef) {
-			val ref = atom.body as RuleRef
+		val ref = (r.body as Atom).body
+		if (ref instanceof RuleRef) {
 			if (ref.reference.type != null) {
 				ref.reference.type.list.bind
 			}
+		}
+	}
+
+	def getTerminalName(Element r) {
+		val ref = (r.body as Atom).body
+		if (ref instanceof Terminal) {
+			(ref.reference as LexerRule).name
 		}
 	}
 
@@ -279,100 +288,90 @@ class UniMapperGeneratorGenerator implements IGenerator {
 		}
 	}
 
-	def makeListMethodBody(ParserRule r, String itemClassName) {
-		val sb = new StringBuilder
-		sb.nl('''val list = new ArrayList<«itemClassName»>''')
-		if (r.hasItemClassField(itemClassName)) {
-			sb.nl('''val tNode = new «itemClassName»''')
-		}
-		sb.nl('''if (ctx.children != null) {''')
-		sb.nl('''ctx.children.forEach [''')
-		sb.nl('''if (it instanceof RuleContext) {''')
-		sb.nl('''switch (it as RuleContext).invokingState {''')
-		val list = r.eAllContents.filter(Element)
-		list.forEach [
-			if (it.op == null) {
-				return
-			}
-			if (it.op.equals("ADD")) {
-				sb.nl('''case «r.getInvokingState(it)»: {''')
-				sb.nl('''list += it.visit as «itemClassName»''')
-				sb.nl('''}''')
-				return
-			}
-			if (it.op.equals("APPEND")) {
-				if (!r.type.list.bind.equals(it.referenceReturnType)) {
-					die("Expected return type: " + r.type.list.bind + " actual type: " + it.referenceReturnType)
+	def makeListMethodBody(ParserRule r, String itemClassName) '''
+		val list = new ArrayList<«itemClassName»>
+		«IF r.hasItemClassField(itemClassName)»
+			val tNode = new «itemClassName»
+		«ENDIF»
+		if (ctx.children != null) {
+			ctx.children.forEach [
+				if (it instanceof RuleContext) {
+					switch it.invokingState {
+						«FOR it : r.eAllContents.filter(Element).toList»
+							«IF it.op != null»
+								«IF it.op == "ADD"»
+									case «r.getInvokingState(it)»: {
+										«val refType = it.referenceReturnType»
+										list += it.visit as «if (refType != null) refType else itemClassName»
+									}
+								«ELSEIF r.hasItemClassField(itemClassName)»
+									«try {
+										val clazz = Class.forName(itemClassName)
+										val field = clazz.getField(it.op)
+										val fieldTypeName = field.genericType.typeName
+										'''
+										case «r.getInvokingState(it)»: {
+											tNode.«field.name» = it.visit as «fieldTypeName»
+										}
+										'''
+									} catch (NoSuchFieldException e) {
+										die("No such Field: " + it.op)
+									} catch (ClassNotFoundException e) {
+										die("No such class: " + itemClassName)
+									}»
+								«ENDIF»
+							«ENDIF»
+						«ENDFOR»
+					}
 				}
-				sb.nl('''case «r.getInvokingState(it)»: {''')
-				sb.nl('''list += it.visit as «r.type.list.bind»''')
-				sb.nl('''}''')
-			}
-			if (r.hasItemClassField(itemClassName)) {
-				try {
-					val clazz = Class.forName(itemClassName)
-					val field = clazz.getField(it.op)
-					val fieldTypeName = field.genericType.typeName
-					sb.nl('''case «r.getInvokingState(it)»: {''')
-					sb.nl('''tNode.«field.name» = it.visit as «fieldTypeName»''')
-					sb.nl('''}''')
-				} catch (NoSuchFieldException e) {
-					die("No such Field: " + it.op)
-				} catch (ClassNotFoundException e) {
-					die("No such class: " + itemClassName)
-				}
-
-			}
-		]
-		sb.nl('''}''')
-		sb.nl('''}''')
-		sb.nl(''']''')
-		if(r.hasItemClassField(itemClassName)){
-			sb.nl('''list.forEach[''')
-			sb.nl('''it.merge(tNode)''')
-			sb.nl(''']''')
+			]
 		}
-		sb.nl('''}''')
-		sb.nl('''list''')
-		sb
-	}
+		«IF r.type.list.ret != null»
+			list.forEach [
+				it.merge(tNode)
+			]
+		«ENDIF»		
+		list
+	'''
 
-	def makeStringMethodBody(ParserRule r) {
-		val sb = new StringBuilder
-		sb.nl('''ctx.text''')
-		sb.toString
-	}
+	def makeStringMethodBody(ParserRule r) '''
+		ctx.text
+	'''
 
-	def makeLiteralMethod(ParserRule r) {
-		val sb = new StringBuilder
-		val methodName = "visit" + r.name.toCamelCase
-		sb.nl('''override public «methodName»(«_grammarName»Parser.«r.name.toCamelCase»Context ctx) {''')
-		sb.nl('''throw new RuntimeException("Unimplemented Method: «methodName»")''')
-		sb.nl('''}''')
-		sb.nl
-		sb.toString
-	}
+
+	def makeLiteralMethod(ParserRule r) '''
+		«val methodName = "visit" + r.name.toCamelCase»
+		override public «methodName»(«_grammarName»Parser.«r.name.toCamelCase»Context ctx) {
+			val text = ctx.children.findFirst[
+				if (it instanceof TerminalNodeImpl) {
+					«FOR it : r.eAllContents.filter(Element).toList»
+						«IF it.op != null»
+							«IF it.op == "value"»
+								if (it.symbol.type == «_grammarName»Parser.«it.terminalName») {
+									return true;
+								}
+							«ENDIF»
+						«ENDIF»
+					«ENDFOR»
+				}
+				return false;
+			].text
+			«IF r.type.list.bind == "UniIntLiteral"»
+				return new UniIntLiteral(Integer.parseInt(text))
+			«ELSEIF r.type.list.bind == "UniBoolLiteral"»
+				return new UniBoolLiteral("true" == text)
+			«ELSEIF r.type.list.bind == "UniDoubleLiteral"»
+				return new UniDoubleLiteral(Double.parseDouble(text))
+			«ELSEIF r.type.list.bind == "UniStringLiteral"»
+				return new UniStringLiteral(text.substring(1, text.length - 1))
+			«ELSE»
+				throw new RuntimeException("Unimplemented Method: «methodName»")
+			«ENDIF»
+		}
+	'''
 
 	def die(String message) {
 		throw new RuntimeException(message)
-	}
-
-	def nl(StringBuilder sb, CharSequence contents) {
-		if (Pattern.compile("[}\\]]").matcher(contents).find) {
-			_indent--;
-		}
-		for (var i = 0; i < _indent; i++) {
-			sb.append('\t')
-		}
-		if (Pattern.compile("[{\\[]").matcher(contents).find) {
-			_indent++;
-		}
-		sb.append(contents)
-		sb.nl
-	}
-
-	def nl(StringBuilder sb) {
-		sb.append(System.lineSeparator)
 	}
 
 	def getInvokingState(ParserRule r, Element obj) {
