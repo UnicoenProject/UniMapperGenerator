@@ -34,8 +34,6 @@ class UniMapperGeneratorValidator extends AbstractUniMapperGeneratorValidator {
 					}
 					case "ADD":
 						return
-					case "APPEND":
-						return
 					case "RETURN":
 						return
 					case "MERGE":
