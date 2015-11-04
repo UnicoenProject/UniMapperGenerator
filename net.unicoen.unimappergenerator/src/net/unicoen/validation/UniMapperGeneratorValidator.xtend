@@ -25,31 +25,25 @@ class UniMapperGeneratorValidator extends AbstractUniMapperGeneratorValidator {
 			if (it.op == null) {
 				return
 			}
-			val ruleName = ((it.body as Atom).body as RuleRef).reference.name
-			switch it.op {
-				case "TODO": {
-					warning('not Implemented: ' + ruleName + ' in ' + r.name, it, Literals.ELEMENT__OP)
-				}
-				case "ADD":
-					r.checkAddTarget(it)
-				case "APPEND":
-					return
-				case "RETURN":
-					return
-				case "MERGE":
-					r.checkMergeTarget(it, ruleName)
-				default: {
-					r.checkField(it)
+			val body = (it.body as Atom).body
+			if (body instanceof RuleRef) {
+				val ruleName = body.reference.name
+				switch it.op {
+					case "TODO": {
+						warning('not Implemented: ' + ruleName + ' in ' + r.name, it, Literals.ELEMENT__OP)
+					}
+					case "ADD":
+						return
+					case "RETURN":
+						return
+					case "MERGE":
+						r.checkMergeTarget(it, ruleName)
+					default: {
+						r.checkField(it)
+					}
 				}
 			}
 		]
-
-	}
-
-	def checkAddTarget(ParserRule rule, Element elem) {
-		if (!rule.type.list.bind.contains("List")) {
-			error('Type ' + rule.type.list.bind + ' is not List.', elem, Literals.UNICOEN_TYPE_LIST__BIND)
-		}
 	}
 
 	def checkMergeTarget(ParserRule rule, Element elem, String ruleName) {
