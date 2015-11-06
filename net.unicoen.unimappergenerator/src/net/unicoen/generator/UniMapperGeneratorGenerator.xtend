@@ -390,7 +390,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 
 	def hasField(String itemClass, String fieldName) {
 		try {
-			val clazz = Class.forName(itemClass)
+			val clazz = Class.forName(UniNode.package.name + '.' + itemClass)
 			clazz.getField(fieldName)
 		} catch (Exception e) {
 			return false

@@ -10,6 +10,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
+import net.unicoen.generator.UniMapperGeneratorGenerator
 
 @RunWith(XtextRunner)
 @InjectWith(UniMapperGeneratorInjectorProvider)
@@ -31,5 +32,12 @@ literal2
 	;
 		'''.parse
 		assertEquals(2, grammars.rules.size)
+	}
+
+	@Test def void testHasField() {
+		val generator = new UniMapperGeneratorGenerator
+		assertTrue(generator.hasField("UniClassDec", "className"))
+		assertTrue(generator.hasField("UniFieldDec", "value"))
+		assertFalse(generator.hasField("UniBoolLiteral", "block"))
 	}
 }
