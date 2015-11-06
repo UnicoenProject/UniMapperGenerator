@@ -71,28 +71,16 @@ literal
 	|	nullLiteral
 	;
 integerLiteral => UniIntLiteral
-	:	integerLiteralValue$value
-	;
-integerLiteralValue
-	:	IntegerLiteral
+	:	IntegerLiteral$value
 	;
 floatingPointLiteral => UniDoubleLiteral
-	:	floatingPointLiteralValue$value
-	;
-floatingPointLiteralValue
-	:	FloatingPointLiteral
+	:	FloatingPointLiteral$value
 	;
 booleanLiteral => UniBoolLiteral
-	:	booleanLiteralValue
-	;
-booleanLiteralValue
-	:	BooleanLiteral
+	:	BooleanLiteral$value
 	;
 stringLiteral => UniStringLiteral
-	:	stringLiteralValue
-	;
-stringLiteralValue
-	:	StringLiteral
+	:	StringLiteral$value
 	;
 characterLiteral
 	:	CharacterLiteral
@@ -372,7 +360,7 @@ classMemberDeclaration
 	;
 
 fieldDeclaration => List<UniFieldDec>
-	:	fieldModifiers$modifiers unannType$type fieldVariableDeclaratorList$APPEND ';'
+	:	fieldModifiers$modifiers unannType$type fieldVariableDeclaratorList$ADD ';'
 	;
 fieldModifiers =>List<String>
 	:	fieldModifier*$ADD
@@ -492,7 +480,7 @@ methodDeclaration => UniMethodDec
 	:	methodModifier*$modifiers methodHeader$MERGE methodBody$block
 	;
 
-methodModifier => List<String>
+methodModifier => String
 	:	annotation
 	|	'public'
 	|	'protected'
@@ -524,7 +512,7 @@ methodName => String
 	;
 
 formalParameterList => List<UniArg>
-	:	formalParameters$APPEND ',' lastFormalParameter$ADD
+	:	formalParameters$ADD ',' lastFormalParameter$ADD
 	|	lastFormalParameter$ADD
 	;
 
