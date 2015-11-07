@@ -178,7 +178,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 	def makeCaseStatement(ParserRule r, Element obj, String fieldTypeName, String fieldName, String returnType) {
 		val rule = obj.eAllContents.filter(RuleRef).head
 		if (rule == null) {
-			die("Unreach")
+			die("rule must not to be null.")
 		}
 		val ruleName = rule.reference.name.toCamelCase
 		'''
@@ -207,14 +207,12 @@ class UniMapperGeneratorGenerator implements IGenerator {
 
 	def makeMethodBody(ParserRule r, Class<?> clazz) '''
 		val bind = new «r.type.list.bind»
-		var lastInvokingState = -1
 		«IF r.type.list.ret != null»
 			val ret = new «r.type.list.ret»
 		«ENDIF»
 		for (it : ctx.children) {
 			if (it instanceof RuleContext) {
-				lastInvokingState = it.invokingState
-				switch lastInvokingState {
+				switch it.invokingState {
 					«FOR it : r.eAllContents.filter(Element).toList»
 						«val atom = it.body»
 						«IF atom instanceof Atom»
@@ -247,36 +245,27 @@ class UniMapperGeneratorGenerator implements IGenerator {
 					«ENDFOR»
 				}
 			} else if (it instanceof TerminalNode) {
-				switch lastInvokingState {
-					«var lastInvokingState = -1»
-					«FOR it : r.eAllContents.filter(Element).toList»
-						«val atom = it.body»
-						«IF atom instanceof Atom»
-							«val ref = atom.body»
-							«IF ref instanceof RuleRef»
-								«{
-									lastInvokingState = r.getInvokingState(it)
-									null	// to prevent from writing lastInvokingState
-								}»
-							«ELSEIF ref instanceof Terminal»
-								«IF it.op != null»
-									case «lastInvokingState»: {
-										«try {
-											clazz.getField(it.op)
-											'''
-											if (it.symbol.type == «_grammarName»Parser.«it.terminalName») {
-												bind.«it.op» = it.text
-											}
-											'''
-										} catch (NoSuchFieldException e) {
-											die("No such Field: " + it.op)
-										}»
+				«var firstIf = true»
+				«FOR it : r.eAllContents.filter(Element).toList»
+					«val atom = it.body»
+					«IF atom instanceof Atom»
+						«val ref = atom.body»
+						«IF ref instanceof Terminal»
+							«IF it.op != null»
+								«try {
+									clazz.getField(it.op)
+									'''
+									«if (firstIf) {firstIf = false; ""} else "else "»if (it.symbol.type == «_grammarName»Parser.«it.terminalName») {
+										bind.«it.op» = it.text
 									}
-								«ENDIF»
+									'''
+								} catch (NoSuchFieldException e) {
+									die("No such Field: " + it.op)
+								}»
 							«ENDIF»
 						«ENDIF»
-					«ENDFOR»
-				}
+					«ENDIF»
+				«ENDFOR»
 			}
 		}
 		«IF r.type.list.ret != null»
