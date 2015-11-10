@@ -10,7 +10,8 @@ import net.unicoen.uniMapperGenerator.RuleRef
 import java.util.ArrayList
 
 class InvokingStateAnalyzer {
-	private val invokingStates = new HashMap<String, List<InvokingState>>
+	private val invokingStates = new HashMap<String, List<Integer>>
+	private val invokingStateIndexes = new HashMap<String, Integer>
 
 	public new(String code, Grammar g) {
 		g.eAllContents.filter(ParserRule).forEach [ rule |
@@ -19,23 +20,25 @@ class InvokingStateAnalyzer {
 			}
 			val ruleName = rule.name
 			var pos = code.indexOf('''«ruleName»() throws''')
-			val list = new ArrayList<InvokingState>
+			val list = new ArrayList<Integer>
 			for (element : rule.eAllContents.filter(Element).toList) {
-				if (element.op != null) {
-					val body = (element.body as Atom).body
-					if (body instanceof RuleRef) {
-						val refName = body.reference.name
+				val atom = element.body
+				if (atom instanceof Atom) {
+					val ruleRef = atom.body
+					if (ruleRef instanceof RuleRef) {
+						val refName = ruleRef.reference.name
 						pos = code.indexOf('''«refName»()''', pos)
 						val start = code.lastIndexOf('(', pos)
 						val last = code.indexOf(')', start)
 						val str = code.substring(start + 1, last)
 						val state = Integer.parseInt(str)
-						list.add(new InvokingState(body.reference.name, state))
+						list.add(state)
 						pos++
 					}
 				}
 			}
 			invokingStates.put(ruleName, list)
+			invokingStateIndexes.put(ruleName, 0)
 		]
 	}
 
@@ -46,13 +49,13 @@ class InvokingStateAnalyzer {
 			if (b instanceof RuleRef) {
 				val ruleName = rule.name
 				val states = invokingStates.get(ruleName)
-				for (state : states) {
-					if (state.isName(b.reference.name)) {
-						states.remove(state)
-						return state.invokingState
-					}
+				if (!states.isEmpty) {
+					val index = invokingStateIndexes.get(ruleName)
+					invokingStateIndexes.put(ruleName, (index + 1) % states.length)
+					return states.get(index)
 				}
 			}
 		}
+		throw new Exception("Cannot use getInvokingState for not RuleRef objects")
 	}
 }
