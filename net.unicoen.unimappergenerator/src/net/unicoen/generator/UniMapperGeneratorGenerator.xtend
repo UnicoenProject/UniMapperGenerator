@@ -326,7 +326,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 				}
 			]
 		}
-		«IF r.type.list.ret != null»
+		«IF r.hasItemClassField(itemClassName)»
 			list.forEach [
 				it.merge(tNode)
 			]
