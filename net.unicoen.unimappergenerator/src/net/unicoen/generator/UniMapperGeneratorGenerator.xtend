@@ -306,7 +306,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 									}
 								«ELSEIF r.hasItemClassField(itemClassName)»
 									«try {
-										val clazz = Class.forName(itemClassName)
+										val clazz = Class.forName(UniNode.package.name + '.' + itemClassName)
 										val field = clazz.getField(it.op)
 										val fieldTypeName = field.genericType.typeName
 										'''
@@ -317,7 +317,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 									} catch (NoSuchFieldException e) {
 										die("No such Field: " + it.op)
 									} catch (ClassNotFoundException e) {
-										die("No such class: " + itemClassName)
+										die("No such class: " + UniNode.package.name + '.' + itemClassName)
 									}»
 								«ENDIF»
 							«ENDIF»
