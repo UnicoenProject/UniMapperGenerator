@@ -71,28 +71,16 @@ literal
 	|	nullLiteral
 	;
 integerLiteral=>UniIntLiteral
-	:	integerLiteralValue$value
-	;
-integerLiteralValue
-	:	IntegerLiteral
+	:	IntegerLiteral$value
 	;
 floatingPointLiteral=>UniDoubleLiteral
-	:	floatingPointLiteralValue$value
-	;
-floatingPointLiteralValue
-	:	FloatingPointLiteral
+	:	FloatingPointLiteral$value
 	;
 booleanLiteral=>UniBoolLiteral
-	:	booleanLiteralValue
-	;
-booleanLiteralValue
-	:	BooleanLiteral
+	:	BooleanLiteral$value
 	;
 stringLiteral=>UniStringLiteral
-	:	stringLiteralValue
-	;
-stringLiteralValue
-	:	StringLiteral
+	:	StringLiteral$value
 	;
 	
 characterLiteral
@@ -161,7 +149,7 @@ classType_lfno_classOrInterfaceType
 	:	annotation* Identifier typeArguments?
 	;
 
-interfaceType
+interfaceType=>String
 	:	classType
 	;
 
@@ -296,7 +284,7 @@ staticImportOnDemandDeclaration
 
 typeDeclaration => UniClassDec
 	:	classDeclaration$MERGE
-	|	interfaceDeclaration
+	|	interfaceDeclaration$MERGE
 	|	';'
 	;
 
@@ -348,31 +336,31 @@ superinterfaces => List<String>
 	:	'implements' interfaceTypeList$ADD
 	;
 
-interfaceTypeList => String
-	:	interfaceType (',' interfaceType)*
+interfaceTypeList => List<String>
+	:	interfaceType$ADD (',' interfaceType$ADD)*
 	;
 
 classBody => List<UniMemberDec>
 	:	'{' classBodyDeclaration*$ADD '}'
 	;
 
-classBodyDeclaration
-	:	classMemberDeclaration
+classBodyDeclaration => List<UniMemberDec>
+	:	classMemberDeclaration$ADD
 	|	instanceInitializer
 	|	staticInitializer
-	|	constructorDeclaration
+	|	constructorDeclaration$ADD
 	;
 
-classMemberDeclaration
-	:	fieldDeclaration
-	|	methodDeclaration
+classMemberDeclaration => List<UniMemberDec>
+	:	fieldDeclaration$ADD
+	|	methodDeclaration$ADD
 	|	classDeclaration
 	|	interfaceDeclaration
 	|	';'
 	;
 
 fieldDeclaration => List<UniFieldDec>
-	:	fieldModifiers$modifiers unannType$type fieldVariableDeclaratorList$APPEND ';'
+	:	fieldModifiers$modifiers unannType$type variableDeclaratorList$ADD ';'
 	;
 fieldModifiers =>List<String>
 	:	fieldModifier*$ADD
@@ -388,38 +376,16 @@ fieldModifier => String
 	|	'transient'
 	|	'volatile'
 	;
-	
-	
-fieldVariableDeclaratorList=>List<UniFieldDec>
-	:	fieldVariableDeclarator$ADD (',' fieldVariableDeclarator$ADD)*
-	;
-fieldVariableDeclarator=>UniFieldDec
-	:	fieldVariableDeclaratorId$name ('=' fieldVariableInitializer$value)?
-	;
-fieldVariableDeclaratorId=>String
-	:	Identifier dims?
-	;
-fieldVariableInitializer
-	:	fieldAssignmentExpression
-	|	fieldArrayInitializer
-	;
-fieldAssignmentExpression
-	:	expression	//mainly use assignmentExpression
-	;
-fieldArrayInitializer
-	:	arrayInitializer	//list of assignmentExpressions
+
+variableDeclaratorList => List<UniFieldDec>
+	:	variableDeclarator$ADD (',' variableDeclarator$ADD)*
 	;
 
-
-variableDeclaratorList
-	:	variableDeclarator (',' variableDeclarator)*
+variableDeclarator=>UniFieldDec
+	:	variableDeclaratorId$name ('=' variableInitializer$value)?
 	;
 
-variableDeclarator
-	:	variableDeclaratorId ('=' variableInitializer)?
-	;
-
-variableDeclaratorId
+variableDeclaratorId=>String
 	:	Identifier dims?
 	;
 
@@ -489,7 +455,10 @@ unannArrayType
 	;
 
 methodDeclaration => UniMethodDec
-	:	methodModifier*$modifiers methodHeader$MERGE methodBody$block
+	:	methodModifiers$modifiers methodHeader$MERGE methodBody$block
+	;
+methodModifiers => List<String>
+	:	methodModifier*
 	;
 
 methodModifier => String
@@ -524,7 +493,7 @@ methodName => String
 	;
 
 formalParameterList => List<UniArg>
-	:	formalParameters$APPEND ',' lastFormalParameter$ADD
+	:	formalParameters$ADD ',' lastFormalParameter$ADD
 	|	lastFormalParameter$ADD
 	;
 
@@ -585,22 +554,22 @@ staticInitializer
 	:	'static' block
 	;
 
-constructorDeclaration
-	:	constructorModifier* constructorDeclarator throws_? constructorBody
+constructorDeclaration=>UniMethodDec
+	:	constructorModifier*$modifiers constructorDeclarator$MERGE throws_? constructorBody$block
 	;
 
-constructorModifier
+constructorModifier=>List<String>
 	:	annotation
 	|	'public'
 	|	'protected'
 	|	'private'
 	;
 
-constructorDeclarator
-	:	typeParameters? simpleTypeName '(' formalParameterList? ')'
+constructorDeclarator=>UniMethodDec
+	:	typeParameters? simpleTypeName$methodName '(' formalParameterList?$args ')'
 	;
 
-simpleTypeName
+simpleTypeName=>String
 	:	Identifier
 	;
 
@@ -643,16 +612,22 @@ enumBodyDeclarations
  * Productions from §9 (Interfaces)
  */
 
-interfaceDeclaration
-	:	normalInterfaceDeclaration
+interfaceDeclaration=>UniClassDec
+	:	normalInterfaceDeclaration$MERGE
 	|	annotationTypeDeclaration
 	;
 
-normalInterfaceDeclaration
-	:	interfaceModifier* 'interface' Identifier typeParameters? extendsInterfaces? interfaceBody
+normalInterfaceDeclaration => UniClassDec
+	:	interfaceModifiers$modifiers 'interface' interfaceName$className typeParameters? extendsInterfaces?$interfaces interfaceBody$members
+	;
+interfaceModifiers => List<String>
+	:	interfaceModifier*$ADD
+	;
+interfaceName => String
+	:	Identifier
 	;
 
-interfaceModifier
+interfaceModifier => String
 	:	annotation
 	|	'public'
 	|	'protected'
@@ -662,38 +637,44 @@ interfaceModifier
 	|	'strictfp'
 	;
 
-extendsInterfaces
-	:	'extends' interfaceTypeList
+extendsInterfaces => List<String>
+	:	'extends' interfaceTypeList$ADD
 	;
 
-interfaceBody
-	:	'{' interfaceMemberDeclaration* '}'
+interfaceBody => List<UniMemberDec>
+	:	'{' interfaceMemberDeclaration*$ADD '}'
 	;
 
-interfaceMemberDeclaration
-	:	constantDeclaration
-	|	interfaceMethodDeclaration
+interfaceMemberDeclaration => List<UniMemberDec>
+	:	constantDeclaration$ADD
+	|	interfaceMethodDeclaration$ADD
 	|	classDeclaration
 	|	interfaceDeclaration
 	|	';'
 	;
 
-constantDeclaration
-	:	constantModifier* unannType variableDeclaratorList ';'
+constantDeclaration => List<UniFieldDec>
+	:	constantModifiers$modifiers unannType$type variableDeclaratorList$ADD ';'
+	;
+constantModifiers => List<String>
+	:	constantModifier*$ADD
 	;
 
-constantModifier
+constantModifier => String
 	:	annotation
 	|	'public'
 	|	'static'
 	|	'final'
 	;
 
-interfaceMethodDeclaration
-	:	interfaceMethodModifier* methodHeader methodBody
+interfaceMethodDeclaration=>UniMethodDec
+	:	interfaceMethodModifiers$modifiers methodHeader$MERGE methodBody$block
+	;
+interfaceMethodModifiers => List<String>
+	:	interfaceMethodModifier*$ADD
 	;
 
-interfaceMethodModifier
+interfaceMethodModifier=>String
 	:	annotation
 	|	'public'
 	|	'abstract'
@@ -776,12 +757,12 @@ singleElementAnnotation
  * Productions from §10 (Arrays)
  */
 
-arrayInitializer
-	:	'{' variableInitializerList? ','? '}'
+arrayInitializer=>UniArray    //UniArrayLiteral
+	:	'{' variableInitializerList?$items ','? '}'
 	;
 
-variableInitializerList
-	:	variableInitializer (',' variableInitializer)*
+variableInitializerList=>List<UniExpr>
+	:	variableInitializer$ADD (',' variableInitializer$ADD)*
 	;
 
 /*
