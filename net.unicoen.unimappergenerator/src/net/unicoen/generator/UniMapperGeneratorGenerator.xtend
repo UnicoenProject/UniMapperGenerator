@@ -336,7 +336,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 												list += it.visit as «if (refType != null) refType else itemClassName»
 											«ELSEIF r.hasItemClassField(itemClassName)»
 												«try {
-													val clazz = Class.forName(itemClassName)
+													val clazz = Class.forName(UniNode.package.name + '.' + itemClassName)
 													val field = clazz.getField(it.op)
 													val fieldTypeName = field.genericType.typeName
 													'''
@@ -357,7 +357,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 				}
 			}
 		}
-		«IF r.type.list.ret != null»
+		«IF r.hasItemClassField(itemClassName)»
 			list.forEach [
 				it.merge(tNode)
 			]
@@ -421,7 +421,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 
 	def hasField(String itemClass, String fieldName) {
 		try {
-			val clazz = Class.forName(itemClass)
+			val clazz = Class.forName(UniNode.package.name + '.' + itemClass)
 			clazz.getField(fieldName)
 		} catch (Exception e) {
 			return false
