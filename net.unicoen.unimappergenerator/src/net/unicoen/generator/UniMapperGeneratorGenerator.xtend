@@ -228,7 +228,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 											val child = it.visit as «r.type.list.bind»
 											bind.merge(child)
 										«ELSEIF it.op == "RETURN"»
-											bind = it.visit as «r.type.list.ret»
+											return it.visit
 										«ELSE»
 											«try {
 												val field = clazz.getField(it.op)
