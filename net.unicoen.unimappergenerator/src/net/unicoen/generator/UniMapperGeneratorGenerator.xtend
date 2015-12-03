@@ -333,7 +333,16 @@ class UniMapperGeneratorGenerator implements IGenerator {
 										case «invokingState»: {
 											«IF it.op == "ADD"»
 												«val refType = it.referenceReturnType»
-												list += it.visit as «if (refType != null) refType else itemClassName»
+												«IF refType != null»
+													list += it.visit as «refType»
+												«ELSE»
+													val ret = it.visit
+													if (ret instanceof «itemClassName») {
+														list += ret as «itemClassName»
+													} else {
+														list += ret as List<«itemClassName»>
+													}
+												«ENDIF»
 											«ELSEIF r.hasItemClassField(itemClassName)»
 												«try {
 													val clazz = Class.forName(UniNode.package.name + '.' + itemClassName)
