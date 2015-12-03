@@ -28,9 +28,9 @@ class InvokingStateAnalyzer {
 					if (ruleRef instanceof RuleRef) {
 						val refName = ruleRef.reference.name
 						pos = code.indexOf('''«refName»()''', pos)
-						val start = code.lastIndexOf('(', pos)
+						val start = code.lastIndexOf("setState(", pos)
 						val last = code.indexOf(')', start)
-						val str = code.substring(start + 1, last)
+						val str = code.substring(start + 9, last)
 						val state = Integer.parseInt(str)
 						list.add(state)
 						pos++
