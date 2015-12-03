@@ -234,7 +234,7 @@ packageOrTypeName
 	;
 
 expressionName=>UniIdent
-	:	Identifier
+	:	Identifier$name
 	|	ambiguousName '.' Identifier
 	;
 
@@ -539,7 +539,7 @@ exceptionType
 	;
 
 methodBody=>UniBlock
-	:	block$body
+	:	block$MERGE
 	|	';'
 	;
 
@@ -766,8 +766,8 @@ variableInitializerList=>List<UniExpr>
  * Productions from §14 (Blocks and Statements)
  */
 
-block => List<UniExpr>
-	:	'{' blockStatements?$ADD '}'
+block => UniBlock
+	:	'{' blockStatements?$body '}'
 	;
 
 blockStatements => List<UniExpr>
@@ -832,8 +832,8 @@ labeledStatementNoShortIf
 	:	Identifier ':' statementNoShortIf
 	;
 
-expressionStatement
-	:	statementExpression ';'
+expressionStatement => UniBinOp  //後で消すーアブストラクトではないインスタンスを作る為に書くだけ
+	:	statementExpression$RETURN ';'
 	;
 
 statementExpression
@@ -1263,7 +1263,7 @@ leftHandSide
 	|	arrayAccess
 	;
 
-assignmentOperator
+assignmentOperator=>String
 	:	'='
 	|	'*='
 	|	'/='
@@ -1786,7 +1786,7 @@ URSHIFT_ASSIGN : '>>>=';
 
 // §3.8 Identifiers (must appear after all keywords in the grammar)
 
-Identifier
+Identifier=>String
 	:	JavaLetter JavaLetterOrDigit*
 	;
 
