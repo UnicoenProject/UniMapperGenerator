@@ -344,8 +344,8 @@ classBody => List<UniMemberDec>
 	:	'{' classBodyDeclaration*$ADD '}'
 	;
 
-classBodyDeclaration
-	:	classMemberDeclaration
+classBodyDeclaration => List<UniMemberDec>
+	:	classMemberDeclaration $ ADD
 	|	instanceInitializer
 	|	staticInitializer
 	|	constructorDeclaration
