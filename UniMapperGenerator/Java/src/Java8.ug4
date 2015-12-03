@@ -233,7 +233,7 @@ packageOrTypeName
 	|	packageOrTypeName '.' Identifier
 	;
 
-expressionName
+expressionName=>UniIdent
 	:	Identifier
 	|	ambiguousName '.' Identifier
 	;
@@ -455,10 +455,7 @@ unannArrayType
 	;
 
 methodDeclaration => UniMethodDec
-	:	methodModifiers$modifiers methodHeader$MERGE methodBody$block
-	;
-methodModifiers => List<String>
-	:	methodModifier*
+	:	methodModifier*$modifiers methodHeader$MERGE methodBody$block
 	;
 
 methodModifier => String
@@ -541,8 +538,8 @@ exceptionType
 	|	typeVariable
 	;
 
-methodBody
-	:	block
+methodBody=>UniBlock
+	:	block$body
 	|	';'
 	;
 
@@ -558,7 +555,7 @@ constructorDeclaration=>UniMethodDec
 	:	constructorModifier*$modifiers constructorDeclarator$MERGE throws_? constructorBody$block
 	;
 
-constructorModifier=>List<String>
+constructorModifier=>String
 	:	annotation
 	|	'public'
 	|	'protected'
@@ -769,12 +766,12 @@ variableInitializerList=>List<UniExpr>
  * Productions from §14 (Blocks and Statements)
  */
 
-block
-	:	'{' blockStatements? '}'
+block => List<UniExpr>
+	:	'{' blockStatements?$ADD '}'
 	;
 
-blockStatements
-	:	blockStatement blockStatement*
+blockStatements => List<UniExpr>
+	:	blockStatement$ADD blockStatement*$ADD
 	;
 
 blockStatement
@@ -849,8 +846,8 @@ statementExpression
 	|	classInstanceCreationExpression
 	;
 
-ifThenStatement
-	:	'if' '(' expression ')' statement
+ifThenStatement=>UniIf
+	:	'if' '(' expression$cond ')' statement$trueStatement
 	;
 
 ifThenElseStatement
@@ -1256,8 +1253,8 @@ assignmentExpression
 	|	assignment
 	;
 
-assignment
-	:	leftHandSide assignmentOperator expression
+assignment=>UniBinOp
+	:	leftHandSide$left assignmentOperator$operator expression$right
 	;
 
 leftHandSide
