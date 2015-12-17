@@ -198,10 +198,7 @@ ElementOption: // This format indicates the default element option
 	qualifiedId=QualifiedId | id=Id assign='=' value=OptionValue;
 
 UnicoenTypeDec:
-	'=>' list=UnicoenTypeList;
-
-UnicoenTypeList:
-	bind=UnicoenTypeIdentifiers (',' ret=UnicoenTypeIdentifiers)?;
+	'=>' name=UnicoenTypeIdentifiers;
 
 UnicoenTypeIdentifiers:
 	Id ('<' UnicoenTypeIdentifiers '>')?;

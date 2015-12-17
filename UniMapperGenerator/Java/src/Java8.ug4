@@ -360,7 +360,7 @@ classMemberDeclaration => List<UniMemberDec>
 	;
 
 fieldDeclaration => List<UniFieldDec>
-	:	fieldModifiers$modifiers unannType$type variableDeclaratorList$ADD ';'
+	:	fieldModifiers$modifiers unannType$type variableDeclaratorList$MERGE ';'
 	;
 fieldModifiers =>List<String>
 	:	fieldModifier*$ADD
@@ -615,7 +615,7 @@ interfaceDeclaration=>UniClassDec
 	;
 
 normalInterfaceDeclaration => UniClassDec
-	:	interfaceModifiers$modifiers 'interface' interfaceName$className typeParameters? extendsInterfaces?$interfaces interfaceBody$members
+	:	interfaceModifiers$modifiers 'interface' interfaceName$className typeParameters? extendsInterfaces?$superClass interfaceBody$members
 	;
 interfaceModifiers => List<String>
 	:	interfaceModifier*$ADD
@@ -651,7 +651,7 @@ interfaceMemberDeclaration => List<UniMemberDec>
 	;
 
 constantDeclaration => List<UniFieldDec>
-	:	constantModifiers$modifiers unannType$type variableDeclaratorList$ADD ';'
+	:	constantModifiers$modifiers unannType$type variableDeclaratorList$MERGE ';'
 	;
 constantModifiers => List<String>
 	:	constantModifier*$ADD

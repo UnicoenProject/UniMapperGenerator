@@ -47,25 +47,25 @@ class UniMapperGeneratorValidator extends AbstractUniMapperGeneratorValidator {
 	}
 
 	def checkMergeTarget(ParserRule rule, Element elem, String ruleName) {
-		if (!rule.type.list.bind.equals(elem.referenceReturnType)) {
+		if (!rule.type.name.equals(elem.referenceReturnType)) {
 			val sb = new StringBuilder
 			sb.append('Type mismatch: The return type of ').append(rule.name).append(' is ').append(
-				rule.type.list.bind).append(' but The return type of ').append(ruleName).append(' is ').append(
+				rule.type.name).append(' but The return type of ').append(ruleName).append(' is ').append(
 				elem.referenceReturnType).append('.')
 			error(sb.toString, elem, Literals.ELEMENT__BODY)
 		}
 	}
 
 	def checkField(ParserRule r, Element elem) {
-		val packagePrefix = if(r.type.list.bind.startsWith('Uni')) UniNode.package.name + '.'
+		val packagePrefix = if(r.type.name.startsWith('Uni')) UniNode.package.name + '.'
 		try {
-			val clazz = if(packagePrefix != null) Class.forName(packagePrefix + r.type.list.bind)
+			val clazz = if(packagePrefix != null) Class.forName(packagePrefix + r.type.name)
 			try {
 				clazz.getField(elem.op)
 			} catch (NoSuchFieldException e) {
 				val sb = new StringBuilder
 				sb.append('Field ').append(elem.op).append(' is not exist. The fields of class ').append(
-					r.type.list.bind).append(' are')
+					r.type.name).append(' are')
 				clazz.fields.forEach [
 					sb.append(' ').append(it.name)
 					sb.append('(').append(it.type.name).append(')')
@@ -77,7 +77,7 @@ class UniMapperGeneratorValidator extends AbstractUniMapperGeneratorValidator {
 				error(sb.toString, elem, Literals.ELEMENT__OP)
 			}
 		} catch (ClassNotFoundException e) {
-			error("No such class: " + r.type.list.bind, r.type, Literals.UNICOEN_TYPE_DEC__LIST)
+			error("No such class: " + r.type.name, r.type, Literals.UNICOEN_TYPE_DEC__NAME)
 		}
 	}
 
@@ -87,7 +87,7 @@ class UniMapperGeneratorValidator extends AbstractUniMapperGeneratorValidator {
 			if (atom.body instanceof RuleRef) {
 				val ref = atom.body as RuleRef
 				if (ref.reference.type != null) {
-					ref.reference.type.list.bind
+					ref.reference.type.name
 				}
 			}
 		}
