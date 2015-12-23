@@ -27,7 +27,7 @@ class InvokingStateAnalyzer {
 					val ruleRef = atom.body
 					if (ruleRef instanceof RuleRef) {
 						val refName = ruleRef.reference.name
-						pos = code.indexOf('''«refName»()''', pos)
+						pos = code.indexOf('''«refName»(''', pos)
 						val start = code.lastIndexOf("setState(", pos)
 						val last = code.indexOf(')', start)
 						val str = code.substring(start + 9, last)

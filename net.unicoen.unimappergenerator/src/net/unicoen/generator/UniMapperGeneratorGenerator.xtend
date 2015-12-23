@@ -3,7 +3,6 @@
  */
 package net.unicoen.generator
 
-import com.google.common.collect.Lists
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import net.unicoen.node.UniNode
@@ -18,7 +17,6 @@ import net.unicoen.util.InvokingStateAnalyzer
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
-import java.util.List
 import com.google.common.collect.Sets
 
 /**
@@ -243,11 +241,11 @@ class UniMapperGeneratorGenerator implements IGenerator {
 				}
 				clazz.cast(temp)
 			}
+		
 			«FOR r : g.rules.filter(ParserRule)»
-
 				«IF r.type != null && r.type.name.endsWith("Literal")»
 					«r.makeLiteralMethod»
-				«ELSE»
+				«ELSEIF r.type != null && r.eAllContents.filter(Element).findFirst[it.op != null] != null»
 					«r.makeVisitMethod»
 				«ENDIF»
 			«ENDFOR»
@@ -277,6 +275,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 					«r.makeStringMethodBody»
 				«ENDIF»
 			}
+			
 		'''
 	}
 
@@ -486,6 +485,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 				throw new RuntimeException("Unimplemented Method: «methodName»")
 			«ENDIF»
 		}
+		
 	'''
 
 	def die(String message) {

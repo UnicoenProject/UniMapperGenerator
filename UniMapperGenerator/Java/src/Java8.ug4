@@ -1278,9 +1278,9 @@ assignmentOperator=>String
 	|	'|='
 	;
 
-conditionalExpression
-	:	conditionalOrExpression
-	|	conditionalOrExpression '?' expression ':' conditionalExpression
+conditionalExpression => UniTernaryOp
+	:	conditionalOrExpression$RETURN
+	|	conditionalOrExpression$cond '?' expression$trueExpr ':' conditionalExpression$falseExpr
 	;
 
 conditionalOrExpression
