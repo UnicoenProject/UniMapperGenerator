@@ -98,7 +98,7 @@ type
 	|	referenceType
 	;
 
-primitiveType
+primitiveType=>String
 	:	annotation* numericType
 	|	annotation* 'boolean'
 	;
@@ -127,7 +127,7 @@ referenceType
 	|	arrayType
 	;
 
-classOrInterfaceType
+classOrInterfaceType=>String
 	:	(	classType_lfno_classOrInterfaceType
 		|	interfaceType_lfno_classOrInterfaceType
 		)
@@ -850,12 +850,12 @@ ifThenStatement=>UniIf
 	:	'if' '(' expression$cond ')' statement$trueStatement
 	;
 
-ifThenElseStatement
-	:	'if' '(' expression ')' statementNoShortIf 'else' statement
+ifThenElseStatement=>UniIf
+	:	'if' '(' expression$cond ')' statementNoShortIf$trueStatement 'else' statement$falseStatement
 	;
 
-ifThenElseStatementNoShortIf
-	:	'if' '(' expression ')' statementNoShortIf 'else' statementNoShortIf
+ifThenElseStatementNoShortIf=>UniIf
+	:	'if' '(' expression$cond ')' statementNoShortIf$trueStatement 'else' statementNoShortIf$falseStatement
 	;
 
 assertStatement
@@ -889,12 +889,12 @@ enumConstantName
 	:	Identifier
 	;
 
-whileStatement
-	:	'while' '(' expression ')' statement
+whileStatement=>UniWhile
+	:	'while' '(' expression$cond ')' statement$statement
 	;
 
-whileStatementNoShortIf
-	:	'while' '(' expression ')' statementNoShortIf
+whileStatementNoShortIf=>UniWhile
+	:	'while' '(' expression$cond ')' statementNoShortIf$statement
 	;
 
 doStatement
@@ -911,12 +911,12 @@ forStatementNoShortIf
 	|	enhancedForStatementNoShortIf
 	;
 
-basicForStatement
-	:	'for' '(' forInit? ';' expression? ';' forUpdate? ')' statement
+basicForStatement=>UniFor
+	:	'for' '(' forInit?$init ';' expression?$cond ';' forUpdate?$step ')' statement$statement
 	;
 
-basicForStatementNoShortIf
-	:	'for' '(' forInit? ';' expression? ';' forUpdate? ')' statementNoShortIf
+basicForStatementNoShortIf=>UniFor
+	:	'for' '(' forInit?$init ';' expression?$cond ';' forUpdate?$step ')' statementNoShortIf$statement
 	;
 
 forInit
@@ -1109,9 +1109,9 @@ classInstanceCreationExpression_lf_primary
 	:	'.' 'new' typeArguments? annotation* Identifier typeArgumentsOrDiamond? '(' argumentList? ')' classBody?
 	;
 
-classInstanceCreationExpression_lfno_primary
-	:	'new' typeArguments? annotation* Identifier ('.' annotation* Identifier)* typeArgumentsOrDiamond? '(' argumentList? ')' classBody?
-	|	expressionName '.' 'new' typeArguments? annotation* Identifier typeArgumentsOrDiamond? '(' argumentList? ')' classBody?
+classInstanceCreationExpression_lfno_primary=>UniNew
+	:	'new' typeArguments? annotation* Identifier$type ('.' annotation* Identifier)* typeArgumentsOrDiamond? '(' argumentList?$args ')' classBody?
+	|	expressionName '.' 'new' typeArguments? annotation* Identifier$type typeArgumentsOrDiamond? '(' argumentList?$args ')' classBody?
 	;
 
 typeArgumentsOrDiamond
@@ -1178,8 +1178,8 @@ methodInvocation_lfno_primary
 	|	typeName '.' 'super' '.' typeArguments? Identifier '(' argumentList? ')'
 	;
 
-argumentList
-	:	expression (',' expression)*
+argumentList=>List<UniExpr>
+	:	expression$ADD (',' expression$ADD)*
 	;
 
 methodReference
@@ -1205,19 +1205,19 @@ methodReference_lfno_primary
 	|	arrayType '::' 'new'
 	;
 
-arrayCreationExpression
-	:	'new' primitiveType dimExprs dims?
-	|	'new' classOrInterfaceType dimExprs dims?
-	|	'new' primitiveType dims arrayInitializer
-	|	'new' classOrInterfaceType dims arrayInitializer
+arrayCreationExpression=>UniNewArray
+	:	'new' primitiveType$type dimExprs$elementsNum dims?
+	|	'new' classOrInterfaceType$type dimExprs$elementsNum dims?
+	|	'new' primitiveType$type dims arrayInitializer$value
+	|	'new' classOrInterfaceType$type dims arrayInitializer$value
 	;
 
-dimExprs
-	:	dimExpr dimExpr*
+dimExprs=>List<UniExpr>
+	:	dimExpr$ADD dimExpr*$ADD
 	;
 
-dimExpr
-	:	annotation* '[' expression ']'
+dimExpr=>List<UniExpr>
+	:	annotation* '[' expression$ADD ']'
 	;
 
 constantExpression
@@ -1278,92 +1278,155 @@ assignmentOperator=>String
 	|	'|='
 	;
 
-conditionalExpression
-	:	conditionalOrExpression
-	|	conditionalOrExpression '?' expression ':' conditionalExpression
+conditionalExpression=>UniTernaryOp
+	:	conditionalOrExpression$cond
+	|	conditionalOrExpression$cond '?' expression$trueExpr ':' conditionalExpression$falseExpr
+	;
+or
+	:	OR
+	;
+conditionalOrExpression=>UniBinOp
+	:	conditionalAndExpression$MERGE
+	|	conditionalOrExpression$left or$operator conditionalAndExpression$right
+	;
+and
+	:	AND
+	;
+conditionalAndExpression=>UniBinOp
+	:	inclusiveOrExpression$MERGE
+	|	conditionalAndExpression$left and$operator inclusiveOrExpression$right
+	;
+bitor
+	:	BITOR
+	;
+inclusiveOrExpression=>UniBinOp
+	:	exclusiveOrExpression$MERGE
+	|	inclusiveOrExpression$left bitor$operator exclusiveOrExpression$right
+	;
+caret
+	:	CARET
+	;
+exclusiveOrExpression=>UniBinOp
+	:	andExpression$MERGE
+	|	exclusiveOrExpression$left caret$operator andExpression$right
+	;
+bitand
+	:	BITAND
+	;
+andExpression=>UniBinOp
+	:	equalityExpression$MERGE
+	|	andExpression$left bitand$operator equalityExpression$right
+	;
+equal
+	:	EQUAL
+	;
+notequal
+	:	NOTEQUAL
+	;
+equalityExpression=>UniBinOp
+	:	relationalExpression$MERGE
+	|	equalityExpression$left equal$operator relationalExpression$right
+	|	equalityExpression$left notequal$operator relationalExpression$right
 	;
 
-conditionalOrExpression
-	:	conditionalAndExpression
-	|	conditionalOrExpression '||' conditionalAndExpression
+lt
+	:	LT
+	;
+gt
+	:	GT
+	;
+le
+	:	LE
+	;
+ge
+	:	GE
+	;
+instanceof
+	:	INSTANCEOF
+	;
+relationalExpression=>UniBinOp
+	:	shiftExpression$MERGE
+	|	relationalExpression$left lt$operator shiftExpression$right
+	|	relationalExpression$left gt$operator shiftExpression$right
+	|	relationalExpression$left le$operator shiftExpression$right
+	|	relationalExpression$left ge$operator shiftExpression$right
+	|	relationalExpression$left instanceof$operator referenceType$right
+	;
+ltlt
+	:	LT LT
+	;
+gtgt
+	:	GT GT
+	;
+gtgtgt
+	:	GT GT GT
+	;
+shiftExpression=>UniBinOp
+	:	additiveExpression$MERGE
+	|	shiftExpression$left ltlt$operator additiveExpression$right
+	|	shiftExpression$left gtgt$operator additiveExpression$right
+	|	shiftExpression$left gtgtgt$operator additiveExpression$right
 	;
 
-conditionalAndExpression
-	:	inclusiveOrExpression
-	|	conditionalAndExpression '&&' inclusiveOrExpression
+additiveExpression=>UniBinOp
+	:	multiplicativeExpression$MERGE
+	|	additiveExpression$left add$operator multiplicativeExpression$right
+	|	additiveExpression$left sub$operator multiplicativeExpression$right
 	;
 
-inclusiveOrExpression
-	:	exclusiveOrExpression
-	|	inclusiveOrExpression '|' exclusiveOrExpression
+mul
+	:	MUL
+	;
+div
+	:	DIV
+	;
+mod
+	:	MOD
+	;
+multiplicativeExpression=>UniBinOp
+	:	unaryExpression$left
+	|	multiplicativeExpression$left mul$operator unaryExpression$right
+	|	multiplicativeExpression$left div$operator unaryExpression$right
+	|	multiplicativeExpression$left mod$operator unaryExpression$right
 	;
 
-exclusiveOrExpression
-	:	andExpression
-	|	exclusiveOrExpression '^' andExpression
+add
+	:	ADD
+	;
+sub
+	:	SUB
+	;
+unaryExpression=>UniUnaryOp
+	:	preIncrementExpression$MERGE
+	|	preDecrementExpression$MERGE
+	|	add$operator unaryExpression$expr
+	|	sub$operator unaryExpression$expr
+	|	unaryExpressionNotPlusMinus$MERGE
 	;
 
-andExpression
-	:	equalityExpression
-	|	andExpression '&' equalityExpression
+inc
+	:	INC
 	;
-
-equalityExpression
-	:	relationalExpression
-	|	equalityExpression '==' relationalExpression
-	|	equalityExpression '!=' relationalExpression
+preIncrementExpression=>UniUnaryOp
+	:	inc$operator unaryExpression$expr
 	;
-
-relationalExpression
-	:	shiftExpression
-	|	relationalExpression '<' shiftExpression
-	|	relationalExpression '>' shiftExpression
-	|	relationalExpression '<=' shiftExpression
-	|	relationalExpression '>=' shiftExpression
-	|	relationalExpression 'instanceof' referenceType
+dec
+	:	DEC
 	;
-
-shiftExpression
-	:	additiveExpression
-	|	shiftExpression '<' '<' additiveExpression
-	|	shiftExpression '>' '>' additiveExpression
-	|	shiftExpression '>' '>' '>' additiveExpression
+preDecrementExpression=>UniUnaryOp
+	:	dec$operator unaryExpression$expr
 	;
-
-additiveExpression
-	:	multiplicativeExpression
-	|	additiveExpression '+' multiplicativeExpression
-	|	additiveExpression '-' multiplicativeExpression
+tilde
+	:	TILDE
 	;
-
-multiplicativeExpression
-	:	unaryExpression
-	|	multiplicativeExpression '*' unaryExpression
-	|	multiplicativeExpression '/' unaryExpression
-	|	multiplicativeExpression '%' unaryExpression
+bang
+	:	BANG
 	;
-
-unaryExpression
-	:	preIncrementExpression
-	|	preDecrementExpression
-	|	'+' unaryExpression
-	|	'-' unaryExpression
-	|	unaryExpressionNotPlusMinus
-	;
-
-preIncrementExpression
-	:	'++' unaryExpression
-	;
-
-preDecrementExpression
-	:	'--' unaryExpression
-	;
-
-unaryExpressionNotPlusMinus
-	:	postfixExpression
-	|	'~' unaryExpression
-	|	'!' unaryExpression
-	|	castExpression
+unaryExpressionNotPlusMinus=>UniUnaryOp
+	:	postfixExpression$expr
+	|	tilde$operator unaryExpression$expr
+	|	bang$operator unaryExpression$expr
+	|	castExpression$expr
 	;
 
 postfixExpression
@@ -1375,16 +1438,16 @@ postfixExpression
 		)*
 	;
 
-postIncrementExpression
-	:	postfixExpression '++'
+postIncrementExpression=>UniUnaryOp
+	:	postfixExpression$expr inc$operator
 	;
 
 postIncrementExpression_lf_postfixExpression
 	:	'++'
 	;
 
-postDecrementExpression
-	:	postfixExpression '--'
+postDecrementExpression=>UniUnaryOp
+	:	postfixExpression$expr dec$operator
 	;
 
 postDecrementExpression_lf_postfixExpression
