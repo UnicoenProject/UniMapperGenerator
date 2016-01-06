@@ -377,16 +377,16 @@ fieldModifier => String
 	|	'volatile'
 	;
 
-variableDeclaratorList => List<UniFieldDec>
+variableDeclaratorList
 	:	variableDeclarator$ADD (',' variableDeclarator$ADD)*
 	;
 
-variableDeclarator=>UniFieldDec
-	:	variableDeclaratorId$name ('=' variableInitializer$value)?
+variableDeclarator
+	:	variableDeclaratorId$MERGE ('=' variableInitializer$value)?
 	;
 
-variableDeclaratorId=>String
-	:	Identifier dims?
+variableDeclaratorId
+	:	Identifier$name dims?$type
 	;
 
 variableInitializer
@@ -780,12 +780,12 @@ blockStatement
 	|	statement
 	;
 
-localVariableDeclarationStatement
-	:	localVariableDeclaration ';'
+localVariableDeclarationStatement => List<UniVariableDec>
+	:	localVariableDeclaration$RETURN ';'
 	;
 
-localVariableDeclaration
-	:	variableModifier* unannType variableDeclaratorList
+localVariableDeclaration => List<UniVariableDec>
+	:	variableModifier*$modifiers unannType$type variableDeclaratorList$MERGE
 	;
 
 statement
@@ -1009,7 +1009,7 @@ resource
  * primary - field/variable value expressions
  */
 primary
-	:	(	primaryNoNewArray_lfno_primary
+	:	(	primaryNoNewArray_lfno_primary$RETURN
 		|	arrayCreationExpression	//fieldDec/arrayDec inside method that "create new array"
 		)
 		(	primaryNoNewArray_lf_primary
@@ -1067,7 +1067,7 @@ primaryNoNewArray_lf_primary_lfno_arrayAccess_lf_primary
 	;
 
 primaryNoNewArray_lfno_primary
-	:	literal
+	:	literal$RETURN
 	|	typeName ('[' ']')* '.' 'class'
 	|	unannPrimitiveType ('[' ']')* '.' 'class'
 	|	'void' '.' 'class'
@@ -1205,19 +1205,19 @@ methodReference_lfno_primary
 	|	arrayType '::' 'new'
 	;
 
-arrayCreationExpression
-	:	'new' primitiveType dimExprs dims?
-	|	'new' classOrInterfaceType dimExprs dims?
-	|	'new' primitiveType dims arrayInitializer
-	|	'new' classOrInterfaceType dims arrayInitializer
+arrayCreationExpression => UniNewArray
+	:	'new' primitiveType$type dimExprs$MERGE dims?$type
+	|	'new' classOrInterfaceType$type dimExprs$MERGE dims?$type
+	|	'new' primitiveType$type dims arrayInitializer$value
+	|	'new' classOrInterfaceType$type dims arrayInitializer$value
 	;
 
-dimExprs
-	:	dimExpr dimExpr*
+dimExprs => UniNewArray
+	:	dimExpr$MERGE dimExpr*$MERGE
 	;
 
-dimExpr
-	:	annotation* '[' expression ']'
+dimExpr => UniNewArray
+	:	annotation* '[' expression$elementsNum ']'
 	;
 
 constantExpression
@@ -1283,91 +1283,91 @@ conditionalExpression => UniTernaryOp
 	|	conditionalOrExpression$cond '?' expression$trueExpr ':' conditionalExpression$falseExpr
 	;
 
-conditionalOrExpression
-	:	conditionalAndExpression
-	|	conditionalOrExpression '||' conditionalAndExpression
+conditionalOrExpression => UniBinOp
+	:	conditionalAndExpression$RETURN
+	|	conditionalOrExpression$left OR$op conditionalAndExpression$right
 	;
 
-conditionalAndExpression
-	:	inclusiveOrExpression
-	|	conditionalAndExpression '&&' inclusiveOrExpression
+conditionalAndExpression => UniBinOp
+	:	inclusiveOrExpression$RETURN
+	|	conditionalAndExpression$left AND$op inclusiveOrExpression$right
 	;
 
-inclusiveOrExpression
-	:	exclusiveOrExpression
-	|	inclusiveOrExpression '|' exclusiveOrExpression
+inclusiveOrExpression => UniBinOp
+	:	exclusiveOrExpression$RETURN
+	|	inclusiveOrExpression$left BITOR$op exclusiveOrExpression$right
 	;
 
-exclusiveOrExpression
-	:	andExpression
-	|	exclusiveOrExpression '^' andExpression
+exclusiveOrExpression => UniBinOp
+	:	andExpression$RETURN
+	|	exclusiveOrExpression$left CARET$op andExpression$right
 	;
 
-andExpression
-	:	equalityExpression
-	|	andExpression '&' equalityExpression
+andExpression => UniBinOp
+	:	equalityExpression$RETURN
+	|	andExpression$left BITAND$op equalityExpression$right
 	;
 
-equalityExpression
-	:	relationalExpression
-	|	equalityExpression '==' relationalExpression
-	|	equalityExpression '!=' relationalExpression
+equalityExpression => UniBinOp
+	:	relationalExpression$RETURN
+	|	equalityExpression$left EQUAL$op relationalExpression$right
+	|	equalityExpression$left NOTEQUAL$op relationalExpression$right
 	;
 
-relationalExpression
-	:	shiftExpression
-	|	relationalExpression '<' shiftExpression
-	|	relationalExpression '>' shiftExpression
-	|	relationalExpression '<=' shiftExpression
-	|	relationalExpression '>=' shiftExpression
-	|	relationalExpression 'instanceof' referenceType
+relationalExpression => UniBinOp
+	:	shiftExpression$RETURN
+	|	relationalExpression$left LT$op shiftExpression$right
+	|	relationalExpression$left GT$op shiftExpression$right
+	|	relationalExpression$left LE$op shiftExpression$right
+	|	relationalExpression$left GE$op shiftExpression$right
+	|	relationalExpression$left INSTANCEOF$op referenceType$right
 	;
 
-shiftExpression
-	:	additiveExpression
-	|	shiftExpression '<' '<' additiveExpression
-	|	shiftExpression '>' '>' additiveExpression
-	|	shiftExpression '>' '>' '>' additiveExpression
+shiftExpression => UniBinOp
+	:	additiveExpression$RETURN
+	|	shiftExpression$left LT$op LT$op additiveExpression$right
+	|	shiftExpression$left GT$op GT$op additiveExpression$right
+	|	shiftExpression$left GT$op GT$op GT$op additiveExpression$right
 	;
 
-additiveExpression
-	:	multiplicativeExpression
-	|	additiveExpression '+' multiplicativeExpression
-	|	additiveExpression '-' multiplicativeExpression
+additiveExpression => UniBinOp
+	:	multiplicativeExpression$RETURN
+	|	additiveExpression$left ADD$op multiplicativeExpression$right
+	|	additiveExpression$left SUB$op multiplicativeExpression$right
 	;
 
-multiplicativeExpression
-	:	unaryExpression
-	|	multiplicativeExpression '*' unaryExpression
-	|	multiplicativeExpression '/' unaryExpression
-	|	multiplicativeExpression '%' unaryExpression
+multiplicativeExpression => UniBinOp
+	:	unaryExpression$RETURN
+	|	multiplicativeExpression$left MUL$op unaryExpression$right
+	|	multiplicativeExpression$left DIV$op unaryExpression$right
+	|	multiplicativeExpression$left MOD$op unaryExpression$right
 	;
 
-unaryExpression
-	:	preIncrementExpression
-	|	preDecrementExpression
-	|	'+' unaryExpression
-	|	'-' unaryExpression
-	|	unaryExpressionNotPlusMinus
+unaryExpression => UniUnaryOp
+	:	preIncrementExpression$RETURN
+	|	preDecrementExpression$RETURN
+	|	ADD$operator unaryExpression$expr
+	|	SUB$operator unaryExpression$expr
+	|	unaryExpressionNotPlusMinus$RETURN
 	;
 
-preIncrementExpression
-	:	'++' unaryExpression
+preIncrementExpression => UniUnaryOp
+	:	INC$operator unaryExpression$expr
 	;
 
-preDecrementExpression
-	:	'--' unaryExpression
+preDecrementExpression => UniUnaryOp
+	:	DEC$operator unaryExpression$expr
 	;
 
-unaryExpressionNotPlusMinus
-	:	postfixExpression
-	|	'~' unaryExpression
-	|	'!' unaryExpression
+unaryExpressionNotPlusMinus => UniUnaryOp
+	:	postfixExpression$RETURN
+	|	TILDE$operator unaryExpression$expr
+	|	BANG$operator unaryExpression$expr
 	|	castExpression
 	;
 
-postfixExpression
-	:	(	primary
+postfixExpression => UniUnaryOp
+	:	(	primary$RETURN
 		|	expressionName
 		)
 		(	postIncrementExpression_lf_postfixExpression

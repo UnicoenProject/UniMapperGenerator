@@ -47,13 +47,13 @@ class UniMapperGeneratorValidator extends AbstractUniMapperGeneratorValidator {
 	}
 
 	def checkMergeTarget(ParserRule rule, Element elem, String ruleName) {
-		if (!rule.type.name.equals(elem.referenceReturnType)) {
-			val sb = new StringBuilder
-			sb.append('Type mismatch: The return type of ').append(rule.name).append(' is ').append(
-				rule.type.name).append(' but The return type of ').append(ruleName).append(' is ').append(
-				elem.referenceReturnType).append('.')
-			error(sb.toString, elem, Literals.ELEMENT__BODY)
-		}
+//		if (!rule.type.name.equals(elem.referenceReturnType)) {
+//			val sb = new StringBuilder
+//			sb.append('Type mismatch: The return type of ').append(rule.name).append(' is ').append(
+//				rule.type.name).append(' but The return type of ').append(ruleName).append(' is ').append(
+//				elem.referenceReturnType).append('.')
+//			error(sb.toString, elem, Literals.ELEMENT__BODY)
+//		}
 	}
 
 	def checkField(ParserRule r, Element elem) {

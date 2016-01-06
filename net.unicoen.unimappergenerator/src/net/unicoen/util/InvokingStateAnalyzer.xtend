@@ -8,6 +8,8 @@ import net.unicoen.uniMapperGenerator.Element
 import java.util.HashMap
 import net.unicoen.uniMapperGenerator.RuleRef
 import java.util.ArrayList
+import com.google.common.collect.Lists
+import net.unicoen.uniMapperGenerator.Alternative
 
 class InvokingStateAnalyzer {
 	private val invokingStates = new HashMap<String, List<Integer>>
@@ -15,25 +17,38 @@ class InvokingStateAnalyzer {
 
 	public new(String code, Grammar g) {
 		g.eAllContents.filter(ParserRule).forEach [ rule |
-			if (rule.type == null) {
+			if (rule.hasNoAnnotations) {
 				return
 			}
 			val ruleName = rule.name
 			var pos = code.indexOf('''«ruleName»() throws''')
-			val list = new ArrayList<Integer>
-			for (element : rule.eAllContents.filter(Element).toList) {
+			val list = Lists.newArrayList
+			val trypos = code.indexOf("try", pos)
+			val hasLeftRecursion = code.substring(pos, trypos).contains("enterRecursionRule")
+			var recursionState = -1;
+			if (hasLeftRecursion) {
+				val start = code.indexOf("int _startState = ", pos)
+				val last = code.indexOf(";", start)
+				val str = code.substring(start + 18, last)
+				recursionState = Integer.parseInt(str)
+			}
+			for (element : rule.eAllContents.filter(Element).filter[it.op != null].toList) {
 				val atom = element.body
 				if (atom instanceof Atom) {
-					val ruleRef = atom.body
-					if (ruleRef instanceof RuleRef) {
-						val refName = ruleRef.reference.name
-						pos = code.indexOf('''«refName»(''', pos)
-						val start = code.lastIndexOf("setState(", pos)
-						val last = code.indexOf(')', start)
-						val str = code.substring(start + 9, last)
-						val state = Integer.parseInt(str)
-						list.add(state)
-						pos++
+					val ref = atom.body
+					if (ref instanceof RuleRef) {
+						if (ref.reference == rule && hasLeftRecursion) {
+							list.add(recursionState)
+						} else {
+							val refName = ref.reference.name
+							pos = code.indexOf('''«refName»(''', pos)
+							val start = code.lastIndexOf("setState(", pos)
+							val last = code.indexOf(')', start)
+							val str = code.substring(start + 9, last)
+							val state = Integer.parseInt(str)
+							list.add(state)
+							pos++
+						}
 					}
 				}
 			}
@@ -42,20 +57,18 @@ class InvokingStateAnalyzer {
 		]
 	}
 
-	public def getInvokingState(ParserRule rule, Element element) {
-		val body = element.body
-		if (body instanceof Atom) {
-			val b = body.body
-			if (b instanceof RuleRef) {
-				val ruleName = rule.name
-				val states = invokingStates.get(ruleName)
-				if (!states.isEmpty) {
-					val index = invokingStateIndexes.get(ruleName)
-					invokingStateIndexes.put(ruleName, (index + 1) % states.length)
-					return states.get(index)
-				}
-			}
+	public def getInvokingState(ParserRule rule) {
+		val ruleName = rule.name
+		val states = invokingStates.get(ruleName)
+		if (!states.isEmpty) {
+			val index = invokingStateIndexes.get(ruleName)
+			invokingStateIndexes.put(ruleName, (index + 1) % states.size)
+			return states.get(index)
 		}
 		throw new Exception("Cannot use getInvokingState for not RuleRef objects")
+	}
+
+	private def hasNoAnnotations(ParserRule rule) {
+		rule.type == null && rule.eAllContents.filter(Element).findFirst[it.op != null] == null
 	}
 }
