@@ -17,8 +17,6 @@ import net.unicoen.util.InvokingStateAnalyzer
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
-import com.google.common.collect.Sets
-import com.google.common.collect.Lists
 
 /**
  * Generates code from your model files on save.
@@ -27,25 +25,21 @@ import com.google.common.collect.Lists
  */
 class UniMapperGeneratorGenerator implements IGenerator {
 	private String _grammarName
-	private InvokingStateAnalyzer _analyzer;
+	private InvokingStateAnalyzer _analyzer
 
 	override def doGenerate(Resource resource, IFileSystemAccess fsa) {
 		val g4Generator = new ANTLRGrammarGenerator(fsa)
-		val testGenerator = new MapperTestGenerator(fsa)
 		resource.allContents.filter(Grammar).forEach [
 			_grammarName = it.name.toCamelCase
 			val parserCode = g4Generator.generate(_grammarName, it)
 			_analyzer = new InvokingStateAnalyzer(parserCode, it)
 			fsa.generateFile(_grammarName + "Mapper.xtend", it.generateMapper)
-			testGenerator.generate(_grammarName, it)
 		]
 	}
 
 	def generateImports() '''
 		package net.unicoen.mapper
 
-		import com.google.common.collect.Lists
-		import com.google.common.collect.Maps
 		import java.io.FileInputStream
 		import java.util.List
 		import java.util.ArrayList
@@ -78,48 +72,48 @@ class UniMapperGeneratorGenerator implements IGenerator {
 			}
 		
 			def parse(String code) {
-				parseCore(new ANTLRInputStream(code));
+				parseCore(new ANTLRInputStream(code))
 			}
 		
 			def parseFile(String path) {
-				val inputStream = new FileInputStream(path);
+				val inputStream = new FileInputStream(path)
 				try {
-					parseCore(new ANTLRInputStream(inputStream));
+					parseCore(new ANTLRInputStream(inputStream))
 				} finally {
-					inputStream.close();
+					inputStream.close
 				}
 			}
 		
 			def parseCore(CharStream chars) {
-				parseCore(chars, [parser|parser.compilationUnit()])
+				parseCore(chars, [parser|parser.compilationUnit])
 			}
 		
 			def parse(String code, Function1<«_grammarName»Parser, ParseTree> parseAction) {
-				parseCore(new ANTLRInputStream(code), parseAction);
+				parseCore(new ANTLRInputStream(code), parseAction)
 			}
 		
 			def parseFile(String path, Function1<«_grammarName»Parser, ParseTree> parseAction) {
-				val inputStream = new FileInputStream(path);
+				val inputStream = new FileInputStream(path)
 				try {
-					parseCore(new ANTLRInputStream(inputStream), parseAction);
+					parseCore(new ANTLRInputStream(inputStream), parseAction)
 				} finally {
-					inputStream.close();
+					inputStream.close
 				}
 			}
 		
 			def parseCore(CharStream chars, Function1<«_grammarName»Parser, ParseTree> parseAction) {
-				val lexer = new «_grammarName»Lexer(chars);
-				val tokens = new CommonTokenStream(lexer);
-				val parser = new «_grammarName»Parser(tokens);
+				val lexer = new «_grammarName»Lexer(chars)
+				val tokens = new CommonTokenStream(lexer)
+				val parser = new «_grammarName»Parser(tokens)
 				val tree = parseAction.apply(parser) // parse
 				«IF g.rules.size > 0»
-					tree.visit
+					tree.visit.flatten
       			«ENDIF»
 			}
 
 			override public visitChildren(RuleNode node) {
-				val n = node.childCount;
-				val list = Lists.newArrayList()
+				val n = node.childCount
+				val list = newArrayList()
 				(0 ..< n).forEach [ i |
 					val c = node.getChild(i)
 					val childResult = c.visit
@@ -153,7 +147,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 					if (obj.size == 1) {
 						return obj.get(0).flatten
 					}
-					val ret = Lists.newArrayList
+					val ret = newArrayList
 					obj.forEach [
 						ret += it.flatten
 					]
@@ -163,7 +157,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 					if (obj.size == 1) {
 						return obj.get(obj.keySet.get(0)).flatten
 					}
-					val ret = Maps.newHashMap
+					val ret = newHashMap
 					obj.forEach [ key, value |
 						ret.put(key, value.flatten)
 					]
@@ -174,7 +168,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 		
 			public def <T> List<T> castToList(Object obj, Class<T> clazz) {
 				val temp = obj.flatten
-				val ret = Lists.newArrayList
+				val ret = newArrayList
 				if (temp instanceof Map<?, ?>) {
 					val add = temp.containsKey("add")
 					temp.forEach [ key, value |
@@ -212,14 +206,24 @@ class UniMapperGeneratorGenerator implements IGenerator {
 				if (temp instanceof Map<?,?>) {
 					if (String.isAssignableFrom(clazz)) {
 						val builder = new StringBuilder
+						val hasAdd = temp.containsKey("add")
 						temp.forEach [ key, value |
-							builder.append(value.castTo(clazz))
+							switch (key) {
+								case "add": {
+									builder.append(value.castTo(clazz))
+								}
+								default: {
+									if (!hasAdd) {
+										builder.append(value.castTo(clazz))
+									}
+								}
+							}
 						]
 						return if (builder.length > 0) clazz.getConstructor(StringBuilder).newInstance(builder) else null
 					}
 					val instance = clazz.newInstance
 					val fields = clazz.fields
-					val fieldsName = Lists.newArrayList
+					val fieldsName = newArrayList
 					fields.forEach[fieldsName.add(it.name)]
 					temp.forEach [ key, value |
 						if (fieldsName.contains(key)) {
@@ -287,7 +291,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 	}
 
 	def makeMethodBody(ParserRule r) {
-		val annotationList = Sets.newHashSet
+		val annotationList = newHashSet
 		val elementList = r.eAllContents.filter(Element).filter[it.op != null].toList
 		val hasMerge = elementList.findFirst[it.op == "MERGE"] != null
 		val hasReturn = elementList.findFirst[it.op == "RETURN"] != null
@@ -295,20 +299,20 @@ class UniMapperGeneratorGenerator implements IGenerator {
 			annotationList += it.op
 		]
 	'''
-		val map = Maps.newHashMap
-		val none = Lists.newArrayList
+		val map = newHashMap
+		val none = newArrayList
 		map.put("none", none)
 		«FOR it : annotationList»«IF it != "MERGE" && it != "RETURN"»
-		val «if (it == "ADD") it.toLowerCase else it» = Lists.newArrayList
+		val «if (it == "ADD") it.toLowerCase else it» = newArrayList
 		map.put("«if (it == "ADD") it.toLowerCase else it»", «if (it == "ADD") it.toLowerCase else it»)
 		«ENDIF»«ENDFOR»
 		«IF hasMerge»
-		val merge = Lists.newArrayList
+		val merge = newArrayList
 		«ENDIF»
 		«IF hasReturn»for(it : ctx.children) {«ELSE»ctx.children.forEach [«ENDIF»
 			if (it instanceof RuleContext) {
 				switch it.invokingState {
-					«val stateList = Sets.newHashSet»
+					«val stateList = newHashSet»
 					«FOR it : elementList»
 						«val atom = it.body»
 						«IF atom instanceof Atom»
@@ -333,7 +337,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 				}
 			} else if (it instanceof TerminalNode) {
 				switch it.symbol.type {
-					«val nameList = Sets.newHashSet»
+					«val nameList = newHashSet»
 					«FOR it : elementList»
 						«val atom = it.body»
 						«IF atom instanceof Atom»
@@ -415,7 +419,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 	}
 
 	def makeListMethodBody(ParserRule r, String itemClassName) {
-		val annotationList = Sets.newHashSet
+		val annotationList = newHashSet
 		val elementList = r.eAllContents.filter(Element).filter[it.op != null].toList
 		val hasMerge = elementList.findFirst[ it.op == "MERGE" ] != null
 		val hasReturn = elementList.findFirst[ it.op == "RETURN" ] != null
@@ -424,21 +428,21 @@ class UniMapperGeneratorGenerator implements IGenerator {
 		]
 		
 	'''
-		val map = Maps.newHashMap
-		val none = Lists.newArrayList
+		val map = newHashMap
+		val none = newArrayList
 		map.put("none", none)
 		«FOR it : annotationList»«IF it != "MERGE" && it != "RETURN"»
-		val «if (it == "ADD") it.toLowerCase else it» = Lists.newArrayList
+		val «if (it == "ADD") it.toLowerCase else it» = newArrayList
 		map.put("«if (it == "ADD") it.toLowerCase else it»", «if (it == "ADD") it.toLowerCase else it»)
 		«ENDIF»«ENDFOR»
 		«IF hasMerge»
-		val merge = Lists.newArrayList
+		val merge = newArrayList
 		«ENDIF»
 		if (ctx.children != null) {
 			«IF hasReturn»for(it : ctx.children) {«ELSE»ctx.children.forEach [«ENDIF»
 				if (it instanceof RuleContext) {
 					switch it.invokingState {
-						«val stateList = Sets.newHashSet»
+						«val stateList = newHashSet»
 						«FOR it : elementList»
 							«val atom = it.body»
 							«IF atom instanceof Atom»
@@ -463,7 +467,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 					}
 				} else if (it instanceof TerminalNode) {
 					switch it.symbol.type {
-						«val nameList = Sets.newHashSet»
+						«val nameList = newHashSet»
 						«FOR it : elementList»
 							«val atom = it.body»
 							«IF atom instanceof Atom»
@@ -488,7 +492,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 		}
 		«IF hasMerge»val node = «ENDIF»map«IF r.type != null».castTo«IF !hasMerge»List«ENDIF»(«itemClassName»)«ENDIF»
 		«IF hasMerge»
-		val ret = Lists.newArrayList
+		val ret = newArrayList
 		merge.castToList(«itemClassName»).forEach [
 			it.merge(node)
 			ret += it
@@ -499,8 +503,8 @@ class UniMapperGeneratorGenerator implements IGenerator {
 	}
 
 	def makeStringMethodBody(ParserRule r) '''
-		val map = Maps.newHashMap
-		val none = Lists.newArrayList
+		val map = newHashMap
+		val none = newArrayList
 		map.put("none", none)
 		if (ctx.children != null) {
 			ctx.children.forEach [
@@ -520,13 +524,13 @@ class UniMapperGeneratorGenerator implements IGenerator {
 						«IF it.op != null»
 							«IF it.op == "value"»
 								if (it.symbol.type == «_grammarName»Parser.«it.terminalName») {
-									return true;
+									return true
 								}
 							«ENDIF»
 						«ENDIF»
 					«ENDFOR»
 				}
-				return false;
+				return false
 			].text
 			«IF r.type.name == "UniIntLiteral"»
 				return new UniIntLiteral(Integer.parseInt(text))

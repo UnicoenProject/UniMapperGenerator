@@ -55,7 +55,7 @@ grammar Java8;
 root compilationUnit;
 
 @header{
-	package net.unicoen.parser;
+package net.unicoen.parser;
 }
 
 /*
@@ -99,8 +99,8 @@ type
 	;
 
 primitiveType
-	:	annotation* numericType
-	|	annotation* 'boolean'
+	:	annotation* numericType$RETURN
+	|	annotation* BOOLEAN$RETURN
 	;
 
 numericType
@@ -136,7 +136,7 @@ classOrInterfaceType
 		)*
 	;
 
-classType => String
+classType
 	:	annotation* Identifier typeArguments?
 	|	classOrInterfaceType '.' annotation* Identifier typeArguments?
 	;
@@ -149,7 +149,7 @@ classType_lfno_classOrInterfaceType
 	:	annotation* Identifier typeArguments?
 	;
 
-interfaceType=>String
+interfaceType
 	:	classType
 	;
 
@@ -162,7 +162,7 @@ interfaceType_lfno_classOrInterfaceType
 	;
 
 typeVariable
-	:	annotation* Identifier
+	:	annotation* Identifier$RETURN
 	;
 
 arrayType
@@ -172,7 +172,7 @@ arrayType
 	;
 
 dims => String
-	:	annotation* '[' ']' (annotation* '[' ']')*
+	:	annotation* LBRACK$ADD RBRACK$ADD (annotation* LBRACK$ADD RBRACK$ADD)*
 	;
 
 typeParameter
@@ -247,8 +247,8 @@ ambiguousName
  * Productions from §7 (Packages)
  */
 
-compilationUnit => UniClassDec
-	:	packageDeclaration? importDeclaration* typeDeclaration*$MERGE EOF2
+compilationUnit
+	:	packageDeclaration? importDeclaration* typeDeclaration* EOF2
 	;
 
 packageDeclaration
@@ -282,9 +282,9 @@ staticImportOnDemandDeclaration
 	:	'import' 'static' typeName '.' '*' ';'
 	;
 
-typeDeclaration => UniClassDec
-	:	classDeclaration$MERGE
-	|	interfaceDeclaration$MERGE
+typeDeclaration
+	:	classDeclaration$RETURN
+	|	interfaceDeclaration$RETURN
 	|	';'
 	;
 
@@ -1075,7 +1075,7 @@ primaryNoNewArray_lfno_primary
 	|	typeName '.' 'this'
 	|	'(' expression ')'
 	|	classInstanceCreationExpression_lfno_primary
-	|	fieldAccess_lfno_primary
+	|	fieldAccess_lfno_primary$RETURN
 	|	arrayAccess_lfno_primary
 	|	methodInvocation_lfno_primary
 	|	methodReference_lfno_primary

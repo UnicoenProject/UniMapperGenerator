@@ -1,0 +1,25 @@
+
+class Java8MapperTestNew
+target Java8Mapper
+
+test parseClassWithExtendsAndImplements {
+	actual :
+	"public static class A extends SuperClass implements Interface,Interface1 {}"
+	expected : UniClassDec {
+		className : "A"
+		interfaces : {
+			"Interface", "Interface1"
+		}
+		modifiers : {
+			"public", "static"
+		}
+		superClass : {
+			"SuperClass"
+		}
+	}
+}
+
+test ccc {
+	actual : "aaa"
+	expected : 1
+}

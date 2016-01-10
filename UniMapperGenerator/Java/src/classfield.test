@@ -1,0 +1,74 @@
+class GanaratedJava8MapperClassFieldVariableTest
+target Java8Mapper
+
+test parseSinglePrimitiveVarAttDec {
+	actual : "public class A{public static final int a;}"
+	expected : UniClassDec {
+		modifiers : {
+			"public"
+		}
+		className : "A"
+		members : {
+			UniFieldDec as UniMemberDec {
+				name : "a"
+				type : "int"
+				modifiers : {
+					"public", "static", "final"
+				}
+			}
+		}
+	}
+}
+
+test parseMultiplePrimitiveVarAttDec {
+	actual : "public class A{public static final int temp, temp1, temp2;}"
+	expected : UniClassDec {
+		modifiers : {
+			"public"
+		}
+		className : "A"
+		members : {
+			UniFieldDec as UniMemberDec {
+				name : "temp"
+				modifiers : {
+					"public", "static", "final"
+				}
+				type : "int"
+			}, UniFieldDec as UniMemberDec {
+				name : "temp1"
+				modifiers : {
+					"public", "static", "final"
+				}
+				type : "int"
+			}, UniFieldDec as UniMemberDec {
+				name : "temp2"
+				modifiers : {
+					"public", "static", "final"
+				}
+				type : "int"
+			}
+		}
+	}
+}
+
+test parseSinglePrimitiveVarAttDecWithStringValue {
+	actual : "public class A{public static final String a=\"abc\";}"
+	expected : UniClassDec {
+		modifiers : {
+			"public"
+		}
+		className : "A"
+		members : {
+			UniFieldDec as UniMemberDec {
+				name : "a"
+				type : "String"
+				modifiers : {
+					"public", "static", "final"
+				}
+				value : UniStringLiteral {
+					value : "abc"
+				}
+			}
+		}
+	}
+}

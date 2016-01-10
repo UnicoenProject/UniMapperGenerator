@@ -47,19 +47,19 @@ class UniMapperGeneratorValidator extends AbstractUniMapperGeneratorValidator {
 	}
 
 	def checkMergeTarget(ParserRule rule, Element elem, String ruleName) {
-//		if (!rule.type.name.equals(elem.referenceReturnType)) {
-//			val sb = new StringBuilder
-//			sb.append('Type mismatch: The return type of ').append(rule.name).append(' is ').append(
-//				rule.type.name).append(' but The return type of ').append(ruleName).append(' is ').append(
-//				elem.referenceReturnType).append('.')
-//			error(sb.toString, elem, Literals.ELEMENT__BODY)
-//		}
+		//		if (!rule.type.name.equals(elem.referenceReturnType)) {
+		//			val sb = new StringBuilder
+		//			sb.append('Type mismatch: The return type of ').append(rule.name).append(' is ').append(
+		//				rule.type.name).append(' but The return type of ').append(ruleName).append(' is ').append(
+		//				elem.referenceReturnType).append('.')
+		//			error(sb.toString, elem, Literals.ELEMENT__BODY)
+		//		}
 	}
 
 	def checkField(ParserRule r, Element elem) {
-		val packagePrefix = if(r.type.name.startsWith('Uni')) UniNode.package.name + '.'
+		val packagePrefix = if (r.type.name.startsWith('Uni')) UniNode.package.name + '.'
 		try {
-			val clazz = if(packagePrefix != null) Class.forName(packagePrefix + r.type.name)
+			val clazz = if (packagePrefix != null) Class.forName(packagePrefix + r.type.name)
 			try {
 				clazz.getField(elem.op)
 			} catch (NoSuchFieldException e) {
@@ -92,4 +92,5 @@ class UniMapperGeneratorValidator extends AbstractUniMapperGeneratorValidator {
 			}
 		}
 	}
+
 }
