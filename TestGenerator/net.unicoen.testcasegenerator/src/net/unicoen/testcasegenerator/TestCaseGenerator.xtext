@@ -30,7 +30,7 @@ NodeValue:
 	| literal=Literal;
 
 NodeArchitecture:
-	nodeType=ID ('as' castType=ID)? LPAREN children+=ChildDeclaration* RPAREN;
+	nodeType=ID LPAREN children+=ChildDeclaration* RPAREN;
 
 ChildDeclaration:
 	fieldName=ID COLON value=NodeValue;

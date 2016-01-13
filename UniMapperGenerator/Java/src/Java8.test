@@ -1,24 +1,408 @@
-class Java8MapperTestNew
+class Java8MapperProgramTest
 target Java8Mapper
 
-test parseClassWithExtendsAndImplements {
-	actual :
-	"public static class A extends SuperClass implements Interface,Interface1 {}"
+test parseSampleProgram {
+	actual : "public class ClassName<E> extends AnyClass implements InterfaceName<String> {
+	enum Color { RED, GREEN, BLUE };
+	/* This comment may span multiple lines. */
+	static Object staticField;
+	// This comment may span only this line
+	private E field;
+	private AbstractClassName field2;
+	// TASK: refactor
+	public int foo(Integer parameter) {
+		abstractMethod(inheritedField);
+		int local= 42*hashCode();
+		staticMethod();
+		return bar(local) + parameter;
+	}
+}"
 	expected : UniClassDec {
-		className : "A"
-		interfaces : {
-			"Interface", "Interface1"
-		}
 		modifiers : {
-			"public", "static"
+			"public"
 		}
+		className : "ClassName"
 		superClass : {
-			"SuperClass"
+			"AnyClass"
+		}
+		interfaces : {
+			"InterfaceName"
+		}
+		members : {
+			UniFieldDec {
+				modifiers : {
+					"static"
+				}
+				type : "Object"
+				name : "staticField"
+			}, UniFieldDec {
+				modifiers : {
+					"private"
+				}
+				type : "E"
+				name : "field"
+			}, UniFieldDec {
+				modifiers : {
+					"private"
+				}
+				type : "AbstractClassName"
+				name : "field2"
+			}, UniMethodDec {
+				modifiers : {
+					"public"
+				}
+				returnType : "int"
+				methodName : "foo"
+				args : {
+					UniArg {
+						type : "Integer"
+						name : "parameter"
+					}
+				}
+				block : UniBlock {
+					body : {
+						UniMethodCall {
+							methodName : "abstractMethod"
+							args : {
+								UniIdent {
+									name : "inheritedField"
+								}
+							}
+						}, UniVariableDec {
+							name : "local"
+							type : "int"
+							value : UniBinOp {
+								left : UniIntLiteral {
+									value : 42
+								}
+								operator : "*"
+								right : UniMethodCall {
+									methodName : "hashCode"
+								}
+							}
+						}, UniMethodCall {
+							methodName : "staticMethod"
+						}, UniReturn {
+							value : UniBinOp {
+								left : UniMethodCall {
+									args : {
+										UniIdent {
+											name : "local"
+										}
+									}
+									methodName : "bar"
+								}
+								operator : "+"
+								right : UniIdent {
+									name : "parameter"
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 }
 
-test ccc {
-	actual : "aaa"
-	expected : 1
+test parseCPProgram {
+	actual : "
+public class Main {
+	public static void main(String[] args) throws Exception {
+		Scanner sc = new Scanner(System.in);
+		sc.nextInt();
+		int m1 = sc.nextInt();
+		Set<Integer> set1 = new HashSet<Integer>();
+		for (int i = 0; i < m1; i++) {
+			set1.add(sc.nextInt());
+		}
+		int m2 = sc.nextInt();
+		Set<Integer> set2 = new HashSet<Integer>();
+		for (int i = 0; i < m2; i++) {
+			int j = sc.nextInt();
+			if (!set1.contains(j))
+				set2.add(j);
+		}
+		if (set2.isEmpty()) {
+			System.out.print(\"None\");
+		} else {
+			if (set2.iterator().next() != i) {
+				System.out.print(\" \");
+			}
+			System.out.print(i);
+		}
+		System.out.println();
+		sc.close();
+	}
+}
+"
+	expected : UniClassDec {
+		className : "Main"
+		modifiers : {
+			"public"
+		}
+		members : {
+			UniMethodDec {
+				args : {
+					UniArg {
+						name : "args"
+						type : "String[]"
+					}
+				}
+				methodName : "main"
+				modifiers : {
+					"public", "static"
+				}
+				returnType : "void"
+				block : UniBlock {
+					body : {
+						UniVariableDec {
+							name : "sc"
+							type : "Scanner"
+							value : UniNew {
+								args : {
+									UniFieldAccess {
+										fieldName : "in"
+										receiver : UniIdent {
+											name : "System"
+										}
+									}
+								}
+								type : "Scanner"
+							}
+						}, UniMethodCall {
+							methodName : "nextInt"
+							receiver : UniIdent {
+								name : "sc"
+							}
+						}, UniVariableDec {
+							name : "m1"
+							type : "int"
+							value : UniMethodCall {
+								methodName : "nextInt"
+								receiver : UniIdent {
+									name : "sc"
+								}
+							}
+						}, UniVariableDec {
+							name : "set1"
+							type : "Set<Integer>"
+							value : UniNew {
+								type : "HashSet<Integer>"
+							}
+						}, UniFor {
+							init : UniVariableDec {
+								value : UniIntLiteral {
+									value : 0
+								}
+								type : "int"
+								name : "i"
+							}
+							cond : UniBinOp {
+								left : UniIdent {
+									name : "i"
+								}
+								operator : "<"
+								right : UniIdent {
+									name : "m1"
+								}
+							}
+							step : UniUnaryOp {
+								operator : "++"
+								expr : UniIdent {
+									name : "i"
+								}
+							}
+							statement : UniBlock {
+								body : {
+									UniMethodCall {
+										methodName : "add"
+										args : {
+											UniMethodCall {
+												methodName : "nextInt"
+												receiver : UniIdent {
+													name : "sc"
+												}
+											}
+										}
+										receiver : UniIdent {
+											name : "set1"
+										}
+									}
+								}
+							}
+						}, UniVariableDec {
+							name : "m2"
+							type : "int"
+							value : UniMethodCall {
+								methodName : "nextInt"
+								receiver : UniIdent {
+									name : "sc"
+								}
+							}
+						}, UniVariableDec {
+							name : "set2"
+							type : "Set<Integer>"
+							value : UniNew {
+								type : "HashSet<Integer>"
+							}
+						}, UniFor {
+							init : UniVariableDec {
+								value : UniIntLiteral {
+									value : 0
+								}
+								type : "int"
+								name : "i"
+							}
+							cond : UniBinOp {
+								left : UniIdent {
+									name : "i"
+								}
+								operator : "<"
+								right : UniIdent {
+									name : "m2"
+								}
+							}
+							step : UniUnaryOp {
+								operator : "++"
+								expr : UniIdent {
+									name : "i"
+								}
+							}
+							statement : UniBlock {
+								body : {
+									UniVariableDec {
+										type : "int"
+										name : "j"
+										value : UniMethodCall {
+											methodName : "nextInt"
+											receiver : UniIdent {
+												name : "sc"
+											}
+										}
+									}, UniIf {
+										cond : UniUnaryOp {
+											operator : "!"
+											expr : UniMethodCall {
+												receiver : UniIdent {
+													name : "set1"
+												}
+												methodName : "contains"
+												args : {
+													UniIdent {
+														name : "j"
+													}
+												}
+											}
+										}
+										trueStatement : UniMethodCall {
+											receiver : UniIdent {
+												name : "set2"
+											}
+											methodName : "add"
+											args : {
+												UniIdent {
+													name : "j"
+												}
+											}
+										}
+									}
+								}
+							}
+						}, UniIf {
+							cond : UniMethodCall {
+								methodName : "isEmpty"
+								receiver : UniIdent {
+									name : "set2"
+								}
+							}
+							trueStatement : UniBlock {
+								body : {
+									UniMethodCall {
+										args : {
+											UniStringLiteral {
+												value : "None"
+											}
+										}
+										methodName : "print"
+										receiver : UniFieldAccess {
+											receiver : UniIdent {
+												name : "System"
+											}
+											fieldName : "out"
+										}
+									}
+								}
+							}
+							falseStatement : UniBlock {
+								body : {
+									UniIf {
+										cond : UniBinOp {
+											operator : "!="
+											right : UniIdent {
+												name : "i"
+											}
+											left : UniMethodCall {
+												methodName : "next"
+												receiver : UniMethodCall {
+													methodName : "iterator"
+													receiver : UniIdent {
+														name : "set2"
+													}
+												}
+											}
+										}
+										trueStatement : UniBlock {
+											body : {
+												UniMethodCall {
+													args : {
+														UniStringLiteral {
+															value : " "
+														}
+													}
+													methodName : "print"
+													receiver : UniFieldAccess {
+														fieldName : "out"
+														receiver : UniIdent {
+															name : "System"
+														}
+													}
+												}
+											}
+										}
+									}, UniMethodCall {
+										args : {
+											UniIdent {
+												name : "i"
+											}
+										}
+										methodName : "print"
+										receiver : UniFieldAccess {
+											fieldName : "out"
+											receiver : UniIdent {
+												name : "System"
+											}
+										}
+									}
+								}
+							}
+						}, UniMethodCall {
+							methodName : "println"
+							receiver : UniFieldAccess {
+								fieldName : "out"
+								receiver : UniIdent {
+									name : "System"
+								}
+							}
+						}, UniMethodCall {
+							methodName : "close"
+							receiver : UniIdent {
+								name : "sc"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }

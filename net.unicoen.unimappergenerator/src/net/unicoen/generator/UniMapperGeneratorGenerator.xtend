@@ -178,7 +178,10 @@ class UniMapperGeneratorGenerator implements IGenerator {
 									ret += value.castTo(clazz)
 								} else if (value instanceof List<?>) {
 									value.forEach[
-										ret += it.castTo(clazz)
+										val t = it.castTo(clazz)
+										if (t != null) {
+											ret += t
+										}
 									]
 								} else {
 									ret += value.castToList(clazz)
@@ -249,7 +252,11 @@ class UniMapperGeneratorGenerator implements IGenerator {
 					}
 					val first = temp.findFirst[clazz.isAssignableFrom(it.class)]
 					return if (first == null) {
-						if (clazz != UniExpr) clazz.newInstance else null
+						try {
+							clazz.newInstance
+						} catch (InstantiationException e) {
+							null
+						}
 					} else
 						first.castTo(clazz)
 				}
@@ -309,7 +316,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 		«IF hasMerge»
 		val merge = newArrayList
 		«ENDIF»
-		«IF hasReturn»for(it : ctx.children) {«ELSE»ctx.children.forEach [«ENDIF»
+		«IF hasReturn»for (it : ctx.children) {«ELSE»ctx.children.forEach [«ENDIF»
 			if (it instanceof RuleContext) {
 				switch it.invokingState {
 					«val stateList = newHashSet»
@@ -324,7 +331,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 										«IF it.op == "RETURN"»
 										return it.visit
 										«ELSE»
-										«if(it.op == "MERGE" || it.op == "ADD") it.op.toLowerCase else it.op» += it.visit
+										«if (it.op == "MERGE" || it.op == "ADD") it.op.toLowerCase else it.op» += it.visit
 										«ENDIF»
 									}
 								«ENDIF»
@@ -347,7 +354,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 									«IF it.op == "RETURN"»
 									return it.visit
 									«ELSE»
-									«if(it.op == "MERGE" || it.op == "ADD") it.op.toLowerCase else it.op» += it.visit
+									«if (it.op == "MERGE" || it.op == "ADD") it.op.toLowerCase else it.op» += it.visit
 									«ENDIF»
 								}
 							«ENDIF»
@@ -439,7 +446,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 		val merge = newArrayList
 		«ENDIF»
 		if (ctx.children != null) {
-			«IF hasReturn»for(it : ctx.children) {«ELSE»ctx.children.forEach [«ENDIF»
+			«IF hasReturn»for (it : ctx.children) {«ELSE»ctx.children.forEach [«ENDIF»
 				if (it instanceof RuleContext) {
 					switch it.invokingState {
 						«val stateList = newHashSet»
@@ -454,7 +461,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 											«IF it.op == "RETURN"»
 											return it.visit
 											«ELSE»
-											«if(it.op == "MERGE" || it.op == "ADD") it.op.toLowerCase else it.op» += it.visit
+											«if (it.op == "MERGE" || it.op == "ADD") it.op.toLowerCase else it.op» += it.visit
 											«ENDIF»
 										}
 									«ENDIF»
@@ -477,7 +484,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 										«IF it.op == "RETURN"»
 										return it.visit
 										«ELSE»
-										«if(it.op == "MERGE" || it.op == "ADD") it.op.toLowerCase else it.op» += it.visit
+										«if (it.op == "MERGE" || it.op == "ADD") it.op.toLowerCase else it.op» += it.visit
 										«ENDIF»
 									}
 								«ENDIF»

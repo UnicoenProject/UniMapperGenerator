@@ -14,6 +14,7 @@ import net.unicoen.testcasegenerator.testCaseGenerator.NodeArchitecture
 import net.unicoen.testcasegenerator.testCaseGenerator.List
 import net.unicoen.testcasegenerator.testCaseGenerator.ChildDeclaration
 import java.util.ArrayDeque
+import java.lang.reflect.ParameterizedType
 
 /**
  * Generates code from your model files on save.
@@ -47,7 +48,7 @@ class TestCaseGeneratorGenerator implements IGenerator {
 		val ret = '''
 			@Test
 			def void «testCase.name»() {
-				val actual = mapper.parse("«testCase.code.body.name.replace("\"","\\\"")»")
+				val actual = mapper.parse("«testCase.code.body.name.replace("\"", "\\\"")»")
 				
 				«testCase.node.compile»
 				node«stack.pop».evaluate(actual)
@@ -60,23 +61,24 @@ class TestCaseGeneratorGenerator implements IGenerator {
 	}
 
 	private def compile(NodeDeclaration node) {
-		node.value.compile
+		node.value.compile(null)
 	}
 
-	private def Object compile(NodeValue value) {
+	private def Object compile(NodeValue value, Class<?> castType) {
 		if (value.arch != null) {
 			value.arch.compile
 		} else if (value.list != null) {
-			value.list.compile
+			value.list.compile(castType)
 		} else {
 			value.literal.compile
 		}
 	}
 
 	private def compile(NodeArchitecture arch) {
+		val cls = Class.forName("net.unicoen.node." + arch.nodeType)
 		val ret1 = '''
 			«FOR child : arch.children»
-				«child.compile»
+				«child.compile(cls)»
 			«ENDFOR»
 		'''
 
@@ -101,14 +103,20 @@ class TestCaseGeneratorGenerator implements IGenerator {
 		'''
 	}
 
-	private def compile(ChildDeclaration child) {
-		child.value.compile
+	private def compile(ChildDeclaration child, Class<?> nodeType) {
+		val field = nodeType.getField(child.fieldName)
+		child.value.compile(
+			if (field.genericType instanceof ParameterizedType)
+				(field.genericType as ParameterizedType).actualTypeArguments.get(0) as Class<?>
+			else
+				null)
+
 	}
 
-	private def compile(List list) {
+	private def compile(List list, Class<?> castType) {
 		val ret1 = '''
 			«FOR v : list.value»
-				«v.compile»
+				«v.compile(null)»
 			«ENDFOR»
 		'''
 		val localStack = new ArrayDeque<Integer>
@@ -118,8 +126,9 @@ class TestCaseGeneratorGenerator implements IGenerator {
 		nodeCount++
 
 		val ret2 = '''
-		val node«nodeCount» = #[«FOR v : list.value»node«localStack.pop»«if (v.arch != null && v.arch.castType != null) {
-			" as " + v.arch.castType
+		val node«nodeCount» = #[«FOR v : list.value»node«localStack.pop»«if (v.arch != null &&
+			v.arch.nodeType != castType.simpleName) {
+			" as " + castType.simpleName
 		} else {
 			""
 		}»«IF list.value.findLast[true] != v», «ENDIF»«ENDFOR»]'''

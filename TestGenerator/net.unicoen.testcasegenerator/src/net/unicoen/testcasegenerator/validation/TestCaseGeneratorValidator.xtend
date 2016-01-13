@@ -34,20 +34,7 @@ class TestCaseGeneratorValidator extends AbstractTestCaseGeneratorValidator {
 	def checkNodeClass(NodeArchitecture arch) {
 		val className = arch.nodeType
 		try {
-			val cls = Class.forName("net.unicoen.node." + className)
-			if (arch.castType != null) {
-				val castClassName = arch.castType
-				try {
-					val castCls = Class.forName("net.unicoen.node." + castClassName)
-					if (!castCls.isAssignableFrom(cls)) {
-						error("Class " + className + " cannot cast to " + castClassName,
-							Literals.NODE_ARCHITECTURE__NODE_TYPE)
-					}
-				} catch (ClassNotFoundException e) {
-					error("Class " + castClassName + " is not found in package \"net.unicoen.node\".",
-						Literals.NODE_ARCHITECTURE__CAST_TYPE)
-				}
-			}
+			Class.forName("net.unicoen.node." + className)
 		} catch (ClassNotFoundException e) {
 			error("Class " + className + " is not found in package \"net.unicoen.node\".",
 				Literals.NODE_ARCHITECTURE__NODE_TYPE)
