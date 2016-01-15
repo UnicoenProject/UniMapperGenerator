@@ -119,7 +119,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 					val childResult = c.visit
 					list += childResult
 				]
-				list
+				list.flatten
 			}
 		
 			override public visit(ParseTree tree) {
@@ -177,7 +177,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 								if (value instanceof Map<?,?>) {
 									ret += value.castTo(clazz)
 								} else if (value instanceof List<?>) {
-									value.forEach[
+									value.forEach [
 										val t = it.castTo(clazz)
 										if (t != null) {
 											ret += t
@@ -264,7 +264,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 			}
 		
 			«FOR r : g.rules.filter(ParserRule)»
-				«IF r.type != null && r.type.name.endsWith("Literal")»
+				«IF r.type != null && r.type.type.name != null && r.type.type.name.endsWith("Literal")»
 					«r.makeLiteralMethod»
 				«ELSEIF r.type != null || r.eAllContents.filter(Element).findFirst[it.op != null] != null»
 					«r.makeVisitMethod»
@@ -280,15 +280,14 @@ class UniMapperGeneratorGenerator implements IGenerator {
 	def makeVisitMethod(ParserRule r) {
 		val ruleName = r.name.toCamelCase
 		val typeName = if (r.type != null) {
-			r.type.name
+			r.type.type.name
 		} else {
 			new String
 		}
 		'''
 			override public visit«ruleName»(«_grammarName»Parser.«ruleName»Context ctx) {
-				«IF typeName.startsWith("List")»
-					«val itemClassName = typeName.substring(typeName.indexOf('<') + 1, typeName.indexOf('>'))»
-					«r.makeListMethodBody(itemClassName)»
+				«IF typeName=="List"»
+					«r.makeListMethodBody(r.type.type.typevalue)»
 				«ELSE»
 					«r.makeMethodBody»
 				«ENDIF»
@@ -331,7 +330,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 										«IF it.op == "RETURN"»
 										return it.visit
 										«ELSE»
-										«if (it.op == "MERGE" || it.op == "ADD") it.op.toLowerCase else it.op» += it.visit
+										«if (it.op == "MERGE" || it.op == "ADD") it.op.toLowerCase else it.op» += it.visit«IF r.type != null && r.type.type.dir != null».flatten«ENDIF»
 										«ENDIF»
 									}
 								«ENDIF»
@@ -354,7 +353,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 									«IF it.op == "RETURN"»
 									return it.visit
 									«ELSE»
-									«if (it.op == "MERGE" || it.op == "ADD") it.op.toLowerCase else it.op» += it.visit
+									«if (it.op == "MERGE" || it.op == "ADD") it.op.toLowerCase else it.op» += it.visit.flatten
 									«ENDIF»
 								}
 							«ENDIF»
@@ -366,24 +365,46 @@ class UniMapperGeneratorGenerator implements IGenerator {
 				}
 			}
 		«IF hasReturn»}«ELSE»]«ENDIF»
-		«IF hasMerge»val node = «ENDIF»map«IF r.type != null».castTo(«r.type.name»)«ENDIF»
-		«IF hasMerge»
-			«IF r.type != null»
-			merge.forEach[node.merge(it.castTo(«r.type.name»))]
+		«IF r.type != null»
+			«IF r.type.type.name != null»
+				«IF hasMerge»val node = «ENDIF»map.castTo(«r.type.type.name»)
+				«IF hasMerge»
+					merge.forEach[node.merge(it.castTo(«r.type.type.name»))]
+					node
+				«ENDIF»
 			«ELSE»
-			merge.forEach [
-				if (it instanceof Map<?, ?>) {
-					it.forEach [ k, v |
-						if (node.containsKey(k)) {
-							node.get(k) += v
-						} else {
-							node.put(k, v as ArrayList<Object>)
+				«IF r.type.type.dir == '>'»
+					add.reverse
+				«ENDIF»
+				var node = add.get(0) as UniExpr
+				add.remove(node)
+				for (Object obj : add) {
+					switch (obj) {
+						«FOR field:r.type.type.fieldvalue»
+						«field.name.get(0)»: {
+							obj.«field.name.get(1)» = node
+							node = obj
 						}
-					]
+						«ENDFOR»
+					}
 				}
-			]
+				node
 			«ENDIF»
-			node
+		«ELSE»
+			«IF hasMerge»
+				merge.forEach [
+					if (it instanceof Map<?, ?>) {
+						it.forEach [ k, v |
+							if (map.containsKey(k)) {
+								map.get(k) += v
+							} else {
+								map.put(k, v as ArrayList<Object>)
+							}
+						]
+					}
+				]
+			«ENDIF»
+			map
 		«ENDIF»
 	'''}
 
@@ -391,7 +412,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 		val ref = (r.body as Atom).body
 		if (ref instanceof RuleRef) {
 			if (ref.reference.type != null) {
-				ref.reference.type.name
+				ref.reference.type.type.name
 			}
 		}
 	}
@@ -539,13 +560,13 @@ class UniMapperGeneratorGenerator implements IGenerator {
 				}
 				return false
 			].text
-			«IF r.type.name == "UniIntLiteral"»
+			«IF r.type.type.name == "UniIntLiteral"»
 				return new UniIntLiteral(Integer.parseInt(text))
-			«ELSEIF r.type.name == "UniBoolLiteral"»
+			«ELSEIF r.type.type.name == "UniBoolLiteral"»
 				return new UniBoolLiteral(Boolean.parseBoolean(text))
-			«ELSEIF r.type.name == "UniDoubleLiteral"»
+			«ELSEIF r.type.type.name == "UniDoubleLiteral"»
 				return new UniDoubleLiteral(Double.parseDouble(text))
-			«ELSEIF r.type.name == "UniStringLiteral"»
+			«ELSEIF r.type.type.name == "UniStringLiteral"»
 				return new UniStringLiteral(text.substring(1, text.length - 1))
 			«ELSE»
 				throw new RuntimeException("Unimplemented Method: «methodName»")

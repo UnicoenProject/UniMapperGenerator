@@ -57,15 +57,15 @@ class UniMapperGeneratorValidator extends AbstractUniMapperGeneratorValidator {
 	}
 
 	def checkField(ParserRule r, Element elem) {
-		val packagePrefix = if (r.type.name.startsWith('Uni')) UniNode.package.name + '.'
+		val packagePrefix = if (r.type.type.name.startsWith('Uni')) UniNode.package.name + '.'
 		try {
-			val clazz = if (packagePrefix != null) Class.forName(packagePrefix + r.type.name)
+			val clazz = if (packagePrefix != null) Class.forName(packagePrefix + r.type.type.name)
 			try {
 				clazz.getField(elem.op)
 			} catch (NoSuchFieldException e) {
 				val sb = new StringBuilder
 				sb.append('Field ').append(elem.op).append(' is not exist. The fields of class ').append(
-					r.type.name).append(' are')
+					r.type.type.name).append(' are')
 				clazz.fields.forEach [
 					sb.append(' ').append(it.name)
 					sb.append('(').append(it.type.name).append(')')
@@ -77,7 +77,7 @@ class UniMapperGeneratorValidator extends AbstractUniMapperGeneratorValidator {
 				error(sb.toString, elem, Literals.ELEMENT__OP)
 			}
 		} catch (ClassNotFoundException e) {
-			error("No such class: " + r.type.name, r.type, Literals.UNICOEN_TYPE_DEC__NAME)
+			error("No such class: " + r.type.type.name, r.type, Literals.UNICOEN_TYPE_DEC__TYPE)
 		}
 	}
 
@@ -87,7 +87,7 @@ class UniMapperGeneratorValidator extends AbstractUniMapperGeneratorValidator {
 			if (atom.body instanceof RuleRef) {
 				val ref = atom.body as RuleRef
 				if (ref.reference.type != null) {
-					ref.reference.type.name
+					ref.reference.type.type.name
 				}
 			}
 		}

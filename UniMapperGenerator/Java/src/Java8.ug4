@@ -70,25 +70,31 @@ literal
 	|	stringLiteral
 	|	nullLiteral
 	;
+	
 integerLiteral=>UniIntLiteral
 	:	IntegerLiteral$value
 	;
+	
 floatingPointLiteral=>UniDoubleLiteral
 	:	FloatingPointLiteral$value
 	;
+	
 booleanLiteral=>UniBoolLiteral
 	:	BooleanLiteral$value
 	;
+	
 stringLiteral=>UniStringLiteral
 	:	StringLiteral$value
 	;
-	
+
 characterLiteral
 	:	CharacterLiteral
 	;
+
 nullLiteral
 	:	NullLiteral
 	;
+	
 /*
  * Productions from §4 (Types, Values, and Variables)
  */
@@ -906,7 +912,7 @@ doStatement
 	;
 
 forStatement
-	:	basicForStatement$RETURN
+	:	basicForStatement
 	|	enhancedForStatement
 	;
 
@@ -936,8 +942,8 @@ statementExpressionList
 	:	statementExpression (',' statementExpression)*
 	;
 
-enhancedForStatement
-	:	'for' '(' variableModifier* unannType variableDeclaratorId ':' expression ')' statement
+enhancedForStatement => UniEnhancedFor
+	:	'for' '(' variableModifier*$modifiers unannType$type variableDeclaratorId$MERGE ':' expression$container ')' statement$statement
 	;
 
 enhancedForStatementNoShortIf
@@ -1012,11 +1018,11 @@ resource
 /*
  * primary - field/variable value expressions
  */
-primary
-	:	(	primaryNoNewArray_lfno_primary$MERGE
+primary => ( < UniMethodCall.receiver, UniFieldAccess.receiver)
+	:	(	primaryNoNewArray_lfno_primary$ADD
 		|	arrayCreationExpression$ADD	//fieldDec/arrayDec inside method that "create new array"
 		)
-		(	primaryNoNewArray_lf_primary$RETURN
+		(	primaryNoNewArray_lf_primary$ADD
 		)*
 	;
 
@@ -1212,8 +1218,8 @@ methodReference_lfno_primary
 arrayCreationExpression => UniNewArray
 	:	'new' primitiveType$type dimExprs$MERGE dims?$type
 	|	'new' classOrInterfaceType$type dimExprs$MERGE dims?$type
-	|	'new' primitiveType$type dims arrayInitializer$value
-	|	'new' classOrInterfaceType$type dims arrayInitializer$value
+	|	'new' primitiveType$type dims$type arrayInitializer$value
+	|	'new' classOrInterfaceType$type dims$type arrayInitializer$value
 	;
 
 dimExprs => UniNewArray

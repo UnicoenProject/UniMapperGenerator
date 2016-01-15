@@ -198,10 +198,10 @@ ElementOption: // This format indicates the default element option
 	qualifiedId=QualifiedId | id=Id assign='=' value=OptionValue;
 
 UnicoenTypeDec:
-	'=>' name=UnicoenTypeIdentifiers;
+	'=>' type=UnicoenTypeIdentifiers;
 
 UnicoenTypeIdentifiers:
-	Id ('<' UnicoenTypeIdentifiers '>')?;
+	name=Id ('<' typevalue=Id '>')? | '(' dir=('<' | '>') fieldvalue+=QualifiedId (',' fieldvalue+=QualifiedId)* ')';
 
 /** Lexer Rule */
 LexerRule:

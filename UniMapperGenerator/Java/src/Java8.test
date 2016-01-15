@@ -126,10 +126,12 @@ public class Main {
 		if (set2.isEmpty()) {
 			System.out.print(\"None\");
 		} else {
-			if (set2.iterator().next() != i) {
-				System.out.print(\" \");
+			for (int i : set2) {
+				if (set2.iterator().next() != i) {
+					System.out.print(\" \");
+				}
+				System.out.print(i);
 			}
-			System.out.print(i);
 		}
 		System.out.println();
 		sc.close();
@@ -336,28 +338,52 @@ public class Main {
 							}
 							falseStatement : UniBlock {
 								body : {
-									UniIf {
-										cond : UniBinOp {
-											operator : "!="
-											right : UniIdent {
-												name : "i"
-											}
-											left : UniMethodCall {
-												methodName : "next"
-												receiver : UniMethodCall {
-													methodName : "iterator"
-													receiver : UniIdent {
-														name : "set2"
-													}
-												}
-											}
+									UniEnhancedFor {
+										container:UniIdent{
+											name:"set2"
 										}
-										trueStatement : UniBlock {
+										type : "int"
+										name : "i"
+										statement : UniBlock {
 											body : {
-												UniMethodCall {
+												UniIf {
+													cond : UniBinOp {
+														operator : "!="
+														right : UniIdent {
+															name : "i"
+														}
+														left : UniMethodCall {
+															methodName : "next"
+															receiver : UniMethodCall {
+																methodName : "iterator"
+																receiver : UniIdent {
+																	name : "set2"
+																}
+															}
+														}
+													}
+													trueStatement : UniBlock {
+														body : {
+															UniMethodCall {
+																args : {
+																	UniStringLiteral {
+																		value : " "
+																	}
+																}
+																methodName : "print"
+																receiver : UniFieldAccess {
+																	fieldName : "out"
+																	receiver : UniIdent {
+																		name : "System"
+																	}
+																}
+															}
+														}
+													}
+												}, UniMethodCall {
 													args : {
-														UniStringLiteral {
-															value : " "
+														UniIdent {
+															name : "i"
 														}
 													}
 													methodName : "print"
@@ -368,19 +394,6 @@ public class Main {
 														}
 													}
 												}
-											}
-										}
-									}, UniMethodCall {
-										args : {
-											UniIdent {
-												name : "i"
-											}
-										}
-										methodName : "print"
-										receiver : UniFieldAccess {
-											fieldName : "out"
-											receiver : UniIdent {
-												name : "System"
 											}
 										}
 									}
