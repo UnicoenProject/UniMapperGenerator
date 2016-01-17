@@ -127,7 +127,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 					if (!(tree instanceof ParserRuleContext)) {
 						return visitTerminal(tree as TerminalNode)
 					}
-					val ruleName = Java8Parser.ruleNames.get((tree as ParserRuleContext).ruleIndex)
+					val ruleName = «_grammarName»Parser.ruleNames.get((tree as ParserRuleContext).ruleIndex)
 					println("enter " + ruleName + " : " + tree.text)
 					val ret = tree.accept(this)
 					println("exit " + ruleName + " : " + ret)

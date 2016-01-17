@@ -1,0 +1,87 @@
+class ExtendedCalculatorTest
+target ExtendedCalculatorMapper
+
+test sampleTest {
+	actual : "class Sample; x=3+2;"
+	expected : UniClassDec {
+		className : "Sample"
+		members : {
+			UniFieldDec {
+				name : "x"
+				value : UniBinOp {
+					operator : "+"
+					left : UniIntLiteral {
+						value : 3
+					}
+					right : UniIntLiteral {
+						value : 2
+					}
+				}
+			}
+		}
+	}
+}
+
+test programTest {
+	actual : "class Sample;
+
+x = 3 + 2 * 4;
+function (x, y) {
+	sin(x) + cos(y)
+}"
+	expected : UniClassDec {
+		className : "Sample"
+		members : {
+			UniFieldDec {
+				name : "x"
+				value : UniBinOp {
+					operator : "+"
+					left : UniIntLiteral {
+						value : 3
+					}
+					right : UniBinOp {
+						operator : "*"
+						left : UniIntLiteral {
+							value : 2
+						}
+						right : UniIntLiteral {
+							value : 4
+						}
+					}
+				}
+			}, UniMethodDec {
+				methodName : "function"
+				args : {
+					UniArg {
+						name : "x"
+					}, UniArg {
+						name : "y"
+					}
+				}
+				block : UniBlock {
+					body : {
+						UniBinOp {
+							operator : "+"
+							left : UniMethodCall {
+								methodName : "sin"
+								args : {
+									UniFieldAccess {
+										fieldName : "x"
+									}
+								}
+							}
+							right : UniMethodCall {
+								methodName : "cos"
+								args : {
+									UniFieldAccess {
+										fieldName : "y"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

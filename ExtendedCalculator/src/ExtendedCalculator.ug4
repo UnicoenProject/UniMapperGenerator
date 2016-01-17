@@ -1,66 +1,87 @@
-grammar ExtendedCalculator; root compilationUnit;
+grammar ExtendedCalculator;
+root compilationUnit;
+@ header {
+package net.unicoen.parser;
+}
 
-compilationUnit:
-	( classNameDeclaration )? expressionList;
+compilationUnit => UniClassDec:
+	( classNameDeclaration$MERGE )? expressionList$members;
 
 classNameDeclaration:
-	'class' Identifier;
+	'class' Identifier$className ';';
 
 expressionList:
-	( expression ';' )*;
+	( expression$ADD )*;
 
 expression:
-	addSubExpression
-	| variableDeclaration
+	variableDeclaration
 	| functionDeclaration;
 
-addSubExpression:
-	mulDivExpression
-	| addSubExpression PLUS mulDivExpression
-	| addSubExpression MINUS mulDivExpression;
+addSubExpression => UniBinOp:
+	mulDivExpression$RETURN
+	| addSubExpression$left PLUS$operator mulDivExpression$right
+	| addSubExpression$left MINUS$operator mulDivExpression$right;
 
-mulDivExpression:
-	factor
-	| mulDivExpression MUL factor
-	| mulDivExpression DIV factor
-	| mulDivExpression MOD factor;
+mulDivExpression => UniBinOp:
+	factor$RETURN
+	| mulDivExpression$left MUL$operator factor$right
+	| mulDivExpression$left DIV$operator factor$right
+	| mulDivExpression$left MOD$operator factor$right;
 
 factor:
 	functionCall
 	| variableAccess
 	| literal
-	| '(' addSubExpression ')';
+	| nestedExpression;
 
-functionCall:
-	functionName '(' argumentList? ')';
+nestedExpression:
+	'(' addSubExpression$RETURN ')';
 
-functionName:
+functionCall => UniMethodCall:
+	functionName$methodName '(' argumentList?$args ')';
+
+functionName => String:
 	Identifier;
 
 argumentList:
-	argument ( ',' argument )*;
+	argument$ADD ( ',' argument$ADD )*;
 
 argument:
 	addSubExpression;
 
-variableAccess:
-	variableName;
+variableAccess => UniFieldAccess:
+	variableName$fieldName;
 
 literal:
-	IntegerLiteral
-	| FloatingPointLiteral;
+	integerLiteral
+	| floatingPointLiteral;
 
-variableDeclaration:
-	variableName '=' addSubExpression;
+variableDeclaration => UniFieldDec:
+	variableName$name '=' addSubExpression$value ';';
 
-variableName:
+variableName => String:
 	Identifier;
 
-functionDeclaration:
-	functionName '(' parameterList? ')' '=' addSubExpression;
+functionDeclaration => UniMethodDec:
+	functionName$methodName '(' parameterList?$args ')' '=' methodBody$block;
+
+methodBody => UniBlock:
+	'{' addSubExpressionList$body '}';
+
+addSubExpressionList:
+	addSubExpression$ADD;
 
 parameterList:
-	variableName ( ',' variableName )*;
+	parameter$ADD ( ',' parameter$ADD )*;
+
+parameter => UniArg:
+	variableName$name;
+
+integerLiteral => UniIntLiteral:
+	IntegerLiteral$value;
+
+floatingPointLiteral => UniDoubleLiteral:
+	FloatingPointLiteral$value;
 
 Identifier:
 	[a-zA-Z_]+;

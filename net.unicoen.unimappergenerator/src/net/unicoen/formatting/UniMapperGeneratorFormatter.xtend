@@ -33,6 +33,7 @@ class UniMapperGeneratorFormatter extends AbstractDeclarativeFormatter {
 		c.setLinewrap(2, 2, 2).before(UniMapperGeneratorGrammarAccess.ruleRule)
 		c.setLinewrap.after(UniMapperGeneratorGrammarAccess.labeledAltRule)
 		c.setLinewrap.after(UniMapperGeneratorGrammarAccess.lexerAltRule)
+		c.setLinewrap.around(UniMapperGeneratorGrammarAccess.rootSelectionRule)
 
 		c.setLinewrap.after(UniMapperGeneratorGrammarAccess.COLONRule)
 		c.setNoSpace.around(UniMapperGeneratorGrammarAccess.DOLLARRule)
