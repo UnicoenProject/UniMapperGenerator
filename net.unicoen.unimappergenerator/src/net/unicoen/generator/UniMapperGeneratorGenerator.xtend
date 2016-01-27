@@ -308,14 +308,15 @@ class UniMapperGeneratorGenerator implements IGenerator {
 		val map = newHashMap
 		val none = newArrayList
 		map.put("none", none)
-		«FOR it : annotationList»«IF it != "MERGE" && it != "RETURN"»
-		val «if (it == "ADD") it.toLowerCase else it» = newArrayList
+		«FOR it : annotationList»«IF it != "MERGE"»
+		val «if (it == "ADD") it.toLowerCase else if (it == "RETURN") "ret" else it» = newArrayList
+		«IF it != "RETURN"»
 		map.put("«if (it == "ADD") it.toLowerCase else it»", «if (it == "ADD") it.toLowerCase else it»)
-		«ENDIF»«ENDFOR»
+		«ENDIF»«ENDIF»«ENDFOR»
 		«IF hasMerge»
 		val merge = newArrayList
 		«ENDIF»
-		«IF hasReturn»for (it : ctx.children) {«ELSE»ctx.children.forEach [«ENDIF»
+		ctx.children.forEach [
 			if (it instanceof RuleContext) {
 				switch it.invokingState {
 					«val stateList = newHashSet»
@@ -327,11 +328,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 								«val invokingState = r.getInvokingState»
 								«IF stateList.add(invokingState)»
 									case «invokingState»: {
-										«IF it.op == "RETURN"»
-										return it.visit
-										«ELSE»
-										«if (it.op == "MERGE" || it.op == "ADD") it.op.toLowerCase else it.op» += it.visit«IF r.type != null && r.type.type.dir != null».flatten«ENDIF»
-										«ENDIF»
+										«if (it.op == "MERGE" || it.op == "ADD") it.op.toLowerCase else if (it.op == "RETURN") "ret" else it.op» += it.visit«IF r.type != null && r.type.type.dir != null».flatten«ENDIF»
 									}
 								«ENDIF»
 							«ENDIF»
@@ -350,11 +347,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 							«val ref = atom.body»
 							«IF ref instanceof Terminal && nameList.add(it.terminalName)»
 								case «_grammarName»Parser.«it.terminalName»: {
-									«IF it.op == "RETURN"»
-									return it.visit
-									«ELSE»
-									«if (it.op == "MERGE" || it.op == "ADD") it.op.toLowerCase else it.op» += it.visit.flatten
-									«ENDIF»
+									«if (it.op == "MERGE" || it.op == "ADD") it.op.toLowerCase else if (it.op == "RETURN") "ret" else it.op» += it.visit.flatten
 								}
 							«ENDIF»
 						«ENDIF»
@@ -364,7 +357,12 @@ class UniMapperGeneratorGenerator implements IGenerator {
 					}
 				}
 			}
-		«IF hasReturn»}«ELSE»]«ENDIF»
+		]
+		«IF hasReturn»
+			if (!ret.isEmpty) {
+				return ret
+			}
+		«ENDIF»
 		«IF r.type != null»
 			«IF r.type.type.name != null»
 				«IF hasMerge»val node = «ENDIF»map.castTo(«r.type.type.name»)
@@ -459,15 +457,16 @@ class UniMapperGeneratorGenerator implements IGenerator {
 		val map = newHashMap
 		val none = newArrayList
 		map.put("none", none)
-		«FOR it : annotationList»«IF it != "MERGE" && it != "RETURN"»
-		val «if (it == "ADD") it.toLowerCase else it» = newArrayList
+		«FOR it : annotationList»«IF it != "MERGE"»
+		val «if (it == "ADD") it.toLowerCase else if (it == "RETURN") "ret" else it» = newArrayList
+		«IF it != "RETURN"»
 		map.put("«if (it == "ADD") it.toLowerCase else it»", «if (it == "ADD") it.toLowerCase else it»)
-		«ENDIF»«ENDFOR»
+		«ENDIF»«ENDIF»«ENDFOR»
 		«IF hasMerge»
 		val merge = newArrayList
 		«ENDIF»
 		if (ctx.children != null) {
-			«IF hasReturn»for (it : ctx.children) {«ELSE»ctx.children.forEach [«ENDIF»
+			ctx.children.forEach [
 				if (it instanceof RuleContext) {
 					switch it.invokingState {
 						«val stateList = newHashSet»
@@ -479,11 +478,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 									«val invokingState = r.getInvokingState»
 									«IF stateList.add(invokingState)»
 										case «invokingState»: {
-											«IF it.op == "RETURN"»
-											return it.visit
-											«ELSE»
-											«if (it.op == "MERGE" || it.op == "ADD") it.op.toLowerCase else it.op» += it.visit
-											«ENDIF»
+											«if (it.op == "MERGE" || it.op == "ADD") it.op.toLowerCase else if (it.op == "RETURN") "ret" else it.op» += it.visit
 										}
 									«ENDIF»
 								«ENDIF»
@@ -502,11 +497,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 								«val ref = atom.body»
 								«IF ref instanceof Terminal && nameList.add(it.terminalName)»
 									case «_grammarName»Parser.«it.terminalName»: {
-										«IF it.op == "RETURN"»
-										return it.visit
-										«ELSE»
-										«if (it.op == "MERGE" || it.op == "ADD") it.op.toLowerCase else it.op» += it.visit
-										«ENDIF»
+										«if (it.op == "MERGE" || it.op == "ADD") it.op.toLowerCase else if (it.op == "RETURN") "ret" else it.op» += it.visit
 									}
 								«ENDIF»
 							«ENDIF»
@@ -516,8 +507,13 @@ class UniMapperGeneratorGenerator implements IGenerator {
 						}
 					}
 				}
-			«IF hasReturn»}«ELSE»]«ENDIF»
+			]
 		}
+		«IF hasReturn»
+			if (!ret.isEmpty) {
+				return ret
+			}
+		«ENDIF»
 		«IF hasMerge»val node = «ENDIF»map«IF r.type != null».castTo«IF !hasMerge»List«ENDIF»(«itemClassName»)«ENDIF»
 		«IF hasMerge»
 		val ret = newArrayList
