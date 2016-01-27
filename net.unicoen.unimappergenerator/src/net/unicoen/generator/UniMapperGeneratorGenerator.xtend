@@ -559,7 +559,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 					«ENDFOR»
 				}
 				return false
-			].text
+			].visit as String
 			«IF r.type.type.name == "UniIntLiteral"»
 				return new UniIntLiteral(Integer.parseInt(text))
 			«ELSEIF r.type.type.name == "UniBoolLiteral"»

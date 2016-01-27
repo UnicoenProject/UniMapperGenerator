@@ -4,9 +4,9 @@ import org.eclipse.emf.mwe.utils.*
 import org.eclipse.xtext.generator.*
 import org.eclipse.xtext.ui.generator.*
 
-var grammarURI = "classpath:/net/unicoen/testcasegenerator/TestCaseGenerator.xtext"
 var fileExtensions = "test"
 var projectName = "net.unicoen.testcasegenerator"
+var grammarURI = "platform:/resource/${projectName}/src/net/unicoen/testcasegenerator/TestCaseGenerator.xtext"
 var runtimeProject = "../${projectName}"
 var generateXtendStub = true
 var encoding = "UTF-8"
