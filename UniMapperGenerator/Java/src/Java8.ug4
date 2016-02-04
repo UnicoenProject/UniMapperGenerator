@@ -580,8 +580,8 @@ simpleTypeName=>String
 	:	Identifier
 	;
 
-constructorBody
-	:	'{' explicitConstructorInvocation? blockStatements? '}'
+constructorBody=>UniBlock
+	:	'{' explicitConstructorInvocation? blockStatements?$body '}'
 	;
 
 explicitConstructorInvocation
