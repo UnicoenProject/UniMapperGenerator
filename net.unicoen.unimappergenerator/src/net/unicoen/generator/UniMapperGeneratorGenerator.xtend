@@ -53,6 +53,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 		import org.antlr.v4.runtime.CommonTokenStream
 		import org.antlr.v4.runtime.ParserRuleContext
 		import org.antlr.v4.runtime.RuleContext
+		import org.antlr.v4.runtime.Token
 		import org.antlr.v4.runtime.tree.ParseTree
 		import org.antlr.v4.runtime.tree.RuleNode
 		import org.antlr.v4.runtime.tree.TerminalNode
@@ -65,7 +66,22 @@ class UniMapperGeneratorGenerator implements IGenerator {
 		«generateImports»
 		
 		class «_grammarName»Mapper extends «_grammarName»BaseVisitor<Object> {
+		
 			val boolean _isDebugMode
+			val List<Comment> _comments = new ArrayList<Comment>;
+			var CommonTokenStream _stream;
+			var UniNode _lastNode;
+			var int _nextTokenIndex;
+		
+			static class Comment {
+				val List<String> contents
+				var ParseTree parent
+		
+				new(List<String> contents, ParseTree parent) {
+					this.contents = contents
+					this.parent = parent
+				}
+			}
 		
 			new(boolean isDebugMode) {
 				_isDebugMode = isDebugMode
@@ -85,7 +101,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 			}
 		
 			def parseCore(CharStream chars) {
-				parseCore(chars, [parser|parser.compilationUnit])
+				parseCore(chars, [parser|parser.«g.root.root.name»])
 			}
 		
 			def parse(String code, Function1<«_grammarName»Parser, ParseTree> parseAction) {
@@ -106,8 +122,25 @@ class UniMapperGeneratorGenerator implements IGenerator {
 				val tokens = new CommonTokenStream(lexer)
 				val parser = new «_grammarName»Parser(tokens)
 				val tree = parseAction.apply(parser) // parse
+				_comments.clear()
+				_stream = tokens
+				_lastNode = null
+				_nextTokenIndex = 0
+
 				«IF g.rules.size > 0»
-					tree.visit.flatten
+					val ret = tree.visit.flatten
+
+					if (_lastNode !== null) {
+						val count = _stream.size - 1
+						for (var i = _nextTokenIndex; i < count; i++) {
+							val hiddenToken = _stream.get(i) // Includes skipped tokens (maybe)
+							if (_lastNode.comments === null) {
+								_lastNode.comments = newArrayList
+							}
+							_lastNode.comments += hiddenToken.text
+						}
+					}
+					ret
       			«ENDIF»
 			}
 
@@ -123,22 +156,88 @@ class UniMapperGeneratorGenerator implements IGenerator {
 			}
 		
 			override public visit(ParseTree tree) {
-				if (_isDebugMode) {
-					if (!(tree instanceof ParserRuleContext)) {
-						return visitTerminal(tree as TerminalNode)
+				val result = if (_isDebugMode && tree instanceof RuleContext) {
+						val ruleName = «_grammarName»Parser.ruleNames.get((tree as ParserRuleContext).ruleIndex)
+						println("enter " + ruleName + " : " + tree.text)
+						val ret = tree.accept(this)
+						println("exit " + ruleName + " : " + ret)
+						ret
+					} else {
+						tree.accept(this)
 					}
-					val ruleName = Java8Parser.ruleNames.get((tree as ParserRuleContext).ruleIndex)
-					println("enter " + ruleName + " : " + tree.text)
-					val ret = tree.accept(this)
-					println("exit " + ruleName + " : " + ret)
-					ret
+		
+				val node = if (result instanceof List<?>) {
+						if(result.size == 1) result.get(0) else result
+					} else {
+						result
+					}
+				if (node instanceof UniNode) {
+					var List<String> contents = newArrayList
+					for (var i = _comments.size - 1; i >= 0 && _comments.get(i).parent == tree; i--) {
+						_comments.get(i).contents += contents
+						contents = _comments.get(i).contents
+						_comments.remove(i)
+					}
+					if (contents.size > 0) {
+						if (node.comments === null) {
+							node.comments = contents
+						} else {
+							node.comments += contents
+						}
+					}
+					_lastNode = node
 				} else {
-					tree.accept(this)
+					for (var i = _comments.size - 1; i >= 0 && _comments.get(i).parent == tree; i--) {
+						_comments.get(i).parent = _comments.get(i).parent.parent
+					}
+					_lastNode = null
+				}
+		
+				result
+			}
+
+			def boolean isNonEmptyNode(ParseTree node) {
+				if (node instanceof ParserRuleContext) {
+					if (node.childCount > 1) {
+						return true
+					}
+					node.childCount == 1 && node.children.exists[isNonEmptyNode]
+				} else {
+					true
 				}
 			}
 
 			override public visitTerminal(TerminalNode node) {
-				println("visit TERMINAL : " + node.text)
+				if (_isDebugMode) {
+					println("visit TERMINAL : " + node.text)
+				}
+		
+				val token = node.symbol
+				if (token.type > 0) {
+					val count = token.tokenIndex
+					val List<String> contents = newArrayList
+					var i = _nextTokenIndex
+					for (; i < count; i++) {
+						val hiddenToken = _stream.get(i) // Includes skipped tokens (maybe)
+						if (_lastNode !== null && _stream.get(_nextTokenIndex - 1).line == hiddenToken.line) {
+							if (_lastNode.comments === null) {
+								_lastNode.comments = newArrayList
+							}
+							_lastNode.comments += hiddenToken.text
+						} else {
+							contents += hiddenToken.text
+						}
+					}
+					val count2 = _stream.size - 1
+					for (i = count + 1; i < count2 && _stream.get(i).channel == Token.HIDDEN_CHANNEL &&
+						_stream.get(count).line == _stream.get(i).line; i++) {
+						contents += _stream.get(i).text
+					}
+					if (contents.size > 0) {
+						_comments.add(new Comment(contents, node.parent))
+					}
+					_nextTokenIndex = i
+				}
 				node.text
 			}
 		
@@ -153,7 +252,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 					]
 					return ret
 				}
-				if (obj instanceof Map<?,?>) {
+				if (obj instanceof Map<?, ?>) {
 					if (obj.size == 1) {
 						return obj.get(obj.keySet.get(0)).flatten
 					}
@@ -174,7 +273,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 					temp.forEach [ key, value |
 						switch key {
 							case "add": {
-								if (value instanceof Map<?,?>) {
+								if (value instanceof Map<?, ?>) {
 									ret += value.castTo(clazz)
 								} else if (value instanceof List<?>) {
 									value.forEach [
@@ -206,7 +305,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 		
 			public def <T> T castTo(Object obj, Class<T> clazz) {
 				val temp = obj.flatten
-				if (temp instanceof Map<?,?>) {
+				if (temp instanceof Map<?, ?>) {
 					if (String.isAssignableFrom(clazz)) {
 						val builder = new StringBuilder
 						val hasAdd = temp.containsKey("add")
@@ -251,7 +350,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 						return if (builder.length > 0) clazz.getConstructor(StringBuilder).newInstance(builder) else null
 					}
 					val first = temp.findFirst[clazz.isAssignableFrom(it.class)]
-					return if (first == null) {
+					return if (first === null) {
 						try {
 							clazz.newInstance
 						} catch (InstantiationException e) {
@@ -266,8 +365,10 @@ class UniMapperGeneratorGenerator implements IGenerator {
 			«FOR r : g.rules.filter(ParserRule)»
 				«IF r.type != null && r.type.type.name != null && r.type.type.name.endsWith("Literal")»
 					«r.makeLiteralMethod»
+
 				«ELSEIF r.type != null || r.eAllContents.filter(Element).findFirst[it.op != null] != null»
 					«r.makeVisitMethod»
+
 				«ENDIF»
 			«ENDFOR»
 		}
@@ -292,7 +393,6 @@ class UniMapperGeneratorGenerator implements IGenerator {
 					«r.makeMethodBody»
 				«ENDIF»
 			}
-
 		'''
 	}
 
@@ -568,7 +668,6 @@ class UniMapperGeneratorGenerator implements IGenerator {
 				throw new RuntimeException("Unimplemented Method: «methodName»")
 			«ENDIF»
 		}
-		
 	'''
 
 	def die(String message) {
