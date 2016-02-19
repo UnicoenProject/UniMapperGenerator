@@ -78,13 +78,13 @@ class TestCaseGeneratorGenerator implements IGenerator {
 	private def compile(NodeArchitecture arch) {
 		val cls = Class.forName("net.unicoen.node." + arch.nodeType)
 		val ret1 = '''
-			«FOR child : arch.children»
+			«FOR child : arch.children.filter[it.value.literal == null]»
 				«child.compile(cls)»
 			«ENDFOR»
 		'''
 
 		val localStack = new ArrayDeque<String>
-		for (child : arch.children) {
+		for (child : arch.children.filter[it.value.literal == null]) {
 			localStack.push(stack.pop)
 		}
 
@@ -94,7 +94,7 @@ class TestCaseGeneratorGenerator implements IGenerator {
 		val ret2 = '''
 			val «nodeName» = new «arch.nodeType»
 			«FOR child : arch.children»
-				«nodeName».«child.fieldName» = «localStack.pop»
+				«nodeName».«child.fieldName» = «if(child.value.literal != null) child.value.literal.compile else localStack.pop»
 			«ENDFOR»
 		'''
 		stack.push(nodeName)
@@ -118,20 +118,20 @@ class TestCaseGeneratorGenerator implements IGenerator {
 	private def compile(List list, Class<?> castType) {
 		val lst = "list"
 		val ret1 = '''
-			«FOR v : list.value»
+			«FOR v : list.value.filter[it.literal == null]»
 				«v.compile(null)»
 			«ENDFOR»
 		'''
 		val localStack = new ArrayDeque<String>
-		for (v : list.value) {
+		for (v : list.value.filter[it.literal == null]) {
 			localStack.push(stack.pop)
 		}
 		nodeCount.put(lst, if(nodeCount.containsKey(lst)) nodeCount.get(lst) + 1 else 0)
 		val nodeName = lst + nodeCount.get(lst)
 
 		val ret2 = '''
-		val «nodeName» = #[«FOR v : list.value»«localStack.pop»«if (v.arch != null &&
-			v.arch.nodeType != castType.simpleName) {
+		val «nodeName» = #[«FOR v : list.value»«if(v.literal == null) localStack.pop else v.literal.compile»«if (v.arch !=
+			null && v.arch.nodeType != castType.simpleName) {
 			" as " + castType.simpleName
 		} else {
 			""
@@ -144,18 +144,7 @@ class TestCaseGeneratorGenerator implements IGenerator {
 		'''
 	}
 
-	private def compile(String literal) {
-		val str = "str"
-		nodeCount.put(str, if(nodeCount.containsKey(str)) nodeCount.get(str) + 1 else 0)
-		val nodeName = str + nodeCount.get(str)
-		
-		val ret = '''
-			val «nodeName» = «literal»
-			
-		'''
-		stack.push(nodeName)
-		ret
-	}
+	private def compile(String literal) '''«literal»'''
 
 	private def generateImports() '''
 		package net.unicoen.mapper
@@ -164,7 +153,7 @@ class TestCaseGeneratorGenerator implements IGenerator {
 		import org.junit.Test
 	'''
 
-	private def simpleName(String str){
+	private def simpleName(String str) {
 		str.substring(3).toFirstLower
 	}
 }

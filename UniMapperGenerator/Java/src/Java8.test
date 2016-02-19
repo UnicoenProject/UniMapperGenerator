@@ -339,8 +339,8 @@ public class Main {
 							falseStatement : UniBlock {
 								body : {
 									UniEnhancedFor {
-										container:UniIdent{
-											name:"set2"
+										container : UniIdent {
+											name : "set2"
 										}
 										type : "int"
 										name : "i"
