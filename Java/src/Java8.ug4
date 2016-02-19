@@ -55,7 +55,7 @@ grammar Java8;
 root compilationUnit;
 
 @header{
-	package net.unicoen.parser;
+package net.unicoen.parser;
 }
 
 /*
@@ -70,24 +70,31 @@ literal
 	|	stringLiteral
 	|	nullLiteral
 	;
-integerLiteral => UniIntLiteral
+	
+integerLiteral=>UniIntLiteral
 	:	IntegerLiteral$value
 	;
-floatingPointLiteral => UniDoubleLiteral
+	
+floatingPointLiteral=>UniDoubleLiteral
 	:	FloatingPointLiteral$value
 	;
-booleanLiteral => UniBoolLiteral
+	
+booleanLiteral=>UniBoolLiteral
 	:	BooleanLiteral$value
 	;
-stringLiteral => UniStringLiteral
+	
+stringLiteral=>UniStringLiteral
 	:	StringLiteral$value
 	;
+
 characterLiteral
 	:	CharacterLiteral
 	;
+
 nullLiteral
 	:	NullLiteral
 	;
+	
 /*
  * Productions from §4 (Types, Values, and Variables)
  */
@@ -98,8 +105,8 @@ type
 	;
 
 primitiveType
-	:	annotation* numericType
-	|	annotation* 'boolean'
+	:	annotation* numericType$RETURN
+	|	annotation* BOOLEAN$RETURN
 	;
 
 numericType
@@ -136,8 +143,8 @@ classOrInterfaceType
 	;
 
 classType => String
-	:	annotation* Identifier typeArguments?
-	|	classOrInterfaceType '.' annotation* Identifier typeArguments?
+	:	annotation* Identifier$ADD typeArguments?
+	|	classOrInterfaceType$ADD DOT$ADD annotation* Identifier$ADD typeArguments?
 	;
 
 classType_lf_classOrInterfaceType
@@ -161,7 +168,7 @@ interfaceType_lfno_classOrInterfaceType
 	;
 
 typeVariable
-	:	annotation* Identifier
+	:	annotation* Identifier$RETURN
 	;
 
 arrayType
@@ -171,7 +178,7 @@ arrayType
 	;
 
 dims => String
-	:	annotation* '[' ']' (annotation* '[' ']')*
+	:	annotation* LBRACK$ADD RBRACK$ADD (annotation* LBRACK$ADD RBRACK$ADD)*
 	;
 
 typeParameter
@@ -222,32 +229,36 @@ packageName
 	|	packageName '.' Identifier
 	;
 
-typeName
-	:	Identifier
-	|	packageOrTypeName '.' Identifier
+typeName => UniFieldAccess
+	:	ident$RETURN
+	|	packageOrTypeName$receiver '.' Identifier$fieldName
 	;
 
-packageOrTypeName
-	:	Identifier
-	|	packageOrTypeName '.' Identifier
+packageOrTypeName => UniFieldAccess
+	:	ident$RETURN
+	|	packageOrTypeName$receiver '.' Identifier$fieldName
 	;
 
-expressionName
-	:	Identifier
-	|	ambiguousName '.' Identifier
+expressionName => UniFieldAccess
+	:	ident$RETURN
+	|	ambiguousName$receiver '.' Identifier$fieldName
 	;
 
-ambiguousName
-	:	Identifier
-	|	ambiguousName '.' Identifier
+ambiguousName => UniFieldAccess
+	:	ident$RETURN
+	|	ambiguousName$receiver '.' Identifier$fieldName
+	;
+	
+ident => UniIdent
+	:	Identifier$name
 	;
 
 /*
  * Productions from §7 (Packages)
  */
 
-compilationUnit => UniClassDec
-	:	packageDeclaration? importDeclaration* typeDeclaration*$MERGE EOF2
+compilationUnit
+	:	packageDeclaration? importDeclaration* typeDeclaration* EOF2
 	;
 
 packageDeclaration
@@ -281,9 +292,9 @@ staticImportOnDemandDeclaration
 	:	'import' 'static' typeName '.' '*' ';'
 	;
 
-typeDeclaration => UniClassDec
-	:	classDeclaration$MERGE
-	|	interfaceDeclaration
+typeDeclaration
+	:	classDeclaration$RETURN
+	|	interfaceDeclaration$RETURN
 	|	';'
 	;
 
@@ -291,14 +302,13 @@ typeDeclaration => UniClassDec
  * Productions from §8 (Classes)
  */
 
-classDeclaration => UniClassDec
+classDeclaration=>UniClassDec
 	:	normalClassDeclaration$MERGE
 	|	enumDeclaration
 	;
 
 normalClassDeclaration => UniClassDec
-	:	classModifiers$modifiers 'class' className$className typeParameters?
-		superclass?$superClass superinterfaces?$interfaces classBody$members
+	:	classModifiers$modifiers 'class' className$className typeParameters? superclass?$superClass superinterfaces?$interfaces classBody$members
 	;
 
 className => String
@@ -336,8 +346,8 @@ superinterfaces => List<String>
 	:	'implements' interfaceTypeList$ADD
 	;
 
-interfaceTypeList => String
-	:	interfaceType (',' interfaceType)*
+interfaceTypeList => List<String>
+	:	interfaceType$ADD (',' interfaceType$ADD)*
 	;
 
 classBody => List<UniMemberDec>
@@ -345,22 +355,22 @@ classBody => List<UniMemberDec>
 	;
 
 classBodyDeclaration => List<UniMemberDec>
-	:	classMemberDeclaration $ ADD
+	:	classMemberDeclaration$ADD
 	|	instanceInitializer
 	|	staticInitializer
-	|	constructorDeclaration
+	|	constructorDeclaration$ADD
 	;
 
-classMemberDeclaration
-	:	fieldDeclaration
-	|	methodDeclaration
+classMemberDeclaration => List<UniMemberDec>
+	:	fieldDeclaration$ADD
+	|	methodDeclaration$ADD
 	|	classDeclaration
 	|	interfaceDeclaration
 	|	';'
 	;
 
 fieldDeclaration => List<UniFieldDec>
-	:	fieldModifiers$modifiers unannType$type fieldVariableDeclaratorList$ADD ';'
+	:	fieldModifiers$modifiers unannType$type variableDeclaratorList$MERGE ';'
 	;
 fieldModifiers =>List<String>
 	:	fieldModifier*$ADD
@@ -376,39 +386,17 @@ fieldModifier => String
 	|	'transient'
 	|	'volatile'
 	;
-	
-	
-fieldVariableDeclaratorList => List<UniFieldDec>
-	:	fieldVariableDeclarator$ADD (',' fieldVariableDeclarator$ADD)*
-	;
-fieldVariableDeclarator => UniFieldDec
-	:	fieldVariableDeclaratorId$name ('=' fieldVariableInitializer$value)?
-	;
-fieldVariableDeclaratorId => String
-	:	Identifier dims?
-	;
-fieldVariableInitializer
-	:	fieldAssignmentExpression
-	|	fieldArrayInitializer
-	;
-fieldAssignmentExpression
-	:	expression	//mainly use assignmentExpression
-	;
-fieldArrayInitializer
-	:	arrayInitializer	//list of assignmentExpressions
-	;
-
 
 variableDeclaratorList
-	:	variableDeclarator (',' variableDeclarator)*
+	:	variableDeclarator$ADD (',' variableDeclarator$ADD)*
 	;
 
 variableDeclarator
-	:	variableDeclaratorId ('=' variableInitializer)?
+	:	variableDeclaratorId$MERGE ('=' variableInitializer$value)?
 	;
 
 variableDeclaratorId
-	:	Identifier dims?
+	:	Identifier$name dims?$type
 	;
 
 variableInitializer
@@ -480,7 +468,7 @@ methodDeclaration => UniMethodDec
 	:	methodModifier*$modifiers methodHeader$MERGE methodBody$block
 	;
 
-methodModifier => String
+methodModifier
 	:	annotation
 	|	'public'
 	|	'protected'
@@ -560,8 +548,8 @@ exceptionType
 	|	typeVariable
 	;
 
-methodBody
-	:	block
+methodBody=>UniBlock
+	:	block$MERGE
 	|	';'
 	;
 
@@ -573,22 +561,22 @@ staticInitializer
 	:	'static' block
 	;
 
-constructorDeclaration
-	:	constructorModifier* constructorDeclarator throws_? constructorBody
+constructorDeclaration=>UniMethodDec
+	:	constructorModifier*$modifiers constructorDeclarator$MERGE throws_? constructorBody$block
 	;
 
-constructorModifier
+constructorModifier=>String
 	:	annotation
 	|	'public'
 	|	'protected'
 	|	'private'
 	;
 
-constructorDeclarator
-	:	typeParameters? simpleTypeName '(' formalParameterList? ')'
+constructorDeclarator=>UniMethodDec
+	:	typeParameters? simpleTypeName$methodName '(' formalParameterList?$args ')'
 	;
 
-simpleTypeName
+simpleTypeName=>String
 	:	Identifier
 	;
 
@@ -631,16 +619,22 @@ enumBodyDeclarations
  * Productions from §9 (Interfaces)
  */
 
-interfaceDeclaration
-	:	normalInterfaceDeclaration
+interfaceDeclaration=>UniClassDec
+	:	normalInterfaceDeclaration$MERGE
 	|	annotationTypeDeclaration
 	;
 
-normalInterfaceDeclaration
-	:	interfaceModifier* 'interface' Identifier typeParameters? extendsInterfaces? interfaceBody
+normalInterfaceDeclaration => UniClassDec
+	:	interfaceModifiers$modifiers 'interface' interfaceName$className typeParameters? extendsInterfaces?$superClass interfaceBody$members
+	;
+interfaceModifiers => List<String>
+	:	interfaceModifier*$ADD
+	;
+interfaceName => String
+	:	Identifier
 	;
 
-interfaceModifier
+interfaceModifier => String
 	:	annotation
 	|	'public'
 	|	'protected'
@@ -650,38 +644,44 @@ interfaceModifier
 	|	'strictfp'
 	;
 
-extendsInterfaces
-	:	'extends' interfaceTypeList
+extendsInterfaces => List<String>
+	:	'extends' interfaceTypeList$ADD
 	;
 
-interfaceBody
-	:	'{' interfaceMemberDeclaration* '}'
+interfaceBody => List<UniMemberDec>
+	:	'{' interfaceMemberDeclaration*$ADD '}'
 	;
 
-interfaceMemberDeclaration
-	:	constantDeclaration
-	|	interfaceMethodDeclaration
+interfaceMemberDeclaration => List<UniMemberDec>
+	:	constantDeclaration$ADD
+	|	interfaceMethodDeclaration$ADD
 	|	classDeclaration
 	|	interfaceDeclaration
 	|	';'
 	;
 
-constantDeclaration
-	:	constantModifier* unannType variableDeclaratorList ';'
+constantDeclaration => List<UniFieldDec>
+	:	constantModifiers$modifiers unannType$type variableDeclaratorList$MERGE ';'
+	;
+constantModifiers => List<String>
+	:	constantModifier*$ADD
 	;
 
-constantModifier
+constantModifier => String
 	:	annotation
 	|	'public'
 	|	'static'
 	|	'final'
 	;
 
-interfaceMethodDeclaration
-	:	interfaceMethodModifier* methodHeader methodBody
+interfaceMethodDeclaration=>UniMethodDec
+	:	interfaceMethodModifiers$modifiers methodHeader$MERGE methodBody$block
+	;
+interfaceMethodModifiers => List<String>
+	:	interfaceMethodModifier*$ADD
 	;
 
-interfaceMethodModifier
+interfaceMethodModifier=>String
 	:	annotation
 	|	'public'
 	|	'abstract'
@@ -764,24 +764,24 @@ singleElementAnnotation
  * Productions from §10 (Arrays)
  */
 
-arrayInitializer
-	:	'{' variableInitializerList? ','? '}'
+arrayInitializer=>UniArray    //UniArrayLiteral
+	:	'{' variableInitializerList?$items ','? '}'
 	;
 
-variableInitializerList
-	:	variableInitializer (',' variableInitializer)*
+variableInitializerList=>List<UniExpr>
+	:	variableInitializer$ADD (',' variableInitializer$ADD)*
 	;
 
 /*
  * Productions from §14 (Blocks and Statements)
  */
 
-block
-	:	'{' blockStatements? '}'
+block => UniBlock
+	:	'{' blockStatements?$body '}'
 	;
 
-blockStatements
-	:	blockStatement blockStatement*
+blockStatements => List<UniExpr>
+	:	blockStatement$ADD blockStatement*$ADD
 	;
 
 blockStatement
@@ -790,12 +790,12 @@ blockStatement
 	|	statement
 	;
 
-localVariableDeclarationStatement
-	:	localVariableDeclaration ';'
+localVariableDeclarationStatement => List<UniVariableDec>
+	:	localVariableDeclaration$RETURN ';'
 	;
 
-localVariableDeclaration
-	:	variableModifier* unannType variableDeclaratorList
+localVariableDeclaration => List<UniVariableDec>
+	:	variableModifier*$modifiers unannType$type variableDeclaratorList$MERGE
 	;
 
 statement
@@ -843,7 +843,7 @@ labeledStatementNoShortIf
 	;
 
 expressionStatement
-	:	statementExpression ';'
+	:	statementExpression$RETURN ';'
 	;
 
 statementExpression
@@ -856,12 +856,12 @@ statementExpression
 	|	classInstanceCreationExpression
 	;
 
-ifThenStatement
-	:	'if' '(' expression ')' statement
+ifThenStatement => UniIf
+	:	'if' '(' expression$cond ')' statement$trueStatement
 	;
 
-ifThenElseStatement
-	:	'if' '(' expression ')' statementNoShortIf 'else' statement
+ifThenElseStatement => UniIf
+	:	'if' '(' expression$cond ')' statementNoShortIf$trueStatement 'else' statement$falseStatement
 	;
 
 ifThenElseStatementNoShortIf
@@ -921,8 +921,8 @@ forStatementNoShortIf
 	|	enhancedForStatementNoShortIf
 	;
 
-basicForStatement
-	:	'for' '(' forInit? ';' expression? ';' forUpdate? ')' statement
+basicForStatement => UniFor
+	:	'for' '(' forInit?$init ';' expression?$cond ';' forUpdate?$step ')' statement$statement
 	;
 
 basicForStatementNoShortIf
@@ -942,8 +942,8 @@ statementExpressionList
 	:	statementExpression (',' statementExpression)*
 	;
 
-enhancedForStatement
-	:	'for' '(' variableModifier* unannType variableDeclaratorId ':' expression ')' statement
+enhancedForStatement => UniEnhancedFor
+	:	'for' '(' variableModifier*$modifiers unannType$type variableDeclaratorId$MERGE ':' expression$container ')' statement$statement
 	;
 
 enhancedForStatementNoShortIf
@@ -958,8 +958,8 @@ continueStatement
 	:	'continue' Identifier? ';'
 	;
 
-returnStatement
-	:	'return' expression? ';'
+returnStatement => UniReturn
+	:	'return' expression?$value ';'
 	;
 
 throwStatement
@@ -1015,12 +1015,14 @@ resource
 /*
  * Productions from §15 (Expressions)
  */
-
-primary
-	:	(	primaryNoNewArray_lfno_primary
-		|	arrayCreationExpression
+/*
+ * primary - field/variable value expressions
+ */
+primary => ( < UniMethodCall.receiver, UniFieldAccess.receiver)
+	:	(	primaryNoNewArray_lfno_primary$ADD
+		|	arrayCreationExpression$ADD	//fieldDec/arrayDec inside method that "create new array"
 		)
-		(	primaryNoNewArray_lf_primary
+		(	primaryNoNewArray_lf_primary$ADD
 		)*
 	;
 
@@ -1075,7 +1077,7 @@ primaryNoNewArray_lf_primary_lfno_arrayAccess_lf_primary
 	;
 
 primaryNoNewArray_lfno_primary
-	:	literal
+	:	literal$RETURN
 	|	typeName ('[' ']')* '.' 'class'
 	|	unannPrimitiveType ('[' ']')* '.' 'class'
 	|	'void' '.' 'class'
@@ -1083,9 +1085,9 @@ primaryNoNewArray_lfno_primary
 	|	typeName '.' 'this'
 	|	'(' expression ')'
 	|	classInstanceCreationExpression_lfno_primary
-	|	fieldAccess_lfno_primary
+	|	fieldAccess_lfno_primary$RETURN
 	|	arrayAccess_lfno_primary
-	|	methodInvocation_lfno_primary
+	|	methodInvocation_lfno_primary$RETURN
 	|	methodReference_lfno_primary
 	;
 
@@ -1117,8 +1119,8 @@ classInstanceCreationExpression_lf_primary
 	:	'.' 'new' typeArguments? annotation* Identifier typeArgumentsOrDiamond? '(' argumentList? ')' classBody?
 	;
 
-classInstanceCreationExpression_lfno_primary
-	:	'new' typeArguments? annotation* Identifier ('.' annotation* Identifier)* typeArgumentsOrDiamond? '(' argumentList? ')' classBody?
+classInstanceCreationExpression_lfno_primary => UniNew
+	:	'new' typeArguments? annotation* Identifier$type (DOT$type annotation* Identifier$type)* typeArgumentsOrDiamond?$type '(' argumentList?$args ')' classBody?
 	|	expressionName '.' 'new' typeArguments? annotation* Identifier typeArgumentsOrDiamond? '(' argumentList? ')' classBody?
 	;
 
@@ -1166,28 +1168,28 @@ arrayAccess_lfno_primary
 	;
 
 methodInvocation => UniMethodCall
-	:	methodName$methodName '(' argumentList? ')'
-	|	typeName '.' typeArguments? Identifier$methodName '(' argumentList? ')'
-	|	expressionName '.' typeArguments? Identifier$methodName '(' argumentList? ')'
-	|	primary '.' typeArguments? Identifier$methodName '(' argumentList? ')'
-	|	'super' '.' typeArguments? Identifier$methodName '(' argumentList? ')'
-	|	typeName '.' 'super' '.' typeArguments? Identifier$methodName '(' argumentList? ')'
+	:	methodName$methodName '(' argumentList?$args ')'
+	|	typeName$receiver '.' typeArguments? Identifier$methodName '(' argumentList?$args ')'
+	|	expressionName$receiver '.' typeArguments? Identifier$methodName '(' argumentList?$args ')'
+	|	primary$receiver '.' typeArguments? Identifier$methodName '(' argumentList?$args ')'
+	|	'super' '.' typeArguments? Identifier$methodName '(' argumentList?$args ')'
+	|	typeName '.' 'super' '.' typeArguments? Identifier$methodName '(' argumentList?$args ')'
 	;
 
-methodInvocation_lf_primary
-	:	'.' typeArguments? Identifier '(' argumentList? ')'
+methodInvocation_lf_primary => UniMethodCall
+	:	'.' typeArguments? Identifier$methodName '(' argumentList?$args ')'
 	;
 
-methodInvocation_lfno_primary
-	:	methodName '(' argumentList? ')'
-	|	typeName '.' typeArguments? Identifier '(' argumentList? ')'
-	|	expressionName '.' typeArguments? Identifier '(' argumentList? ')'
+methodInvocation_lfno_primary => UniMethodCall
+	:	methodName$methodName '(' argumentList?$args ')'
+	|	typeName$receiver '.' typeArguments? Identifier$methodName '(' argumentList?$args ')'
+	|	expressionName$receiver '.' typeArguments? Identifier$methodName '(' argumentList?$args ')'
 	|	'super' '.' typeArguments? Identifier '(' argumentList? ')'
 	|	typeName '.' 'super' '.' typeArguments? Identifier '(' argumentList? ')'
 	;
 
 argumentList
-	:	expression (',' expression)*
+	:	expression$ADD (',' expression$ADD)*
 	;
 
 methodReference
@@ -1213,19 +1215,19 @@ methodReference_lfno_primary
 	|	arrayType '::' 'new'
 	;
 
-arrayCreationExpression
-	:	'new' primitiveType dimExprs dims?
-	|	'new' classOrInterfaceType dimExprs dims?
-	|	'new' primitiveType dims arrayInitializer
-	|	'new' classOrInterfaceType dims arrayInitializer
+arrayCreationExpression => UniNewArray
+	:	'new' primitiveType$type dimExprs$MERGE dims?$type
+	|	'new' classOrInterfaceType$type dimExprs$MERGE dims?$type
+	|	'new' primitiveType$type dims$type arrayInitializer$value
+	|	'new' classOrInterfaceType$type dims$type arrayInitializer$value
 	;
 
-dimExprs
-	:	dimExpr dimExpr*
+dimExprs => UniNewArray
+	:	dimExpr$MERGE dimExpr*$MERGE
 	;
 
-dimExpr
-	:	annotation* '[' expression ']'
+dimExpr => UniNewArray
+	:	annotation* '[' expression$elementsNum ']'
 	;
 
 constantExpression
@@ -1261,8 +1263,8 @@ assignmentExpression
 	|	assignment
 	;
 
-assignment
-	:	leftHandSide assignmentOperator expression
+assignment=>UniBinOp
+	:	leftHandSide$left assignmentOperator$operator expression$right
 	;
 
 leftHandSide
@@ -1271,7 +1273,7 @@ leftHandSide
 	|	arrayAccess
 	;
 
-assignmentOperator
+assignmentOperator=>String
 	:	'='
 	|	'*='
 	|	'/='
@@ -1286,105 +1288,105 @@ assignmentOperator
 	|	'|='
 	;
 
-conditionalExpression
-	:	conditionalOrExpression
-	|	conditionalOrExpression '?' expression ':' conditionalExpression
+conditionalExpression => UniTernaryOp
+	:	conditionalOrExpression$RETURN
+	|	conditionalOrExpression$cond '?' expression$trueExpr ':' conditionalExpression$falseExpr
 	;
 
-conditionalOrExpression
-	:	conditionalAndExpression
-	|	conditionalOrExpression '||' conditionalAndExpression
+conditionalOrExpression => UniBinOp
+	:	conditionalAndExpression$RETURN
+	|	conditionalOrExpression$left OR$operator conditionalAndExpression$right
 	;
 
-conditionalAndExpression
-	:	inclusiveOrExpression
-	|	conditionalAndExpression '&&' inclusiveOrExpression
+conditionalAndExpression => UniBinOp
+	:	inclusiveOrExpression$RETURN
+	|	conditionalAndExpression$left AND$operator inclusiveOrExpression$right
 	;
 
-inclusiveOrExpression
-	:	exclusiveOrExpression
-	|	inclusiveOrExpression '|' exclusiveOrExpression
+inclusiveOrExpression => UniBinOp
+	:	exclusiveOrExpression$RETURN
+	|	inclusiveOrExpression$left BITOR$operator exclusiveOrExpression$right
 	;
 
-exclusiveOrExpression
-	:	andExpression
-	|	exclusiveOrExpression '^' andExpression
+exclusiveOrExpression => UniBinOp
+	:	andExpression$RETURN
+	|	exclusiveOrExpression$left CARET$operator andExpression$right
 	;
 
-andExpression
-	:	equalityExpression
-	|	andExpression '&' equalityExpression
+andExpression => UniBinOp
+	:	equalityExpression$RETURN
+	|	andExpression$left BITAND$operator equalityExpression$right
 	;
 
-equalityExpression
-	:	relationalExpression
-	|	equalityExpression '==' relationalExpression
-	|	equalityExpression '!=' relationalExpression
+equalityExpression => UniBinOp
+	:	relationalExpression$RETURN
+	|	equalityExpression$left EQUAL$operator relationalExpression$right
+	|	equalityExpression$left NOTEQUAL$operator relationalExpression$right
 	;
 
-relationalExpression
-	:	shiftExpression
-	|	relationalExpression '<' shiftExpression
-	|	relationalExpression '>' shiftExpression
-	|	relationalExpression '<=' shiftExpression
-	|	relationalExpression '>=' shiftExpression
-	|	relationalExpression 'instanceof' referenceType
+relationalExpression => UniBinOp
+	:	shiftExpression$RETURN
+	|	relationalExpression$left LT$operator shiftExpression$right
+	|	relationalExpression$left GT$operator shiftExpression$right
+	|	relationalExpression$left LE$operator shiftExpression$right
+	|	relationalExpression$left GE$operator shiftExpression$right
+	|	relationalExpression$left INSTANCEOF$operator referenceType$right
 	;
 
-shiftExpression
-	:	additiveExpression
-	|	shiftExpression '<' '<' additiveExpression
-	|	shiftExpression '>' '>' additiveExpression
-	|	shiftExpression '>' '>' '>' additiveExpression
+shiftExpression => UniBinOp
+	:	additiveExpression$RETURN
+	|	shiftExpression$left LT$operator LT$operator additiveExpression$right
+	|	shiftExpression$left GT$operator GT$operator additiveExpression$right
+	|	shiftExpression$left GT$operator GT$operator GT$operator additiveExpression$right
 	;
 
-additiveExpression
-	:	multiplicativeExpression
-	|	additiveExpression '+' multiplicativeExpression
-	|	additiveExpression '-' multiplicativeExpression
+additiveExpression => UniBinOp
+	:	multiplicativeExpression$RETURN
+	|	additiveExpression$left ADD$operator multiplicativeExpression$right
+	|	additiveExpression$left SUB$operator multiplicativeExpression$right
 	;
 
-multiplicativeExpression
-	:	unaryExpression
-	|	multiplicativeExpression '*' unaryExpression
-	|	multiplicativeExpression '/' unaryExpression
-	|	multiplicativeExpression '%' unaryExpression
+multiplicativeExpression => UniBinOp
+	:	unaryExpression$RETURN
+	|	multiplicativeExpression$left MUL$operator unaryExpression$right
+	|	multiplicativeExpression$left DIV$operator unaryExpression$right
+	|	multiplicativeExpression$left MOD$operator unaryExpression$right
 	;
 
-unaryExpression
-	:	preIncrementExpression
-	|	preDecrementExpression
-	|	'+' unaryExpression
-	|	'-' unaryExpression
-	|	unaryExpressionNotPlusMinus
+unaryExpression => UniUnaryOp
+	:	preIncrementExpression$RETURN
+	|	preDecrementExpression$RETURN
+	|	ADD$operator unaryExpression$expr
+	|	SUB$operator unaryExpression$expr
+	|	unaryExpressionNotPlusMinus$RETURN
 	;
 
-preIncrementExpression
-	:	'++' unaryExpression
+preIncrementExpression => UniUnaryOp
+	:	INC$operator unaryExpression$expr
 	;
 
-preDecrementExpression
-	:	'--' unaryExpression
+preDecrementExpression => UniUnaryOp
+	:	DEC$operator unaryExpression$expr
 	;
 
-unaryExpressionNotPlusMinus
-	:	postfixExpression
-	|	'~' unaryExpression
-	|	'!' unaryExpression
+unaryExpressionNotPlusMinus => UniUnaryOp
+	:	postfixExpression$RETURN
+	|	TILDE$operator unaryExpression$expr
+	|	BANG$operator unaryExpression$expr
 	|	castExpression
 	;
 
-postfixExpression
-	:	(	primary
-		|	expressionName
+postfixExpression => UniUnaryOp
+	:	(	primary$RETURN
+		|	expressionName$RETURN
 		)
 		(	postIncrementExpression_lf_postfixExpression
 		|	postDecrementExpression_lf_postfixExpression
 		)*
 	;
 
-postIncrementExpression
-	:	postfixExpression '++'
+postIncrementExpression => UniUnaryOp
+	:	postfixExpression$expr INC$operator
 	;
 
 postIncrementExpression_lf_postfixExpression
@@ -1794,7 +1796,7 @@ URSHIFT_ASSIGN : '>>>=';
 
 // §3.8 Identifiers (must appear after all keywords in the grammar)
 
-Identifier
+Identifier=>String
 	:	JavaLetter JavaLetterOrDigit*
 	;
 

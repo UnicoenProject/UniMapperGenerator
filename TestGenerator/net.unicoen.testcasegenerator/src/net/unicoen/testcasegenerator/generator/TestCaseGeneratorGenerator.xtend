@@ -15,6 +15,7 @@ import net.unicoen.testcasegenerator.testCaseGenerator.List
 import net.unicoen.testcasegenerator.testCaseGenerator.ChildDeclaration
 import java.util.ArrayDeque
 import java.lang.reflect.ParameterizedType
+import java.util.HashMap
 
 /**
  * Generates code from your model files on save.
@@ -23,8 +24,8 @@ import java.lang.reflect.ParameterizedType
  */
 class TestCaseGeneratorGenerator implements IGenerator {
 
-	private val stack = new ArrayDeque<Integer>
-	private var nodeCount = 0
+	private val stack = new ArrayDeque<String>
+	private val nodeCount = new HashMap<String, Integer>
 
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
 		resource.allContents.filter(File).forEach [
@@ -51,12 +52,12 @@ class TestCaseGeneratorGenerator implements IGenerator {
 				val actual = mapper.parse("«testCase.code.body.name.replace("\"", "\\\"")»")
 				
 				«testCase.node.compile»
-				node«stack.pop».evaluate(actual)
+				evaluate(«stack.pop», actual)
 			}
 			
 		'''
 		stack.clear
-		nodeCount = 0
+		nodeCount.clear
 		ret
 	}
 
@@ -82,20 +83,21 @@ class TestCaseGeneratorGenerator implements IGenerator {
 			«ENDFOR»
 		'''
 
-		val localStack = new ArrayDeque<Integer>
+		val localStack = new ArrayDeque<String>
 		for (child : arch.children) {
 			localStack.push(stack.pop)
 		}
 
-		nodeCount++
+		nodeCount.put(arch.nodeType, if(nodeCount.containsKey(arch.nodeType)) nodeCount.get(arch.nodeType) + 1 else 0)
+		val nodeName = arch.nodeType.simpleName + nodeCount.get(arch.nodeType)
 
 		val ret2 = '''
-			val node«nodeCount» = new «arch.nodeType»
+			val «nodeName» = new «arch.nodeType»
 			«FOR child : arch.children»
-				node«nodeCount».«child.fieldName» = node«localStack.pop»
+				«nodeName».«child.fieldName» = «localStack.pop»
 			«ENDFOR»
 		'''
-		stack.push(nodeCount)
+		stack.push(nodeName)
 		'''
 			«ret1»
 			«ret2»
@@ -114,25 +116,27 @@ class TestCaseGeneratorGenerator implements IGenerator {
 	}
 
 	private def compile(List list, Class<?> castType) {
+		val lst = "list"
 		val ret1 = '''
 			«FOR v : list.value»
 				«v.compile(null)»
 			«ENDFOR»
 		'''
-		val localStack = new ArrayDeque<Integer>
+		val localStack = new ArrayDeque<String>
 		for (v : list.value) {
 			localStack.push(stack.pop)
 		}
-		nodeCount++
+		nodeCount.put(lst, if(nodeCount.containsKey(lst)) nodeCount.get(lst) + 1 else 0)
+		val nodeName = lst + nodeCount.get(lst)
 
 		val ret2 = '''
-		val node«nodeCount» = #[«FOR v : list.value»node«localStack.pop»«if (v.arch != null &&
+		val «nodeName» = #[«FOR v : list.value»«localStack.pop»«if (v.arch != null &&
 			v.arch.nodeType != castType.simpleName) {
 			" as " + castType.simpleName
 		} else {
 			""
 		}»«IF list.value.findLast[true] != v», «ENDIF»«ENDFOR»]'''
-		stack.push(nodeCount)
+		stack.push(nodeName)
 		'''
 			«ret1»
 			«ret2»
@@ -141,12 +145,15 @@ class TestCaseGeneratorGenerator implements IGenerator {
 	}
 
 	private def compile(String literal) {
-		nodeCount++
+		val str = "str"
+		nodeCount.put(str, if(nodeCount.containsKey(str)) nodeCount.get(str) + 1 else 0)
+		val nodeName = str + nodeCount.get(str)
+		
 		val ret = '''
-			val node«nodeCount» = «literal»
+			val «nodeName» = «literal»
 			
 		'''
-		stack.push(nodeCount)
+		stack.push(nodeName)
 		ret
 	}
 
@@ -156,4 +163,8 @@ class TestCaseGeneratorGenerator implements IGenerator {
 		import net.unicoen.node.*
 		import org.junit.Test
 	'''
+
+	private def simpleName(String str){
+		str.substring(3).toFirstLower
+	}
 }
