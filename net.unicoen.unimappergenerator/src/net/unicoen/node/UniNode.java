@@ -1,12 +1,14 @@
 package net.unicoen.node;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 
-import com.google.common.collect.Lists;
-
 public abstract class UniNode {
-	@SuppressWarnings("unchecked")
-	public <T extends UniNode> List<T> flattenForBuilding() {
-		return (List<T>) Lists.newArrayList(this);
+	@Retention(RetentionPolicy.RUNTIME)
+	public @interface Order {
+	    int value();
 	}
+
+	public List<String> comments;
 }

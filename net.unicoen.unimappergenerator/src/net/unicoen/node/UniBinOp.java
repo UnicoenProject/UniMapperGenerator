@@ -2,9 +2,9 @@ package net.unicoen.node;
 
 /** 二項式 */
 public class UniBinOp extends UniExpr {
-	public String operator;
-	public UniExpr left;
-	public UniExpr right;
+	@Order(value = 2)public String operator;
+	@Order(value = 1)public UniExpr left;
+	@Order(value = 3)public UniExpr right;
 
 	public UniBinOp() {
 	}
@@ -26,6 +26,7 @@ public class UniBinOp extends UniExpr {
 		result = result * 31 + (operator == null ? 0 : operator.hashCode());
 		result = result * 31 + (left == null ? 0 : left.hashCode());
 		result = result * 31 + (right == null ? 0 : right.hashCode());
+		result = result * 31 + (comments == null ? 0 : comments.hashCode());
 		return result;
 	}
 
@@ -35,7 +36,8 @@ public class UniBinOp extends UniExpr {
 		UniBinOp that = (UniBinOp)obj;
 		return (this.operator == null ? that.operator == null : this.operator.equals(that.operator))
 			&& (this.left == null ? that.left == null : this.left.equals(that.left))
-			&& (this.right == null ? that.right == null : this.right.equals(that.right));
+			&& (this.right == null ? that.right == null : this.right.equals(that.right))
+			&& (this.comments == null ? that.comments == null : this.comments.equals(that.comments));
 	}
 
 	@Override
@@ -52,6 +54,13 @@ public class UniBinOp extends UniExpr {
 		}
 		if (that.right != null) {
 			this.right = that.right;
+		}
+		if (that.comments != null) {
+			if (this.comments == null) {
+				this.comments = that.comments;
+			} else {
+				this.comments.addAll(that.comments);
+			}
 		}
 	}
 }

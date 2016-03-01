@@ -17,6 +17,10 @@ import net.unicoen.util.InvokingStateAnalyzer
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
+import java.util.Set
+import java.util.Comparator
+import java.lang.reflect.Field
+import net.unicoen.node.UniNode.Order
 
 /**
  * Generates code from your model files on save.
@@ -59,7 +63,6 @@ class UniMapperGeneratorGenerator implements IGenerator {
 		import org.antlr.v4.runtime.tree.TerminalNode
 		import org.antlr.v4.runtime.tree.TerminalNodeImpl
 		import org.eclipse.xtext.xbase.lib.Functions.Function1
-		import java.lang.reflect.ParameterizedType
 	'''
 
 	def generateMapper(Grammar g) '''
@@ -68,10 +71,10 @@ class UniMapperGeneratorGenerator implements IGenerator {
 		class «_grammarName»Mapper extends «_grammarName»BaseVisitor<Object> {
 		
 			val boolean _isDebugMode
-			val List<Comment> _comments = new ArrayList<Comment>;
-			var CommonTokenStream _stream;
-			var UniNode _lastNode;
-			var int _nextTokenIndex;
+			val List<Comment> _comments = new ArrayList<Comment>
+			var CommonTokenStream _stream
+			var UniNode _lastNode
+			var int _nextTokenIndex
 		
 			static class Comment {
 				val List<String> contents
@@ -122,7 +125,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 				val tokens = new CommonTokenStream(lexer)
 				val parser = new «_grammarName»Parser(tokens)
 				val tree = parseAction.apply(parser) // parse
-				_comments.clear()
+				_comments.clear
 				_stream = tokens
 				_lastNode = null
 				_nextTokenIndex = 0
@@ -132,7 +135,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 
 					if (_lastNode !== null) {
 						val count = _stream.size - 1
-						for (var i = _nextTokenIndex; i < count; i++) {
+						for (var i = _nextTokenIndex i < count i++) {
 							val hiddenToken = _stream.get(i) // Includes skipped tokens (maybe)
 							if (_lastNode.comments === null) {
 								_lastNode.comments = newArrayList
@@ -242,124 +245,15 @@ class UniMapperGeneratorGenerator implements IGenerator {
 			}
 		
 			private def Object flatten(Object obj) {
-				if (obj instanceof List<?>) {
-					if (obj.size == 1) {
-						return obj.get(0).flatten
-					}
-					val ret = newArrayList
-					obj.forEach [
-						ret += it.flatten
-					]
-					return ret
-				}
-				if (obj instanceof Map<?, ?>) {
-					if (obj.size == 1) {
-						return obj.get(obj.keySet.get(0)).flatten
-					}
-					val ret = newHashMap
-					obj.forEach [ key, value |
-						ret.put(key, value.flatten)
-					]
-					return ret
-				}
-				obj
+				MapperUtility.flatten(obj)
 			}
 		
 			public def <T> List<T> castToList(Object obj, Class<T> clazz) {
-				val temp = obj.flatten
-				val ret = newArrayList
-				if (temp instanceof Map<?, ?>) {
-					val add = temp.containsKey("add")
-					temp.forEach [ key, value |
-						switch key {
-							case "add": {
-								if (value instanceof Map<?, ?>) {
-									ret += value.castTo(clazz)
-								} else if (value instanceof List<?>) {
-									value.forEach [
-										val t = it.castTo(clazz)
-										if (t != null) {
-											ret += t
-										}
-									]
-								} else {
-									ret += value.castToList(clazz)
-								}
-							}
-							default: {
-								if (!add) {
-									ret += value.castToList(clazz)
-								}
-							}
-						}
-					]
-				} else if (temp instanceof List<?>) {
-					temp.forEach [
-						ret += it.castToList(clazz)
-					]
-				} else {
-					ret += temp.castTo(clazz)
-				}
-				ret
+				MapperUtility.castToList(obj, clazz)
 			}
 		
 			public def <T> T castTo(Object obj, Class<T> clazz) {
-				val temp = obj.flatten
-				if (temp instanceof Map<?, ?>) {
-					if (String.isAssignableFrom(clazz)) {
-						val builder = new StringBuilder
-						val hasAdd = temp.containsKey("add")
-						temp.forEach [ key, value |
-							switch (key) {
-								case "add": {
-									builder.append(value.castTo(clazz))
-								}
-								default: {
-									if (!hasAdd) {
-										builder.append(value.castTo(clazz))
-									}
-								}
-							}
-						]
-						return if (builder.length > 0) clazz.getConstructor(StringBuilder).newInstance(builder) else null
-					}
-					val instance = clazz.newInstance
-					val fields = clazz.fields
-					val fieldsName = newArrayList
-					fields.forEach[fieldsName.add(it.name)]
-					temp.forEach [ key, value |
-						if (fieldsName.contains(key)) {
-							val field = fields.get(fieldsName.indexOf(key))
-							field.set(instance,
-								if (List.isAssignableFrom(field.type)) {
-									value.castToList(
-										(field.genericType as ParameterizedType).actualTypeArguments.get(0) as Class<?>)
-								} else {
-									value.castTo(field.type)
-								})
-						}
-					]
-					return instance
-				}
-				if (temp instanceof List<?>) {
-					if (String.isAssignableFrom(clazz)) {
-						val builder = new StringBuilder
-						temp.forEach [
-							builder.append(it.castTo(clazz))
-						]
-						return if (builder.length > 0) clazz.getConstructor(StringBuilder).newInstance(builder) else null
-					}
-					val first = temp.findFirst[clazz.isAssignableFrom(it.class)]
-					return if (first === null) {
-						try {
-							clazz.newInstance
-						} catch (InstantiationException e) {
-							null
-						}
-					} else
-						first.castTo(clazz)
-				}
-				clazz.cast(temp)
+				MapperUtility.castTo(obj, clazz)
 			}
 		
 			«FOR r : g.rules.filter(ParserRule)»
@@ -398,24 +292,40 @@ class UniMapperGeneratorGenerator implements IGenerator {
 
 	def makeMethodBody(ParserRule r) {
 		val annotationList = newHashSet
+		if(r.type != null && r.type.type.name != null && r.type.type.name.startsWith("UniBinOp")){
+			val clz = Class.forName("net.unicoen.node."+ r.type.type.name)
+			val fields = clz.fields
+			r.body.alternatives.forEach[alt|
+				if(alt.body.elements.size == fields.size && alt.body.elements.findFirst[it.op != null] == null){
+					fields.sort(new Comparator<Field>{
+						override compare(Field o1, Field o2) {
+			               val or1 = o1.getAnnotation(Order)
+			               val or2 = o2.getAnnotation(Order)
+			                // nulls last
+			                if (or1 != null && or2 != null) {
+			                    return or1.value - or2.value
+			                } else if (or1 != null && or2 == null) {
+			                    return -1
+			                } else if (or1 == null && or2 != null) {
+			                    return 1
+			                }
+			                return o1.name.compareTo(o2.name)
+						}})
+					alt.body.elements.forEach[element|
+						element.op = fields.get(alt.body.elements.indexOf(element)).name
+					]
+				}
+			]
+		}
 		val elementList = r.eAllContents.filter(Element).filter[it.op != null].toList
 		val hasMerge = elementList.findFirst[it.op == "MERGE"] != null
 		val hasReturn = elementList.findFirst[it.op == "RETURN"] != null
 		elementList.forEach[
 			annotationList += it.op
 		]
+		r.body.alternatives
 	'''
-		val map = newHashMap
-		val none = newArrayList
-		map.put("none", none)
-		«FOR it : annotationList»«IF it != "MERGE"»
-		val «if (it == "ADD") it.toLowerCase else if (it == "RETURN") "ret" else it» = newArrayList
-		«IF it != "RETURN"»
-		map.put("«if (it == "ADD") it.toLowerCase else it»", «if (it == "ADD") it.toLowerCase else it»)
-		«ENDIF»«ENDIF»«ENDFOR»
-		«IF hasMerge»
-		val merge = newArrayList
-		«ENDIF»
+		«createDecPart(annotationList)»
 		ctx.children.forEach [
 			if (it instanceof RuleContext) {
 				switch it.invokingState {
@@ -428,14 +338,17 @@ class UniMapperGeneratorGenerator implements IGenerator {
 								«val invokingState = r.getInvokingState»
 								«IF stateList.add(invokingState)»
 									case «invokingState»: {
-										«if (it.op == "MERGE" || it.op == "ADD") it.op.toLowerCase else if (it.op == "RETURN") "ret" else it.op» += it.visit«IF r.type != null && r.type.type.dir != null».flatten«ENDIF»
+										«if (it.op == "MERGE") it.op.toLowerCase
+										else if (it.op == "RETURN") "ret"
+										else if (it.op == "ADD") '''map.get("«it.op.toLowerCase»")'''
+										else '''map.get("«it.op»")'''» += it.visit«IF r.type != null && r.type.type.dir != null».flatten«ENDIF»
 									}
 								«ENDIF»
 							«ENDIF»
 						«ENDIF»
 					«ENDFOR»
 					default: {
-						none += it.visit
+						map.get("none") += it.visit
 					}
 				}
 			} else if (it instanceof TerminalNode) {
@@ -447,13 +360,16 @@ class UniMapperGeneratorGenerator implements IGenerator {
 							«val ref = atom.body»
 							«IF ref instanceof Terminal && nameList.add(it.terminalName)»
 								case «_grammarName»Parser.«it.terminalName»: {
-									«if (it.op == "MERGE" || it.op == "ADD") it.op.toLowerCase else if (it.op == "RETURN") "ret" else it.op» += it.visit.flatten
+									«if (it.op == "MERGE") it.op.toLowerCase
+									else if (it.op == "RETURN") "ret"
+									else if (it.op == "ADD") '''map.get("«it.op.toLowerCase»")'''
+									else '''map.get("«it.op»")'''» += it.visit.flatten
 								}
 							«ENDIF»
 						«ENDIF»
 					«ENDFOR»
 					default: {
-						none += it.visit
+						map.get("none") += it.visit
 					}
 				}
 			}
@@ -472,11 +388,11 @@ class UniMapperGeneratorGenerator implements IGenerator {
 				«ENDIF»
 			«ELSE»
 				«IF r.type.type.dir == '>'»
-					add.reverse
+					map.get("add").reverse
 				«ENDIF»
-				var node = add.get(0) as UniExpr
-				add.remove(node)
-				for (Object obj : add) {
+				var node = map.get("add").get(0) as UniExpr
+				map.get("add").remove(node)
+				for (Object obj : map.get("add")) {
 					switch (obj) {
 						«FOR field:r.type.type.fieldvalue»
 						«field.name.get(0)»: {
@@ -505,7 +421,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 			map
 		«ENDIF»
 	'''}
-
+	
 	def getReferenceReturnType(Element r) {
 		val ref = (r.body as Atom).body
 		if (ref instanceof RuleRef) {
@@ -554,17 +470,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 		]
 		
 	'''
-		val map = newHashMap
-		val none = newArrayList
-		map.put("none", none)
-		«FOR it : annotationList»«IF it != "MERGE"»
-		val «if (it == "ADD") it.toLowerCase else if (it == "RETURN") "ret" else it» = newArrayList
-		«IF it != "RETURN"»
-		map.put("«if (it == "ADD") it.toLowerCase else it»", «if (it == "ADD") it.toLowerCase else it»)
-		«ENDIF»«ENDIF»«ENDFOR»
-		«IF hasMerge»
-		val merge = newArrayList
-		«ENDIF»
+		«createDecPart(annotationList)»
 		if (ctx.children != null) {
 			ctx.children.forEach [
 				if (it instanceof RuleContext) {
@@ -578,14 +484,17 @@ class UniMapperGeneratorGenerator implements IGenerator {
 									«val invokingState = r.getInvokingState»
 									«IF stateList.add(invokingState)»
 										case «invokingState»: {
-											«if (it.op == "MERGE" || it.op == "ADD") it.op.toLowerCase else if (it.op == "RETURN") "ret" else it.op» += it.visit
+											«if (it.op == "MERGE") it.op.toLowerCase
+											else if (it.op == "RETURN") "ret"
+											else if (it.op == "ADD") '''map.get("«it.op.toLowerCase»")'''
+											else '''map.get("«it.op»")'''» += it.visit«IF r.type != null && r.type.type.dir != null».flatten«ENDIF»
 										}
 									«ENDIF»
 								«ENDIF»
 							«ENDIF»
 						«ENDFOR»
 						default: {
-							none += it.visit
+							map.get("none") += it.visit
 						}
 					}
 				} else if (it instanceof TerminalNode) {
@@ -597,13 +506,16 @@ class UniMapperGeneratorGenerator implements IGenerator {
 								«val ref = atom.body»
 								«IF ref instanceof Terminal && nameList.add(it.terminalName)»
 									case «_grammarName»Parser.«it.terminalName»: {
-										«if (it.op == "MERGE" || it.op == "ADD") it.op.toLowerCase else if (it.op == "RETURN") "ret" else it.op» += it.visit
+										«if (it.op == "MERGE") it.op.toLowerCase
+										else if (it.op == "RETURN") "ret"
+										else if (it.op == "ADD") '''map.get("«it.op.toLowerCase»")'''
+										else '''map.get("«it.op»")'''» += it.visit.flatten
 									}
 								«ENDIF»
 							«ENDIF»
 						«ENDFOR»
 						default: {
-							none += it.visit
+							map.get("none") += it.visit
 						}
 					}
 				}
@@ -625,19 +537,6 @@ class UniMapperGeneratorGenerator implements IGenerator {
 		«ENDIF»
 	'''
 	}
-
-	def makeStringMethodBody(ParserRule r) '''
-		val map = newHashMap
-		val none = newArrayList
-		map.put("none", none)
-		if (ctx.children != null) {
-			ctx.children.forEach [
-				none += it.visit
-			]
-		}
-		map
-	'''
-
 
 	def makeLiteralMethod(ParserRule r) '''
 		«val methodName = "visit" + r.name.toCamelCase»
@@ -697,5 +596,15 @@ class UniMapperGeneratorGenerator implements IGenerator {
 		}
 		return true
 	}
-
+	
+	def createDecPart(Set<String> annotationList)
+		'''
+			val map = newHashMap
+			map.put("none", newArrayList)
+			«FOR it : annotationList»«IF it == "MERGE" || it == "RETURN"»
+			val «if (it == "MERGE") it.toLowerCase else if (it == "RETURN") "ret" else it» = newArrayList
+			«ELSE»
+			map.put("«if (it == "ADD") it.toLowerCase else it»", newArrayList)
+			«ENDIF»«ENDFOR»'''
+	
 }

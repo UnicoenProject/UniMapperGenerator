@@ -1264,7 +1264,7 @@ assignmentExpression
 	;
 
 assignment=>UniBinOp
-	:	leftHandSide$left assignmentOperator$operator expression$right
+	:	leftHandSide assignmentOperator expression
 	;
 
 leftHandSide
