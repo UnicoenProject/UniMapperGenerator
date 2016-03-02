@@ -135,7 +135,7 @@ class UniMapperGeneratorGenerator implements IGenerator {
 
 					if (_lastNode !== null) {
 						val count = _stream.size - 1
-						for (var i = _nextTokenIndex i < count i++) {
+						for (var i = _nextTokenIndex; i < count; i++) {
 							val hiddenToken = _stream.get(i) // Includes skipped tokens (maybe)
 							if (_lastNode.comments === null) {
 								_lastNode.comments = newArrayList
@@ -291,60 +291,26 @@ class UniMapperGeneratorGenerator implements IGenerator {
 	}
 
 	def makeMethodBody(ParserRule r) {
+		val map = r.extractElements
 		val annotationList = newHashSet
-		if(r.type != null && r.type.type.name != null && r.type.type.name.startsWith("UniBinOp")){
-			val clz = Class.forName("net.unicoen.node."+ r.type.type.name)
-			val fields = clz.fields
-			r.body.alternatives.forEach[alt|
-				if(alt.body.elements.size == fields.size && alt.body.elements.findFirst[it.op != null] == null){
-					fields.sort(new Comparator<Field>{
-						override compare(Field o1, Field o2) {
-			               val or1 = o1.getAnnotation(Order)
-			               val or2 = o2.getAnnotation(Order)
-			                // nulls last
-			                if (or1 != null && or2 != null) {
-			                    return or1.value - or2.value
-			                } else if (or1 != null && or2 == null) {
-			                    return -1
-			                } else if (or1 == null && or2 != null) {
-			                    return 1
-			                }
-			                return o1.name.compareTo(o2.name)
-						}})
-					alt.body.elements.forEach[element|
-						element.op = fields.get(alt.body.elements.indexOf(element)).name
-					]
-				}
-			]
-		}
-		val elementList = r.eAllContents.filter(Element).filter[it.op != null].toList
-		val hasMerge = elementList.findFirst[it.op == "MERGE"] != null
-		val hasReturn = elementList.findFirst[it.op == "RETURN"] != null
-		elementList.forEach[
-			annotationList += it.op
-		]
-		r.body.alternatives
+		map.forEach[ key, value | annotationList += value]
+		val parserRules = map.filter[element, op|(element.body as Atom).body instanceof RuleRef]
+		val lexerRules = map.filter[element, op|(element.body as Atom).body instanceof Terminal]
+		val hasMerge = map.values.findFirst[it == "merge"] != null
+		val hasReturn = map.values.findFirst[it == "ret"] != null
 	'''
 		«createDecPart(annotationList)»
 		ctx.children.forEach [
 			if (it instanceof RuleContext) {
 				switch it.invokingState {
-					«val stateList = newHashSet»
-					«FOR it : elementList»
-						«val atom = it.body»
-						«IF atom instanceof Atom»
-							«val ref = atom.body»
-							«IF ref instanceof RuleRef»
-								«val invokingState = r.getInvokingState»
-								«IF stateList.add(invokingState)»
-									case «invokingState»: {
-										«if (it.op == "MERGE") it.op.toLowerCase
-										else if (it.op == "RETURN") "ret"
-										else if (it.op == "ADD") '''map.get("«it.op.toLowerCase»")'''
-										else '''map.get("«it.op»")'''» += it.visit«IF r.type != null && r.type.type.dir != null».flatten«ENDIF»
-									}
-								«ENDIF»
-							«ENDIF»
+					«val set = newHashSet»
+					«FOR it : parserRules.entrySet»
+						«val invokingState = r.getInvokingState»
+						«IF set.add(invokingState)»
+						case «invokingState»: {
+							«if (it.value == "merge" || it.value == "ret") it.value
+							else '''map.get("«it.value»")'''» += it.visit«IF r.type != null && r.type.type.dir != null».flatten«ENDIF»
+						}
 						«ENDIF»
 					«ENDFOR»
 					default: {
@@ -353,19 +319,12 @@ class UniMapperGeneratorGenerator implements IGenerator {
 				}
 			} else if (it instanceof TerminalNode) {
 				switch it.symbol.type {
-					«val nameList = newHashSet»
-					«FOR it : elementList»
-						«val atom = it.body»
-						«IF atom instanceof Atom»
-							«val ref = atom.body»
-							«IF ref instanceof Terminal && nameList.add(it.terminalName)»
-								case «_grammarName»Parser.«it.terminalName»: {
-									«if (it.op == "MERGE") it.op.toLowerCase
-									else if (it.op == "RETURN") "ret"
-									else if (it.op == "ADD") '''map.get("«it.op.toLowerCase»")'''
-									else '''map.get("«it.op»")'''» += it.visit.flatten
-								}
-							«ENDIF»
+					«FOR it : lexerRules.entrySet»
+						«IF set.add(it.key.terminalName)»
+						case «_grammarName»Parser.«it.key.terminalName»: {
+							«if (it.value == "merge" || it.value == "ret") it.value
+							else '''map.get("«it.value»")'''» += it.visit.flatten
+						}
 						«ENDIF»
 					«ENDFOR»
 					default: {
@@ -461,36 +420,30 @@ class UniMapperGeneratorGenerator implements IGenerator {
 	}
 
 	def makeListMethodBody(ParserRule r, String itemClassName) {
+		val map = r.extractElements
 		val annotationList = newHashSet
-		val elementList = r.eAllContents.filter(Element).filter[it.op != null].toList
-		val hasMerge = elementList.findFirst[ it.op == "MERGE" ] != null
-		val hasReturn = elementList.findFirst[ it.op == "RETURN" ] != null
-		elementList.forEach[
-			annotationList += it.op
+		map.forEach[ key, value | annotationList += value]
+		val parserRules = map.filter[element, op|(element.body as Atom).body instanceof RuleRef]
+		val lexerRules = map.filter[element, op|(element.body as Atom).body instanceof Terminal]
+		val hasMerge = map.values.findFirst[it == "merge"] != null
+		val hasReturn = map.values.findFirst[it == "ret"] != null
+		map.forEach[key, value | 
+			annotationList += value
 		]
-		
 	'''
 		«createDecPart(annotationList)»
 		if (ctx.children != null) {
 			ctx.children.forEach [
 				if (it instanceof RuleContext) {
 					switch it.invokingState {
-						«val stateList = newHashSet»
-						«FOR it : elementList»
-							«val atom = it.body»
-							«IF atom instanceof Atom»
-								«val ref = atom.body»
-								«IF ref instanceof RuleRef»
-									«val invokingState = r.getInvokingState»
-									«IF stateList.add(invokingState)»
-										case «invokingState»: {
-											«if (it.op == "MERGE") it.op.toLowerCase
-											else if (it.op == "RETURN") "ret"
-											else if (it.op == "ADD") '''map.get("«it.op.toLowerCase»")'''
-											else '''map.get("«it.op»")'''» += it.visit«IF r.type != null && r.type.type.dir != null».flatten«ENDIF»
-										}
-									«ENDIF»
-								«ENDIF»
+						«val set = newHashSet»
+						«FOR it : parserRules.entrySet»
+							«val invokingState = r.getInvokingState»
+							«IF set.add(invokingState)»
+							case «invokingState»: {
+								«if (it.value == "merge" || it.value == "ret") it.value
+								else '''map.get("«it.value»")'''» += it.visit«IF r.type != null && r.type.type.dir != null».flatten«ENDIF»
+							}
 							«ENDIF»
 						«ENDFOR»
 						default: {
@@ -499,21 +452,14 @@ class UniMapperGeneratorGenerator implements IGenerator {
 					}
 				} else if (it instanceof TerminalNode) {
 					switch it.symbol.type {
-						«val nameList = newHashSet»
-						«FOR it : elementList»
-							«val atom = it.body»
-							«IF atom instanceof Atom»
-								«val ref = atom.body»
-								«IF ref instanceof Terminal && nameList.add(it.terminalName)»
-									case «_grammarName»Parser.«it.terminalName»: {
-										«if (it.op == "MERGE") it.op.toLowerCase
-										else if (it.op == "RETURN") "ret"
-										else if (it.op == "ADD") '''map.get("«it.op.toLowerCase»")'''
-										else '''map.get("«it.op»")'''» += it.visit.flatten
-									}
-								«ENDIF»
-							«ENDIF»
-						«ENDFOR»
+					«FOR it : lexerRules.entrySet»
+						«IF set.add(it.key.terminalName)»
+						case «_grammarName»Parser.«it.key.terminalName»: {
+							«if (it.value == "merge" || it.value == "ret") it.value
+							else '''map.get("«it.value»")'''» += it.visit.flatten
+						}
+						«ENDIF»
+					«ENDFOR»
 						default: {
 							map.get("none") += it.visit
 						}
@@ -601,10 +547,46 @@ class UniMapperGeneratorGenerator implements IGenerator {
 		'''
 			val map = newHashMap
 			map.put("none", newArrayList)
-			«FOR it : annotationList»«IF it == "MERGE" || it == "RETURN"»
-			val «if (it == "MERGE") it.toLowerCase else if (it == "RETURN") "ret" else it» = newArrayList
+			«FOR it : annotationList»«IF it == "merge" || it == "ret"»
+			val «it» = newArrayList
 			«ELSE»
-			map.put("«if (it == "ADD") it.toLowerCase else it»", newArrayList)
+			map.put("«it»", newArrayList)
 			«ENDIF»«ENDFOR»'''
+			
+	def extractElements(ParserRule r){
+		val map = newHashMap
+		if(r.type != null && r.type.type.name != null && r.type.type.name.startsWith("Uni")){
+			val clz = Class.forName("net.unicoen.node."+ r.type.type.name)
+			val fields = clz.fields
+			r.body.alternatives.forEach[ alt |
+				if(alt.body.elements.size <= fields.size && alt.body.elements.findFirst[it.op != null] == null){
+					fields.sort(new Comparator<Field>{
+						override compare(Field o1, Field o2) {
+			               val or1 = o1.getAnnotation(Order)
+			               val or2 = o2.getAnnotation(Order)
+			                // nulls last
+			                if (or1 != null && or2 != null) {
+			                    return or1.value - or2.value
+			                } else if (or1 != null && or2 == null) {
+			                    return -1
+			                } else if (or1 == null && or2 != null) {
+			                    return 1
+			                }
+			                return o1.name.compareTo(o2.name)
+						}})
+					alt.body.elements.forEach[ element |
+						map.put(element, fields.get(alt.body.elements.indexOf(element)).name)
+					]
+				}
+			]
+		}
+		r.eAllContents.filter(Element).filter[it.op != null && it.body instanceof Atom].forEach[
+			map.put(it, if (it.op == "MERGE" || it.op == "ADD") it.op.toLowerCase 
+				else if (it.op == "RETURN") "ret"
+				else it.op
+			)
+		]
+		map
+	}
 	
 }

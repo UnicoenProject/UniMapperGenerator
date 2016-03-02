@@ -1,15 +1,12 @@
 package net.unicoen.util
 
-import net.unicoen.uniMapperGenerator.Grammar
-import net.unicoen.uniMapperGenerator.ParserRule
+import java.util.HashMap
 import java.util.List
 import net.unicoen.uniMapperGenerator.Atom
 import net.unicoen.uniMapperGenerator.Element
-import java.util.HashMap
+import net.unicoen.uniMapperGenerator.Grammar
+import net.unicoen.uniMapperGenerator.ParserRule
 import net.unicoen.uniMapperGenerator.RuleRef
-import java.util.ArrayList
-import com.google.common.collect.Lists
-import net.unicoen.uniMapperGenerator.Alternative
 
 class InvokingStateAnalyzer {
 	private val invokingStates = new HashMap<String, List<Integer>>
@@ -22,7 +19,7 @@ class InvokingStateAnalyzer {
 			}
 			val ruleName = rule.name
 			var pos = code.indexOf('''«ruleName»() throws''')
-			val list = Lists.newArrayList
+			val list = newArrayList
 			val trypos = code.indexOf("try", pos)
 			val hasLeftRecursion = code.substring(pos, trypos).contains("enterRecursionRule")
 			var recursionState = -1;
@@ -32,7 +29,7 @@ class InvokingStateAnalyzer {
 				val str = code.substring(start + 18, last)
 				recursionState = Integer.parseInt(str)
 			}
-			for (element : rule.eAllContents.filter(Element).filter[it.op != null].toList) {
+			for (element : rule.eAllContents.filter(Element).toList) {
 				val atom = element.body
 				if (atom instanceof Atom) {
 					val ref = atom.body
