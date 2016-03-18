@@ -29,22 +29,27 @@ class InvokingStateAnalyzer {
 				val str = code.substring(start + 18, last)
 				recursionState = Integer.parseInt(str)
 			}
-			for (element : rule.eAllContents.filter(Element).toList) {
-				val atom = element.body
-				if (atom instanceof Atom) {
-					val ref = atom.body
-					if (ref instanceof RuleRef) {
-						if (ref.reference == rule && hasLeftRecursion) {
-							list.add(recursionState)
-						} else {
-							val refName = ref.reference.name
-							pos = code.indexOf('''«refName»(''', pos)
-							val start = code.lastIndexOf("setState(", pos)
-							val last = code.indexOf(')', start)
-							val str = code.substring(start + 9, last)
-							val state = Integer.parseInt(str)
-							list.add(state)
-							pos++
+			for (alternative : rule.body.alternatives) {
+				val hasNoAnnotation = alternative.eAllContents.filter(Element).findFirst[it.op != null] == null
+				for (element : alternative.eAllContents.filter(Element).toIterable) {
+					if (hasNoAnnotation && rule.type != null && rule.type.type.name.startsWith("UniBinOp") || element.op != null) {
+						val atom = element.body
+						if (atom instanceof Atom) {
+							val ref = atom.body
+							if (ref instanceof RuleRef) {
+								if (ref.reference == rule && hasLeftRecursion) {
+									list.add(recursionState)
+								} else {
+									val refName = ref.reference.name
+									pos = code.indexOf('''«refName»(''', pos)
+									val start = code.lastIndexOf("setState(", pos)
+									val last = code.indexOf(')', start)
+									val str = code.substring(start + 9, last)
+									val state = Integer.parseInt(str)
+									list.add(state)
+									pos++
+								}
+							}
 						}
 					}
 				}

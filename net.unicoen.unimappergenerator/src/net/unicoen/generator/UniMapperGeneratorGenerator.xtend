@@ -304,12 +304,12 @@ class UniMapperGeneratorGenerator implements IGenerator {
 			if (it instanceof RuleContext) {
 				switch it.invokingState {
 					«val set = newHashSet»
-					«FOR it : parserRules.entrySet»
+					«FOR it : r.eAllContents.filter(Element).filter[map.containsKey(it)].toIterable»
 						«val invokingState = r.getInvokingState»
 						«IF set.add(invokingState)»
 						case «invokingState»: {
-							«if (it.value == "merge" || it.value == "ret") it.value
-							else '''map.get("«it.value»")'''» += it.visit«IF r.type != null && r.type.type.dir != null».flatten«ENDIF»
+							«if (map.get(it) == "merge" || map.get(it) == "ret") map.get(it)
+							else '''map.get("«map.get(it)»")'''» += it.visit«IF r.type != null && r.type.type.dir != null».flatten«ENDIF»
 						}
 						«ENDIF»
 					«ENDFOR»
@@ -553,9 +553,9 @@ class UniMapperGeneratorGenerator implements IGenerator {
 			map.put("«it»", newArrayList)
 			«ENDIF»«ENDFOR»'''
 			
-	def extractElements(ParserRule r){
+	static def extractElements(ParserRule r){
 		val map = newHashMap
-		if(r.type != null && r.type.type.name != null && r.type.type.name.startsWith("Uni")){
+		if(r.type != null && r.type.type.name != null && r.type.type.name.startsWith("UniBinOp")){
 			val clz = Class.forName("net.unicoen.node."+ r.type.type.name)
 			val fields = clz.fields
 			r.body.alternatives.forEach[ alt |
