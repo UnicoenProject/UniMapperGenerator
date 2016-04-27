@@ -41,3 +41,9 @@ How to Develop
 2. Click "Complete ANTLR 4.5.1 Java binaries jar" link, and download the latest version of ANTLR 4.
 3. Copy the downloaded file into net.unicoen.unimappergenerator/src directory.
 
+How to Learn
+---
+- Xtext
+  - https://eclipse.org/Xtext/documentation/102_domainmodelwalkthrough.html
+  - httpshttps://eclipse.org/Xtext/documentation/103_domainmodelnextsteps.html
+  - https://eclipse.org/Xtext/documentation/104_jvmdomainmodel.html
