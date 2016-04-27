@@ -6,7 +6,7 @@ Requirements
 
 * [Eclipse 4.4 (Luna)](https://eclipse.org/)
 * [Xtext 2.7.3](http://www.eclipse.org/Xtext/)
-* [Xtend](http://www.eclipse.org/xtend/)
+* [Xtend 2.7.3](http://www.eclipse.org/xtend/)
 
 How to Develop
 ---
