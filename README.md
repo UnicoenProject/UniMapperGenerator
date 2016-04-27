@@ -45,5 +45,5 @@ How to Learn
 ---
 - Xtext
   - https://eclipse.org/Xtext/documentation/102_domainmodelwalkthrough.html
-  - httpshttps://eclipse.org/Xtext/documentation/103_domainmodelnextsteps.html
+  - https://eclipse.org/Xtext/documentation/103_domainmodelnextsteps.html
   - https://eclipse.org/Xtext/documentation/104_jvmdomainmodel.html
