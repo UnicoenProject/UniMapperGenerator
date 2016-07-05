@@ -60,6 +60,8 @@ class UniMapperGeneratorGenerator implements IGenerator {
 		import org.antlr.v4.runtime.tree.TerminalNodeImpl
 		import org.eclipse.xtext.xbase.lib.Functions.Function1
 		import java.lang.reflect.ParameterizedType
+		import net.unicoen.node_helper.CodeLocation
+		import net.unicoen.node_helper.CodeRange
 	'''
 
 	def generateMapper(Grammar g) '''
@@ -172,6 +174,16 @@ class UniMapperGeneratorGenerator implements IGenerator {
 						result
 					}
 				if (node instanceof UniNode) {
+					if (tree instanceof RuleContext)
+					{
+						val start = (tree as ParserRuleContext).start
+						val stop = (tree as ParserRuleContext).stop
+						val begin = new CodeLocation(start.charPositionInLine,start.line)
+						val endPos = stop.charPositionInLine
+						val length = 1 + stop.stopIndex - stop.startIndex
+						val end = new CodeLocation(endPos + length, stop.line)
+						node.codeRange = new CodeRange(begin,end)
+					}
 					var List<String> contents = newArrayList
 					for (var i = _comments.size - 1; i >= 0 && _comments.get(i).parent == tree; i--) {
 						_comments.get(i).contents += contents
