@@ -524,7 +524,8 @@ variabledeclarationstatement => List<UniVariableDec>
 ;
 variabledeclaration => List<UniVariableDec>
 :
-	attributespecifierseq? declspecifierseqwithouttype?$modifiers typespecifier$type ptroperator*$type variableDeclaratorList?$MERGE
+	attributespecifierseq? declspecifierseqwithouttype?$modifiers 
+		typespecifier$type ptroperator*$type variableDeclaratorList?$MERGE
 ;
 
 
@@ -532,15 +533,42 @@ variabledeclaration => List<UniVariableDec>
 variableDeclaratorList
 :
 	variableDeclarator$ADD
+	| arrayDeclarator$ADD
 	| variableDeclaratorList$ADD ',' variableDeclarator$ADD
 ;
 
+//Additionally
+arrayDeclarator
+:
+	declaratorid$name dims ('=' initializerclause$value)?
+	| declaratorid$name arrayCreationExpression$value
+;
+arrayCreationExpression => UniNewArray
+:	 
+	 dimExprs$MERGE dims?$type '=' bracedinitlist$value
+	|dims$type bracedinitlist$value
+;
+
+dimExprs => UniNewArray
+:	
+	dimExpr$MERGE dimExpr*$MERGE
+;
+
+dimExpr => UniNewArray
+:	
+	'[' expression$elementsNum ']'
+;
+	
 variableDeclarator
 :
-	declaratorid$name ('=' initializerclause$value)?/*�R���X�g���N�^�n���Ή�*/
+	declaratorid$name ('=' initializerclause$value)?
 	/*declarator initializer?*/
 ;
 
+dims => String
+:	LeftBracket$ADD RightBracket$ADD (LeftBracket$ADD RightBracket$ADD)*
+;
+	
 simpledeclaration
 :
 	declspecifierseq? initdeclaratorlist? ';'
@@ -883,8 +911,7 @@ balancedtoken
 /*Declarators*/
 initdeclaratorlist
 :
-	initdeclarator
-	| initdeclaratorlist ',' initdeclarator
+	initdeclarator$ADD (',' initdeclarator$ADD)*
 ;
 
 initdeclarator
@@ -1063,15 +1090,14 @@ initializerclause
 	| bracedinitlist
 ;
 
-initializerlist
+initializerlist=>List<UniExpr>
 :
-	initializerclause '...'?
-	| initializerlist ',' initializerclause '...'?
+	initializerclause$ADD (',' initializerclause$ADD)*
 ;
 
-bracedinitlist
+bracedinitlist=>UniArray
 :
-	'{' initializerlist ','? '}'
+	'{' initializerlist$items Comma? '}'
 	| '{' '}'
 ;
 
