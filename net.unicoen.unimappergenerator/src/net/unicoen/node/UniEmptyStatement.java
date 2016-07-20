@@ -1,6 +1,7 @@
 package net.unicoen.node;
+import net.unicoen.node_helper.*;
 
-public class UniEmptyStatement extends UniNode {
+public class UniEmptyStatement extends UniExpr {
 
 	public UniEmptyStatement() {
 	}
@@ -12,14 +13,35 @@ public class UniEmptyStatement extends UniNode {
 
 	@Override
 	public int hashCode() {
-		return 0;
+		int result = 17;
+		result = result * 31 + (comments == null ? 0 : comments.hashCode());
+		result = result * 31 + (codeRange == null ? 0 : codeRange.hashCode());
+		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		return obj != null && obj instanceof UniEmptyStatement;
+		if (obj == null || !(obj instanceof UniEmptyStatement)) return false;
+		UniEmptyStatement that = (UniEmptyStatement)obj;
+		return (this.comments == null ? that.comments == null : this.comments.equals(that.comments))
+			&& (this.codeRange == null ? that.codeRange == null : this.codeRange.equals(that.codeRange));
+	}
+
+	@Override
+	public boolean isStatement() {
+		return false;
 	}
 
 	public void merge(UniEmptyStatement that) {
+		if (that.comments != null) {
+			if (this.comments == null) {
+				this.comments = that.comments;
+			} else {
+				this.comments.addAll(that.comments);
+			}
+		}
+		if (that.codeRange != null) {
+			this.codeRange = that.codeRange;
+		}
 	}
 }
