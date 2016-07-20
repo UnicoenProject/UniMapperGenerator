@@ -590,6 +590,17 @@ class UniMapperGeneratorGenerator implements IGenerator {
 									«val invokingState = r.getInvokingState»
 									«IF stateList.add(invokingState)»
 										case «invokingState»: {
+											«if (it.op == "MERGE") it.op.toLowerCase 
+											else if (it.op == "ADD")
+"val results = it.visit.flatten
+if(results instanceof ArrayList<?>){
+	for (result: results)
+		add += result
+}
+else
+	add"
+											else if (it.op == "RETURN") "ret" 
+											else it.op» += it.visit
 											«if (it.op == "MERGE" || it.op == "ADD") it.op.toLowerCase else if (it.op == "RETURN") "ret" else it.op» += it.visit
 										}
 									«ENDIF»
