@@ -7,6 +7,8 @@ public abstract class Traverser {
 	public abstract void traverseLongLiteral(UniLongLiteral node);
 	public abstract void traverseDoubleLiteral(UniDoubleLiteral node);
 	public abstract void traverseStringLiteral(UniStringLiteral node);
+	public abstract void traverseByteLiteral(UniByteLiteral node);
+	public abstract void traverseCharacterLiteral(UniCharacterLiteral node);
 	public abstract void traverseIdent(UniIdent node);
 	public abstract void traverseArray(UniArray node);
 	public abstract void traverseFieldAccess(UniFieldAccess node);
@@ -16,6 +18,7 @@ public abstract class Traverser {
 	public abstract void traverseUnaryOp(UniUnaryOp node);
 	public abstract void traverseBinOp(UniBinOp node);
 	public abstract void traverseTernaryOp(UniTernaryOp node);
+	public abstract void traverseCast(UniCast node);
 	public abstract void traverseReturn(UniReturn node);
 	public abstract void traverseBreak(UniBreak node);
 	public abstract void traverseContinue(UniContinue node);
@@ -25,11 +28,19 @@ public abstract class Traverser {
 	public abstract void traverseEnhancedFor(UniEnhancedFor node);
 	public abstract void traverseWhile(UniWhile node);
 	public abstract void traverseDoWhile(UniDoWhile node);
+	public abstract void traverseSwitch(UniSwitch node);
+	public abstract void traverseSwitchUnit(UniSwitchUnit node);
 	public abstract void traverseVariableDec(UniVariableDec node);
+	public abstract void traverseEmptyStatement(UniEmptyStatement node);
 	public abstract void traverseFieldDec(UniFieldDec node);
 	public abstract void traverseMethodDec(UniMethodDec node);
 	public abstract void traverseArg(UniArg node);
+	public abstract void traverseEnumConstant(UniEnumConstant node);
 	public abstract void traverseClassDec(UniClassDec node);
+	public abstract void traverseInterfaceDec(UniInterfaceDec node);
+	public abstract void traverseProgram(UniProgram node);
+	public abstract void traverseImport(UniImport node);
+	public abstract void traverseNamespace(UniNamespace node);
 
 	public final void traverseExpr(UniExpr node) {
 		if (node instanceof UniBoolLiteral) {
@@ -50,6 +61,14 @@ public abstract class Traverser {
 		}
 		if (node instanceof UniStringLiteral) {
 			traverseStringLiteral((UniStringLiteral)node);
+			return;
+		}
+		if (node instanceof UniByteLiteral) {
+			traverseByteLiteral((UniByteLiteral)node);
+			return;
+		}
+		if (node instanceof UniCharacterLiteral) {
+			traverseCharacterLiteral((UniCharacterLiteral)node);
 			return;
 		}
 		if (node instanceof UniIdent) {
@@ -88,6 +107,10 @@ public abstract class Traverser {
 			traverseTernaryOp((UniTernaryOp)node);
 			return;
 		}
+		if (node instanceof UniCast) {
+			traverseCast((UniCast)node);
+			return;
+		}
 		if (node instanceof UniReturn) {
 			traverseReturn((UniReturn)node);
 			return;
@@ -124,8 +147,20 @@ public abstract class Traverser {
 			traverseDoWhile((UniDoWhile)node);
 			return;
 		}
+		if (node instanceof UniSwitch) {
+			traverseSwitch((UniSwitch)node);
+			return;
+		}
+		if (node instanceof UniSwitchUnit) {
+			traverseSwitchUnit((UniSwitchUnit)node);
+			return;
+		}
 		if (node instanceof UniVariableDec) {
 			traverseVariableDec((UniVariableDec)node);
+			return;
+		}
+		if (node instanceof UniEmptyStatement) {
+			traverseEmptyStatement((UniEmptyStatement)node);
 			return;
 		}
 		throw new RuntimeException("Unknown node: " + node);
@@ -144,6 +179,14 @@ public abstract class Traverser {
 			traverseArg((UniArg)node);
 			return;
 		}
+		if (node instanceof UniEnumConstant) {
+			traverseEnumConstant((UniEnumConstant)node);
+			return;
+		}
+		if (node instanceof UniClassDec) {
+			traverseClassDec((UniClassDec)node);
+			return;
+		}
 		throw new RuntimeException("Unknown node: " + node);
 	}
 
@@ -156,8 +199,20 @@ public abstract class Traverser {
 			traverseMemberDec((UniMemberDec)node);
 			return;
 		}
-		if (node instanceof UniClassDec) {
-			traverseClassDec((UniClassDec)node);
+		if (node instanceof UniInterfaceDec) {
+			traverseInterfaceDec((UniInterfaceDec)node);
+			return;
+		}
+		if (node instanceof UniProgram) {
+			traverseProgram((UniProgram)node);
+			return;
+		}
+		if (node instanceof UniImport) {
+			traverseImport((UniImport)node);
+			return;
+		}
+		if (node instanceof UniNamespace) {
+			traverseNamespace((UniNamespace)node);
 			return;
 		}
 		throw new RuntimeException("Unknown node: " + node);

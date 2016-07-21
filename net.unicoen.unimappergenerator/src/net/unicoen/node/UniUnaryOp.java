@@ -1,4 +1,5 @@
 package net.unicoen.node;
+import net.unicoen.node_helper.*;
 
 /** 単項式 */
 public class UniUnaryOp extends UniExpr {
@@ -23,6 +24,8 @@ public class UniUnaryOp extends UniExpr {
 		int result = 17;
 		result = result * 31 + (operator == null ? 0 : operator.hashCode());
 		result = result * 31 + (expr == null ? 0 : expr.hashCode());
+		result = result * 31 + (comments == null ? 0 : comments.hashCode());
+		result = result * 31 + (codeRange == null ? 0 : codeRange.hashCode());
 		return result;
 	}
 
@@ -31,7 +34,9 @@ public class UniUnaryOp extends UniExpr {
 		if (obj == null || !(obj instanceof UniUnaryOp)) return false;
 		UniUnaryOp that = (UniUnaryOp)obj;
 		return (this.operator == null ? that.operator == null : this.operator.equals(that.operator))
-			&& (this.expr == null ? that.expr == null : this.expr.equals(that.expr));
+			&& (this.expr == null ? that.expr == null : this.expr.equals(that.expr))
+			&& (this.comments == null ? that.comments == null : this.comments.equals(that.comments))
+			&& (this.codeRange == null ? that.codeRange == null : this.codeRange.equals(that.codeRange));
 	}
 
 	@Override
@@ -45,6 +50,16 @@ public class UniUnaryOp extends UniExpr {
 		}
 		if (that.expr != null) {
 			this.expr = that.expr;
+		}
+		if (that.comments != null) {
+			if (this.comments == null) {
+				this.comments = that.comments;
+			} else {
+				this.comments.addAll(that.comments);
+			}
+		}
+		if (that.codeRange != null) {
+			this.codeRange = that.codeRange;
 		}
 	}
 }

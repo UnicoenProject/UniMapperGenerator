@@ -3,31 +3,27 @@ package net.unicoen.node;
 import java.util.List;
 import net.unicoen.node_helper.*;
 
-/** 関数/メソッド呼び出し */
-public class UniMethodCall extends UniExpr {
-	public UniExpr receiver;
-	public String methodName;
+public class UniEnumConstant extends UniMemberDec {
+	public String name;
 	public List<UniExpr> args;
 
-	public UniMethodCall() {
+	public UniEnumConstant() {
 	}
 
-	public UniMethodCall(UniExpr receiver, String methodName, List<UniExpr> args) {
-		this.receiver = receiver;
-		this.methodName = methodName;
+	public UniEnumConstant(String name, List<UniExpr> args) {
+		this.name = name;
 		this.args = args;
 	}
 
 	@Override
 	public String toString() {
-		return "MethodCall(" + methodName + ")";
+		return "EnumConstant(" + name + ")";
 	}
 
 	@Override
 	public int hashCode() {
 		int result = 17;
-		result = result * 31 + (receiver == null ? 0 : receiver.hashCode());
-		result = result * 31 + (methodName == null ? 0 : methodName.hashCode());
+		result = result * 31 + (name == null ? 0 : name.hashCode());
 		result = result * 31 + (args == null ? 0 : args.hashCode());
 		result = result * 31 + (comments == null ? 0 : comments.hashCode());
 		result = result * 31 + (codeRange == null ? 0 : codeRange.hashCode());
@@ -36,26 +32,17 @@ public class UniMethodCall extends UniExpr {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof UniMethodCall)) return false;
-		UniMethodCall that = (UniMethodCall)obj;
-		return (this.receiver == null ? that.receiver == null : this.receiver.equals(that.receiver))
-			&& (this.methodName == null ? that.methodName == null : this.methodName.equals(that.methodName))
+		if (obj == null || !(obj instanceof UniEnumConstant)) return false;
+		UniEnumConstant that = (UniEnumConstant)obj;
+		return (this.name == null ? that.name == null : this.name.equals(that.name))
 			&& (this.args == null ? that.args == null : this.args.equals(that.args))
 			&& (this.comments == null ? that.comments == null : this.comments.equals(that.comments))
 			&& (this.codeRange == null ? that.codeRange == null : this.codeRange.equals(that.codeRange));
 	}
 
-	@Override
-	public boolean isStatement() {
-		return false;
-	}
-
-	public void merge(UniMethodCall that) {
-		if (that.receiver != null) {
-			this.receiver = that.receiver;
-		}
-		if (that.methodName != null) {
-			this.methodName = that.methodName;
+	public void merge(UniEnumConstant that) {
+		if (that.name != null) {
+			this.name = that.name;
 		}
 		if (that.args != null) {
 			if (this.args == null) {

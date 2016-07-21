@@ -1,6 +1,7 @@
 package net.unicoen.node;
 
 import java.util.List;
+import net.unicoen.node_helper.*;
 
 public class UniEnhancedFor extends UniExpr {
 	public List<String> modifiers;
@@ -33,6 +34,8 @@ public class UniEnhancedFor extends UniExpr {
 		result = result * 31 + (name == null ? 0 : name.hashCode());
 		result = result * 31 + (container == null ? 0 : container.hashCode());
 		result = result * 31 + (statement == null ? 0 : statement.hashCode());
+		result = result * 31 + (comments == null ? 0 : comments.hashCode());
+		result = result * 31 + (codeRange == null ? 0 : codeRange.hashCode());
 		return result;
 	}
 
@@ -44,7 +47,9 @@ public class UniEnhancedFor extends UniExpr {
 			&& (this.type == null ? that.type == null : this.type.equals(that.type))
 			&& (this.name == null ? that.name == null : this.name.equals(that.name))
 			&& (this.container == null ? that.container == null : this.container.equals(that.container))
-			&& (this.statement == null ? that.statement == null : this.statement.equals(that.statement));
+			&& (this.statement == null ? that.statement == null : this.statement.equals(that.statement))
+			&& (this.comments == null ? that.comments == null : this.comments.equals(that.comments))
+			&& (this.codeRange == null ? that.codeRange == null : this.codeRange.equals(that.codeRange));
 	}
 
 	@Override
@@ -71,6 +76,16 @@ public class UniEnhancedFor extends UniExpr {
 		}
 		if (that.statement != null) {
 			this.statement = that.statement;
+		}
+		if (that.comments != null) {
+			if (this.comments == null) {
+				this.comments = that.comments;
+			} else {
+				this.comments.addAll(that.comments);
+			}
+		}
+		if (that.codeRange != null) {
+			this.codeRange = that.codeRange;
 		}
 	}
 }
