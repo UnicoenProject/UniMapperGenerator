@@ -1053,19 +1053,21 @@ parameterdeclarationlist => List<UniArg>
 	| parameterdeclarationlist$ADD ',' parameterdeclaration$ADD
 ;
 
-parameterdeclaration
+parameterdeclaration => UniArg
 :
-	attributespecifierseq? declspecifierseq declarator
-	| attributespecifierseq? declspecifierseq declarator '=' initializerclause
-	| attributespecifierseq? declspecifierseq abstractdeclarator?
-	| attributespecifierseq? declspecifierseq abstractdeclarator? '='
+	attributespecifierseq? declspecifierseq$type declarator$name
+	| attributespecifierseq? declspecifierseq$type declarator$name '=' initializerclause
+	| attributespecifierseq? declspecifierseq$type abstractdeclarator?$name
+	| attributespecifierseq? declspecifierseq$type abstractdeclarator?$name '='
 	initializerclause
 ;
+
+
 
 functiondefinition => UniMethodDec
 :
 	/*attributespecifierseq? declspecifierseq? declarator virtspecifierseq? functionbody*/
-	attributespecifierseq? declspecifierseqwithouttype?$modifiers 
+	attributespecifierseq? declspecifierseqwithouttype?$modifiers
 		functionheader$MERGE virtspecifierseq? functionbody$block
 	
 ;
@@ -1080,7 +1082,7 @@ functionheader => UniMethodDec
 functiondeclarator => UniMethodDec
 :
 	/*ptrdeclarator*/
-	declaratorid$methodName '(' parameterdeclarationclause ')'
+	declaratorid$methodName '(' parameterdeclarationclause$args ')'
 ;
 
 functionbody => UniBlock
