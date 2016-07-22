@@ -157,10 +157,10 @@ lambdadeclarator
 	attributespecifierseq? trailingreturntype?
 ;
 
-postfixexpression => UniUnaryOp
+postfixexpression => UniBinOp
 :
 	primaryexpression$RETURN
-	| postfixexpression '[' expression ']'
+	| postfixexpression$left LeftBracket$operator assignmentexpression$right RightBracket$operator//changed expression to assignmentexpression
 	| postfixexpression '[' bracedinitlist ']'
 	| postfixexpression '(' expressionlist? ')'
 	| simpletypespecifier '(' expressionlist? ')'
@@ -194,19 +194,24 @@ pseudodestructorname
 	| '~' decltypespecifier
 ;
 
-unaryexpression => UniUnaryOp
+binaryexpression => UniBinOp
 :
 	postfixexpression$RETURN
-	| PlusPlus$operator castexpression$expr
+	| unaryexpression$RETURN
+	| newexpression$RETURN
+	| deleteexpression$RETURN
+;
+
+unaryexpression => UniUnaryOp
+:
+	PlusPlus$operator castexpression$expr
 	| MinusMinus$operator castexpression$expr
 	| unaryoperator$operator castexpression$expr
-	| Sizeof unaryexpression
+	| Sizeof binaryexpression
 	| Sizeof '(' typeid ')'
 	| Sizeof '...' '(' Identifier ')'
 	| Alignof '(' typeid ')'
 	| noexceptexpression$RETURN
-	| newexpression$RETURN
-	| deleteexpression$RETURN
 ;
 
 unaryoperator
@@ -265,10 +270,10 @@ noexceptexpression
 	Noexcept '(' expression ')'
 ;
 
-castexpression => UniUnaryOp
+castexpression => UniBinOp
 :
-	unaryexpression$RETURN
-	| '(' typeid ')' castexpression
+	binaryexpression$RETURN
+	| LeftBracket$operator typeid$right RightBracket$operator castexpression$right
 ;
 
 pmexpression => UniBinOp
@@ -388,11 +393,17 @@ constantexpression
 statement
 :
 	labeledstatement
-	| attributespecifierseq? expressionstatement//
+	| attributespecifierseq? expressionstatement
 	| attributespecifierseq? compoundstatement
 	| attributespecifierseq? selectionstatement
+	| attributespecifierseq? switchstatement
 	| attributespecifierseq? iterationstatement
+	| attributespecifierseq? whilestatement
+	| attributespecifierseq? dowhilestatement
 	| attributespecifierseq? jumpstatement
+	| attributespecifierseq? breakStatement
+	| attributespecifierseq? continueStatement
+	| attributespecifierseq? returnStatement
 	| variabledeclarationstatement/*Additionaly*/
 	| declarationstatement
 	| attributespecifierseq? tryblock
@@ -420,11 +431,15 @@ statementseq => List<UniExpr>
 	statement$ADD statement*$ADD
 ;
 
-selectionstatement
+selectionstatement => UniIf
 :
-	If '(' condition ')' statement
-	| If '(' condition ')' statement Else statement
-	| Switch '(' condition ')' statement
+	If '(' condition$cond ')' statement$trueStatement
+	| If '(' condition$cond ')' statement$trueStatement Else statement$falseStatement
+;
+
+switchstatement
+:
+	Switch '(' condition ')' statement
 ;
 
 condition
@@ -434,17 +449,31 @@ condition
 	| attributespecifierseq? declspecifierseq declarator bracedinitlist
 ;
 
-iterationstatement
+whilestatement => UniWhile
 :
-	While '(' condition ')' statement
-	| Do statement While '(' expression ')' ';'
-	| For '(' forinitstatement condition? ';' expression? ')' statement
-	| For '(' forrangedeclaration ':' forrangeinitializer ')' statement
+	 While '(' condition$cond ')' statement$statement
+;
+
+dowhilestatement => UniDoWhile
+:
+	 Do compoundstatement$statement While '(' expression$cond ')' ';'
+	 //compoundstatement instedof statement
+;
+
+iterationstatement => UniFor
+:
+	For '(' forinitstatement$init condition?$cond ';' expression?$step ')' statement$statement
+;
+
+enhancedForStatement => UniEnhancedFor
+:	
+	For '(' forrangedeclaration$MERGE ':' forrangeinitializer$container ')' statement$statement
 ;
 
 forinitstatement
 :
 	expressionstatement
+	| variabledeclarationstatement
 	| simpledeclaration
 ;
 
@@ -461,12 +490,25 @@ forrangeinitializer
 
 jumpstatement
 :
-	Break ';'
-	| Continue ';'
-	| Return expression? ';'
-	| Return bracedinitlist ';'
-	| Goto Identifier ';'
+	Goto Identifier ';'
 ;
+
+breakStatement => UniBreak
+:
+	Break ';'
+;
+
+continueStatement => UniContinue
+:
+	Continue ';'
+;
+
+returnStatement => UniReturn
+:
+	Return expression?$value ';'
+	| Return bracedinitlist$value ';'
+;
+
 
 declarationstatement
 :
@@ -543,27 +585,19 @@ variabledeclarationstatement => List<UniVariableDec>
 variabledeclaration => List<UniVariableDec>
 :
 	attributespecifierseq? declspecifierseqwithouttype?$modifiers 
-		typespecifier$type ptroperator*$type variableDeclaratorList?$MERGE
+		typespecifier$type variableDeclaratorList?$MERGE
 ;
 
 
 /*Declarators*/
 variableDeclaratorList
 :
-	variableDeclarator$ADD
-	| arrayDeclarator$ADD
-	| variableDeclaratorList$ADD ',' variableDeclarator$ADD
+	| variableDeclarator$ADD (',' variableDeclarator$ADD)*
 ;
 
-//Additionally
-arrayDeclarator
-:
-	declaratorid$name dims ('=' initializerclause$value)?
-	| declaratorid$name arrayCreationExpression$value
-;
 arrayCreationExpression => UniNewArray
 :	 
-	 dimExprs$MERGE dims?$type '=' bracedinitlist$value
+	 dimExprs$MERGE dims?$type ('=' bracedinitlist$value)?
 	|dims$type bracedinitlist$value
 ;
 
@@ -579,8 +613,10 @@ dimExpr => UniNewArray
 	
 variableDeclarator
 :
-	declaratorid$name ('=' initializerclause$value)?
 	/*declarator initializer?*/
+	ptroperator*$name declaratorid$name ('=' initializerclause$value)?
+	| ptroperator*$name declaratorid$name dims ('=' initializerclause$value)?//Additionally
+	| ptroperator*$name declaratorid$name arrayCreationExpression$value//Additionally
 ;
 
 dims => String
@@ -2181,7 +2217,7 @@ DIGIT
 literal
 :
 	integerliteral
-	| Characterliteral
+	| characterliteral
 	| floatingliteral
 	| stringliteral
 	| booleanliteral
@@ -2288,6 +2324,11 @@ Longlongsuffix
 :
 	'll'
 	| 'LL'
+;
+
+characterliteral => UniCharacterLiteral
+:
+	Characterliteral$value
 ;
 
 Characterliteral
