@@ -83,7 +83,7 @@ unqualifiedid
 	| operatorfunctionid
 	| conversionfunctionid
 	| literaloperatorid
-	| '~' classname
+	| '~' myclassname
 	| '~' decltypespecifier
 	| templateid
 ;
@@ -481,9 +481,27 @@ declarationseq
 	| declarationseq declaration
 ;
 
+myclassbody=>List<UniMemberDec>
+:
+	  memberspecification?$ADD 
+;
+
+// classspecifier does not work
+myclassspecifier=>UniClassDec
+:
+	myclasshead$MERGE  '{' myclassbody$members '}' ';'
+;
+
+myclasshead=>UniClassDec
+:
+	classkey attributespecifierseq? nestednamespecifier? classheadname$className classvirtspecifier? baseclause?
+	| classkey attributespecifierseq? baseclause?
+;
+
 declaration
 :
 	blockdeclaration
+	| myclassspecifier//additionally
 	| functiondefinition
 	| templatedeclaration
 	| explicitinstantiation
@@ -566,7 +584,8 @@ variableDeclarator
 ;
 
 dims => String
-:	LeftBracket$ADD RightBracket$ADD (LeftBracket$ADD RightBracket$ADD)*
+:	
+	LeftBracket$ADD RightBracket$ADD (LeftBracket$ADD RightBracket$ADD)*
 ;
 	
 simpledeclaration
@@ -641,14 +660,14 @@ typedefname
 	Identifier
 ;
 
-typespecifier=>String
+typespecifier
 :
 	trailingtypespecifier
-	| classspecifier
+	| myclassspecifier
 	| enumspecifier
 ;
 
-trailingtypespecifier
+trailingtypespecifier=>String
 :
 	simpletypespecifier
 	| elaboratedtypespecifier
@@ -691,7 +710,7 @@ simpletypespecifier
 
 typename
 :
-	classname
+	myclassname
 	| enumname
 	| typedefname
 	| simpletemplateid
@@ -1102,7 +1121,7 @@ bracedinitlist=>UniArray
 ;
 
 /*Classes*/
-classname=>String
+myclassname=>String
 :
 	Identifier
 	| simpletemplateid
@@ -1110,24 +1129,24 @@ classname=>String
 
 classspecifier=>UniClassDec
 :
-	classhead$MERGE classbody$members
+	classhead$MERGE  classbody$members
 ;
 
 classbody=>List<UniMemberDec>
 :
-	'{' memberspecification?$ADD '}'
+	 '{' memberspecification?$ADD '}'
 ;
-
 
 classhead=>UniClassDec
 :
-	classkey attributespecifierseq? classheadname$MERGE classvirtspecifier? baseclause?
+	classkey attributespecifierseq? nestednamespecifier? classheadname$className classvirtspecifier? baseclause?
 	| classkey attributespecifierseq? baseclause?
 ;
 
-classheadname=>UniClassDec
+
+classheadname
 :
-	nestednamespecifier? classname$className
+	nestednamespecifier? myclassname
 ;
 
 classvirtspecifier
@@ -1144,14 +1163,14 @@ classkey
 
 memberspecification=>List<UniMemberDec>
 :
-	memberdeclaration$ADD memberspecification?
-	| accessspecifier ':' memberspecification?
+	memberdeclaration$ADD memberspecification?$ADD
+	| accessspecifier$ADD ':' memberspecification?$ADD
 ;
 
-memberdeclaration=>List<UniMemberDec>
+memberdeclaration
 :
-	attributespecifierseq? declspecifierseq? memberdeclaratorlist?$ADD ';'
-	| functiondefinition$ADD
+	membervariabledeclarationstatement
+	| functiondefinition
 	| usingdeclaration
 	| static_assertdeclaration
 	| templatedeclaration
@@ -1159,17 +1178,34 @@ memberdeclaration=>List<UniMemberDec>
 	| emptydeclaration
 ;
 
+membervariabledeclarationstatement => List<UniFieldDec>
+:
+	membervariabledeclaration$RETURN ';'
+	
+;
+
+membervariabledeclaration => List<UniFieldDec>
+:
+	attributespecifierseq? declspecifierseqwithouttype?$modifiers 
+		typespecifier$type ptroperator*$type memberdeclaratorlist?$MERGE
+;
+
 memberdeclaratorlist
 :
-	memberdeclarator
-	| memberdeclaratorlist ',' memberdeclarator
+	memberdeclarator$ADD
+	//arrayDeclarator$ADD
+	| memberdeclaratorlist$ADD ',' memberdeclarator$ADD
 ;
 
 memberdeclarator
 :
-	declarator virtspecifierseq? purespecifier?
-	| declarator braceorequalinitializer?
-	| Identifier? attributespecifierseq? ':' constantexpression
+	declaratorid$name virtspecifierseq?$modifiers purespecifier?
+	| declaratorid$name ('=' initializerclause$value)?
+	| declaratorid$name bracedinitlist?$value
+	| Identifier?$name attributespecifierseq? ':' constantexpression$value
+	//declarator virtspecifierseq? purespecifier?
+	//| declarator braceorequalinitializer?
+	//| Identifier? attributespecifierseq? ':' constantexpression
 ;
 
 virtspecifierseq
@@ -1217,7 +1253,7 @@ basespecifier
 
 classordecltype
 :
-	nestednamespecifier? classname
+	nestednamespecifier? myclassname
 	| decltypespecifier
 ;
 
