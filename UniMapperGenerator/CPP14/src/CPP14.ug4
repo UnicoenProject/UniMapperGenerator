@@ -156,6 +156,10 @@ lambdadeclarator
 	'(' parameterdeclarationclause ')' Mutable? exceptionspecification?
 	attributespecifierseq? trailingreturntype?
 ;
+idexpressionlapper => UniIdent
+:
+	idexpression$name
+;
 
 postfixexpression => UniBinOp
 :
@@ -167,10 +171,10 @@ postfixexpression => UniBinOp
 	| typenamespecifier '(' expressionlist? ')'
 	| simpletypespecifier bracedinitlist
 	| typenamespecifier bracedinitlist
-	| postfixexpression '.' Template? idexpression
-	| postfixexpression '->' Template? idexpression
-	| postfixexpression '.' pseudodestructorname
-	| postfixexpression '->' pseudodestructorname
+	| postfixexpression$left Dot$operator Template? idexpressionlapper$right
+	| postfixexpression$left Arrow$operator Template? idexpressionlapper$right
+	| postfixexpression$left Dot$operator pseudodestructorname$right
+	| postfixexpression$left Arrow$operator pseudodestructorname$right
 	| postfixexpression '++'
 	| postfixexpression '--'
 	| Dynamic_cast '<' typeid '>' '(' expression ')'
@@ -273,7 +277,7 @@ noexceptexpression
 castexpression => UniBinOp
 :
 	binaryexpression$RETURN
-	| LeftBracket$operator typeid$right RightBracket$operator castexpression$right
+    | LeftParen$operator typeid$right RightParen$operator castexpression$right
 ;
 
 pmexpression => UniBinOp
