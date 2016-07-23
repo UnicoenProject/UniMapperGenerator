@@ -166,7 +166,7 @@ postfixexpression => UniBinOp
 	primaryexpression$RETURN
 	| postfixexpression$left LeftBracket$operator assignmentexpression$right RightBracket$operator//changed expression to assignmentexpression
 	| postfixexpression '[' bracedinitlist ']'
-	| postfixexpression '(' expressionlist? ')'
+	| postfixexpression$left LeftParen$operator expressionlist?$right RightParen$operator
 	| simpletypespecifier '(' expressionlist? ')'
 	| typenamespecifier '(' expressionlist? ')'
 	| simpletypespecifier bracedinitlist
@@ -185,9 +185,9 @@ postfixexpression => UniBinOp
 	| Typeid '(' typeid ')'
 ;
 
-expressionlist
+expressionlist=>UniArray
 :
-	initializerlist
+	initializerlist$items
 ;
 
 pseudodestructorname
