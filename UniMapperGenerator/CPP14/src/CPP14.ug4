@@ -274,10 +274,10 @@ noexceptexpression
 	Noexcept '(' expression ')'
 ;
 
-castexpression => UniBinOp
+castexpression => UniCast
 :
 	binaryexpression$RETURN
-    | LeftParen$operator typeid$right RightParen$operator castexpression$right
+    | LeftParen typeid$type RightParen$operator castexpression$value
 ;
 
 pmexpression => UniBinOp
