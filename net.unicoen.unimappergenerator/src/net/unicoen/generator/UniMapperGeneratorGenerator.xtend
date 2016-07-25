@@ -601,7 +601,6 @@ else
 	add"
 											else if (it.op == "RETURN") "ret" 
 											else it.op» += it.visit
-											«if (it.op == "MERGE" || it.op == "ADD") it.op.toLowerCase else if (it.op == "RETURN") "ret" else it.op» += it.visit
 										}
 									«ENDIF»
 								«ENDIF»
