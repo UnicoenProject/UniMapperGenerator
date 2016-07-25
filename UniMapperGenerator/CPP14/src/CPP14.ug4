@@ -49,9 +49,9 @@ root translationunit;
 package net.unicoen.parser;
 }
 /*Basic concepts*/
-translationunit
+translationunit => UniProgram
 :
-	declarationseq? EOF2
+	declarationseq?$nodes EOF2
 ;
 
 /*Expressions*/
@@ -59,7 +59,7 @@ primaryexpression => UniUnaryOp
 :
 	literal$RETURN
 	| This
-	| '(' expression ')'
+	| LeftParen$operator expression$RETURN RightParen$operator
 	| identexpression$RETURN //Additionally
 	//| idexpression
 	| lambdaexpression
@@ -521,10 +521,10 @@ declarationstatement
 ;
 
 /*Declarations*/
-declarationseq
+declarationseq => List<UniExpr>
 :
-	declaration
-	| declarationseq declaration
+	declaration$ADD
+	| declarationseq$ADD declaration$ADD
 ;
 
 myclassbody=>List<UniMemberDec>
@@ -596,7 +596,7 @@ variabledeclaration => List<UniVariableDec>
 /*Declarators*/
 variableDeclaratorList
 :
-	| variableDeclarator$ADD (',' variableDeclarator$ADD)*
+	variableDeclarator$ADD (',' variableDeclarator$ADD)*
 ;
 
 arrayCreationExpression => UniNewArray
@@ -1104,7 +1104,7 @@ parameterdeclaration => UniArg
 
 
 
-functiondefinition => UniMethodDec
+functiondefinition => UniFunctionDec
 :
 	/*attributespecifierseq? declspecifierseq? declarator virtspecifierseq? functionbody*/
 	attributespecifierseq? declspecifierseqwithouttype?$modifiers
@@ -1113,16 +1113,16 @@ functiondefinition => UniMethodDec
 ;
 
 /*Additionaly*/
-functionheader => UniMethodDec
+functionheader => UniFunctionDec
 :
 	typespecifier?$returnType functiondeclarator$MERGE
 ;
 
 /*Additionaly*/
-functiondeclarator => UniMethodDec
+functiondeclarator => UniFunctionDec
 :
 	/*ptrdeclarator*/
-	declaratorid$methodName '(' parameterdeclarationclause$args ')'
+	declaratorid$functionName '(' parameterdeclarationclause$args ')'
 ;
 
 functionbody => UniBlock
@@ -1212,7 +1212,7 @@ memberspecification=>List<UniMemberDec>
 memberdeclaration
 :
 	membervariabledeclarationstatement
-	| functiondefinition
+	//| functiondefinition //コピーしてmethoddefinitionを作る
 	| usingdeclaration
 	| static_assertdeclaration
 	| templatedeclaration
