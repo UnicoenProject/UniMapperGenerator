@@ -1,6 +1,7 @@
 package net.unicoen.node;
 
 import java.util.List;
+import net.unicoen.node_helper.*;
 
 /** 関数/メソッド呼び出し */
 public class UniMethodCall extends UniExpr {
@@ -28,6 +29,8 @@ public class UniMethodCall extends UniExpr {
 		result = result * 31 + (receiver == null ? 0 : receiver.hashCode());
 		result = result * 31 + (methodName == null ? 0 : methodName.hashCode());
 		result = result * 31 + (args == null ? 0 : args.hashCode());
+		result = result * 31 + (comments == null ? 0 : comments.hashCode());
+		result = result * 31 + (codeRange == null ? 0 : codeRange.hashCode());
 		return result;
 	}
 
@@ -37,7 +40,9 @@ public class UniMethodCall extends UniExpr {
 		UniMethodCall that = (UniMethodCall)obj;
 		return (this.receiver == null ? that.receiver == null : this.receiver.equals(that.receiver))
 			&& (this.methodName == null ? that.methodName == null : this.methodName.equals(that.methodName))
-			&& (this.args == null ? that.args == null : this.args.equals(that.args));
+			&& (this.args == null ? that.args == null : this.args.equals(that.args))
+			&& (this.comments == null ? that.comments == null : this.comments.equals(that.comments))
+			&& (this.codeRange == null ? that.codeRange == null : this.codeRange.equals(that.codeRange));
 	}
 
 	@Override
@@ -58,6 +63,16 @@ public class UniMethodCall extends UniExpr {
 			} else {
 				this.args.addAll(that.args);
 			}
+		}
+		if (that.comments != null) {
+			if (this.comments == null) {
+				this.comments = that.comments;
+			} else {
+				this.comments.addAll(that.comments);
+			}
+		}
+		if (that.codeRange != null) {
+			this.codeRange = that.codeRange;
 		}
 	}
 }

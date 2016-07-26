@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>C</name>
+	<name>CPP14</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -20,11 +20,4 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.xtext.ui.shared.xtextNature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>src/C.ug4</name>
-			<type>1</type>
-			<locationURI>PARENT-3-PROJECT_LOC/Box%20Sync/Personal/JUNICOEN%E9%96%A2%E4%BF%82/ug4/C.ug4</locationURI>
-		</link>
-	</linkedResources>
 </projectDescription>

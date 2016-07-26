@@ -1,4 +1,5 @@
 package net.unicoen.node;
+import net.unicoen.node_helper.*;
 
 public class UniCharacterLiteral extends UniExpr {
 	public char value;
@@ -20,6 +21,7 @@ public class UniCharacterLiteral extends UniExpr {
 		int result = 17;
 		result = result * 31 + (int)value;
 		result = result * 31 + (comments == null ? 0 : comments.hashCode());
+		result = result * 31 + (codeRange == null ? 0 : codeRange.hashCode());
 		return result;
 	}
 
@@ -28,7 +30,8 @@ public class UniCharacterLiteral extends UniExpr {
 		if (obj == null || !(obj instanceof UniCharacterLiteral)) return false;
 		UniCharacterLiteral that = (UniCharacterLiteral)obj;
 		return this.value == that.value
-			&& (this.comments == null ? that.comments == null : this.comments.equals(that.comments));
+			&& (this.comments == null ? that.comments == null : this.comments.equals(that.comments))
+			&& (this.codeRange == null ? that.codeRange == null : this.codeRange.equals(that.codeRange));
 	}
 
 	@Override
@@ -46,6 +49,9 @@ public class UniCharacterLiteral extends UniExpr {
 			} else {
 				this.comments.addAll(that.comments);
 			}
+		}
+		if (that.codeRange != null) {
+			this.codeRange = that.codeRange;
 		}
 	}
 }

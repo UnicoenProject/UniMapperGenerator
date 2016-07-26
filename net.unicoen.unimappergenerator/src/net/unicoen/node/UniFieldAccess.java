@@ -1,4 +1,5 @@
 package net.unicoen.node;
+import net.unicoen.node_helper.*;
 
 public class UniFieldAccess extends UniExpr {
 	public UniExpr receiver;
@@ -26,6 +27,7 @@ public class UniFieldAccess extends UniExpr {
 		result = result * 31 + (fieldName == null ? 0 : fieldName.hashCode());
 		result = result * 31 + (index == null ? 0 : index.hashCode());
 		result = result * 31 + (comments == null ? 0 : comments.hashCode());
+		result = result * 31 + (codeRange == null ? 0 : codeRange.hashCode());
 		return result;
 	}
 
@@ -36,7 +38,8 @@ public class UniFieldAccess extends UniExpr {
 		return (this.receiver == null ? that.receiver == null : this.receiver.equals(that.receiver))
 			&& (this.fieldName == null ? that.fieldName == null : this.fieldName.equals(that.fieldName))
 			&& (this.index == null ? that.index == null : this.index.equals(that.index))
-			&& (this.comments == null ? that.comments == null : this.comments.equals(that.comments));
+			&& (this.comments == null ? that.comments == null : this.comments.equals(that.comments))
+			&& (this.codeRange == null ? that.codeRange == null : this.codeRange.equals(that.codeRange));
 	}
 
 	@Override
@@ -60,6 +63,9 @@ public class UniFieldAccess extends UniExpr {
 			} else {
 				this.comments.addAll(that.comments);
 			}
+		}
+		if (that.codeRange != null) {
+			this.codeRange = that.codeRange;
 		}
 	}
 }
