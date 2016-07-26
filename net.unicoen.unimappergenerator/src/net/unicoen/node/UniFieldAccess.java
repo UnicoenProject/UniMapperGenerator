@@ -3,13 +3,15 @@ package net.unicoen.node;
 public class UniFieldAccess extends UniExpr {
 	public UniExpr receiver;
 	public String fieldName;
+	public UniExpr index;
 
 	public UniFieldAccess() {
 	}
 
-	public UniFieldAccess(UniExpr receiver, String fieldName) {
+	public UniFieldAccess(UniExpr receiver, String fieldName, UniExpr index) {
 		this.receiver = receiver;
 		this.fieldName = fieldName;
+		this.index = index;
 	}
 
 	@Override
@@ -22,6 +24,7 @@ public class UniFieldAccess extends UniExpr {
 		int result = 17;
 		result = result * 31 + (receiver == null ? 0 : receiver.hashCode());
 		result = result * 31 + (fieldName == null ? 0 : fieldName.hashCode());
+		result = result * 31 + (index == null ? 0 : index.hashCode());
 		result = result * 31 + (comments == null ? 0 : comments.hashCode());
 		return result;
 	}
@@ -32,6 +35,7 @@ public class UniFieldAccess extends UniExpr {
 		UniFieldAccess that = (UniFieldAccess)obj;
 		return (this.receiver == null ? that.receiver == null : this.receiver.equals(that.receiver))
 			&& (this.fieldName == null ? that.fieldName == null : this.fieldName.equals(that.fieldName))
+			&& (this.index == null ? that.index == null : this.index.equals(that.index))
 			&& (this.comments == null ? that.comments == null : this.comments.equals(that.comments));
 	}
 
@@ -46,6 +50,9 @@ public class UniFieldAccess extends UniExpr {
 		}
 		if (that.fieldName != null) {
 			this.fieldName = that.fieldName;
+		}
+		if (that.index != null) {
+			this.index = that.index;
 		}
 		if (that.comments != null) {
 			if (this.comments == null) {
