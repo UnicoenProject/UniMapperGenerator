@@ -211,11 +211,17 @@ unaryexpression => UniUnaryOp
 	PlusPlus$operator castexpression$expr
 	| MinusMinus$operator castexpression$expr
 	| unaryoperator$operator castexpression$expr
-	| Sizeof binaryexpression
-	| Sizeof '(' typeid ')'
-	| Sizeof '...' '(' Identifier ')'
-	| Alignof '(' typeid ')'
+	| Sizeof$operator binaryexpression$expr
+	| Sizeof$operator '(' typeidlapper$expr ')'//add
+	| Sizeof$operator '(' typeid$expr ')'
+	| Sizeof$operator '...' '(' Identifier$expr ')'
+	| Alignof$operator '(' typeid$expr ')'
 	| noexceptexpression$RETURN
+;
+
+typeidlapper => UniIdent
+:
+	typeid$name
 ;
 
 unaryoperator
