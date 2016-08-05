@@ -83,7 +83,7 @@ unqualifiedid
 	| operatorfunctionid
 	| conversionfunctionid
 	| literaloperatorid
-	| '~' classname
+	| '~' myclassname
 	| '~' decltypespecifier
 	| templateid
 ;
@@ -156,21 +156,25 @@ lambdadeclarator
 	'(' parameterdeclarationclause ')' Mutable? exceptionspecification?
 	attributespecifierseq? trailingreturntype?
 ;
+idexpressionlapper => UniIdent
+:
+	idexpression$name
+;
 
-postfixexpression => UniUnaryOp
+postfixexpression => UniBinOp
 :
 	primaryexpression$RETURN
-	| postfixexpression '[' expression ']'
+	| postfixexpression$left LeftBracket$operator assignmentexpression$right RightBracket$operator//changed expression to assignmentexpression
 	| postfixexpression '[' bracedinitlist ']'
-	| postfixexpression '(' expressionlist? ')'
+	| postfixexpression$left LeftParen$operator expressionlist?$right RightParen$operator
 	| simpletypespecifier '(' expressionlist? ')'
 	| typenamespecifier '(' expressionlist? ')'
 	| simpletypespecifier bracedinitlist
 	| typenamespecifier bracedinitlist
-	| postfixexpression '.' Template? idexpression
-	| postfixexpression '->' Template? idexpression
-	| postfixexpression '.' pseudodestructorname
-	| postfixexpression '->' pseudodestructorname
+	| postfixexpression$left Dot$operator Template? idexpressionlapper$right
+	| postfixexpression$left Arrow$operator Template? idexpressionlapper$right
+	| postfixexpression$left Dot$operator pseudodestructorname$right
+	| postfixexpression$left Arrow$operator pseudodestructorname$right
 	| postfixexpression '++'
 	| postfixexpression '--'
 	| Dynamic_cast '<' typeid '>' '(' expression ')'
@@ -181,9 +185,9 @@ postfixexpression => UniUnaryOp
 	| Typeid '(' typeid ')'
 ;
 
-expressionlist
+expressionlist=>UniArray
 :
-	initializerlist
+	initializerlist$items
 ;
 
 pseudodestructorname
@@ -194,19 +198,24 @@ pseudodestructorname
 	| '~' decltypespecifier
 ;
 
-unaryexpression => UniUnaryOp
+binaryexpression => UniBinOp
 :
 	postfixexpression$RETURN
-	| PlusPlus$operator castexpression$expr
+	| unaryexpression$RETURN
+	| newexpression$RETURN
+	| deleteexpression$RETURN
+;
+
+unaryexpression => UniUnaryOp
+:
+	PlusPlus$operator castexpression$expr
 	| MinusMinus$operator castexpression$expr
 	| unaryoperator$operator castexpression$expr
-	| Sizeof unaryexpression
+	| Sizeof binaryexpression
 	| Sizeof '(' typeid ')'
 	| Sizeof '...' '(' Identifier ')'
 	| Alignof '(' typeid ')'
 	| noexceptexpression$RETURN
-	| newexpression$RETURN
-	| deleteexpression$RETURN
 ;
 
 unaryoperator
@@ -265,10 +274,10 @@ noexceptexpression
 	Noexcept '(' expression ')'
 ;
 
-castexpression => UniUnaryOp
+castexpression => UniCast
 :
-	unaryexpression$RETURN
-	| '(' typeid ')' castexpression
+	binaryexpression$RETURN
+    | LeftParen typeid$type RightParen$operator castexpression$value
 ;
 
 pmexpression => UniBinOp
@@ -388,11 +397,17 @@ constantexpression
 statement
 :
 	labeledstatement
-	| attributespecifierseq? expressionstatement//
+	| attributespecifierseq? expressionstatement
 	| attributespecifierseq? compoundstatement
 	| attributespecifierseq? selectionstatement
+	| attributespecifierseq? switchstatement
 	| attributespecifierseq? iterationstatement
+	| attributespecifierseq? whilestatement
+	| attributespecifierseq? dowhilestatement
 	| attributespecifierseq? jumpstatement
+	| attributespecifierseq? breakStatement
+	| attributespecifierseq? continueStatement
+	| attributespecifierseq? returnStatement
 	| variabledeclarationstatement/*Additionaly*/
 	| declarationstatement
 	| attributespecifierseq? tryblock
@@ -420,11 +435,15 @@ statementseq => List<UniExpr>
 	statement$ADD statement*$ADD
 ;
 
-selectionstatement
+selectionstatement => UniIf
 :
-	If '(' condition ')' statement
-	| If '(' condition ')' statement Else statement
-	| Switch '(' condition ')' statement
+	If '(' condition$cond ')' statement$trueStatement
+	| If '(' condition$cond ')' statement$trueStatement Else statement$falseStatement
+;
+
+switchstatement
+:
+	Switch '(' condition ')' statement
 ;
 
 condition
@@ -434,17 +453,31 @@ condition
 	| attributespecifierseq? declspecifierseq declarator bracedinitlist
 ;
 
-iterationstatement
+whilestatement => UniWhile
 :
-	While '(' condition ')' statement
-	| Do statement While '(' expression ')' ';'
-	| For '(' forinitstatement condition? ';' expression? ')' statement
-	| For '(' forrangedeclaration ':' forrangeinitializer ')' statement
+	 While '(' condition$cond ')' statement$statement
+;
+
+dowhilestatement => UniDoWhile
+:
+	 Do compoundstatement$statement While '(' expression$cond ')' ';'
+	 //compoundstatement instedof statement
+;
+
+iterationstatement => UniFor
+:
+	For '(' forinitstatement$init condition?$cond ';' expression?$step ')' statement$statement
+;
+
+enhancedForStatement => UniEnhancedFor
+:	
+	For '(' forrangedeclaration$MERGE ':' forrangeinitializer$container ')' statement$statement
 ;
 
 forinitstatement
 :
 	expressionstatement
+	| variabledeclarationstatement
 	| simpledeclaration
 ;
 
@@ -461,12 +494,25 @@ forrangeinitializer
 
 jumpstatement
 :
-	Break ';'
-	| Continue ';'
-	| Return expression? ';'
-	| Return bracedinitlist ';'
-	| Goto Identifier ';'
+	Goto Identifier ';'
 ;
+
+breakStatement => UniBreak
+:
+	Break ';'
+;
+
+continueStatement => UniContinue
+:
+	Continue ';'
+;
+
+returnStatement => UniReturn
+:
+	Return expression?$value ';'
+	| Return bracedinitlist$value ';'
+;
+
 
 declarationstatement
 :
@@ -481,9 +527,27 @@ declarationseq
 	| declarationseq declaration
 ;
 
+myclassbody=>List<UniMemberDec>
+:
+	  memberspecification?$ADD 
+;
+
+// classspecifier does not work
+myclassspecifier=>UniClassDec
+:
+	myclasshead$MERGE  '{' myclassbody$members '}' ';'
+;
+
+myclasshead=>UniClassDec
+:
+	classkey attributespecifierseq? nestednamespecifier? classheadname$className classvirtspecifier? baseclause?
+	| classkey attributespecifierseq? baseclause?
+;
+
 declaration
 :
 	blockdeclaration
+	| myclassspecifier//additionally
 	| functiondefinition
 	| templatedeclaration
 	| explicitinstantiation
@@ -525,27 +589,19 @@ variabledeclarationstatement => List<UniVariableDec>
 variabledeclaration => List<UniVariableDec>
 :
 	attributespecifierseq? declspecifierseqwithouttype?$modifiers 
-		typespecifier$type ptroperator*$type variableDeclaratorList?$MERGE
+		typespecifier$type variableDeclaratorList?$MERGE
 ;
 
 
 /*Declarators*/
 variableDeclaratorList
 :
-	variableDeclarator$ADD
-	| arrayDeclarator$ADD
-	| variableDeclaratorList$ADD ',' variableDeclarator$ADD
+	| variableDeclarator$ADD (',' variableDeclarator$ADD)*
 ;
 
-//Additionally
-arrayDeclarator
-:
-	declaratorid$name dims ('=' initializerclause$value)?
-	| declaratorid$name arrayCreationExpression$value
-;
 arrayCreationExpression => UniNewArray
 :	 
-	 dimExprs$MERGE dims?$type '=' bracedinitlist$value
+	 dimExprs$MERGE dims?$type ('=' bracedinitlist$value)?
 	|dims$type bracedinitlist$value
 ;
 
@@ -561,12 +617,15 @@ dimExpr => UniNewArray
 	
 variableDeclarator
 :
-	declaratorid$name ('=' initializerclause$value)?
 	/*declarator initializer?*/
+	ptroperator*$name declaratorid$name ('=' initializerclause$value)?
+	| ptroperator*$name declaratorid$name dims ('=' initializerclause$value)?//Additionally
+	| ptroperator*$name declaratorid$name arrayCreationExpression$value//Additionally
 ;
 
 dims => String
-:	LeftBracket$ADD RightBracket$ADD (LeftBracket$ADD RightBracket$ADD)*
+:	
+	LeftBracket$ADD RightBracket$ADD (LeftBracket$ADD RightBracket$ADD)*
 ;
 	
 simpledeclaration
@@ -641,14 +700,14 @@ typedefname
 	Identifier
 ;
 
-typespecifier=>String
+typespecifier
 :
 	trailingtypespecifier
-	| classspecifier
+	| myclassspecifier
 	| enumspecifier
 ;
 
-trailingtypespecifier
+trailingtypespecifier=>String
 :
 	simpletypespecifier
 	| elaboratedtypespecifier
@@ -691,7 +750,7 @@ simpletypespecifier
 
 typename
 :
-	classname
+	myclassname
 	| enumname
 	| typedefname
 	| simpletemplateid
@@ -1034,19 +1093,21 @@ parameterdeclarationlist => List<UniArg>
 	| parameterdeclarationlist$ADD ',' parameterdeclaration$ADD
 ;
 
-parameterdeclaration
+parameterdeclaration => UniArg
 :
-	attributespecifierseq? declspecifierseq declarator
-	| attributespecifierseq? declspecifierseq declarator '=' initializerclause
-	| attributespecifierseq? declspecifierseq abstractdeclarator?
-	| attributespecifierseq? declspecifierseq abstractdeclarator? '='
+	attributespecifierseq? declspecifierseq$type declarator$name
+	| attributespecifierseq? declspecifierseq$type declarator$name '=' initializerclause
+	| attributespecifierseq? declspecifierseq$type abstractdeclarator?$name
+	| attributespecifierseq? declspecifierseq$type abstractdeclarator?$name '='
 	initializerclause
 ;
+
+
 
 functiondefinition => UniMethodDec
 :
 	/*attributespecifierseq? declspecifierseq? declarator virtspecifierseq? functionbody*/
-	attributespecifierseq? declspecifierseqwithouttype?$modifiers 
+	attributespecifierseq? declspecifierseqwithouttype?$modifiers
 		functionheader$MERGE virtspecifierseq? functionbody$block
 	
 ;
@@ -1061,7 +1122,7 @@ functionheader => UniMethodDec
 functiondeclarator => UniMethodDec
 :
 	/*ptrdeclarator*/
-	declaratorid$methodName '(' parameterdeclarationclause ')'
+	declaratorid$methodName '(' parameterdeclarationclause$args ')'
 ;
 
 functionbody => UniBlock
@@ -1102,7 +1163,7 @@ bracedinitlist=>UniArray
 ;
 
 /*Classes*/
-classname=>String
+myclassname=>String
 :
 	Identifier
 	| simpletemplateid
@@ -1110,24 +1171,24 @@ classname=>String
 
 classspecifier=>UniClassDec
 :
-	classhead$MERGE classbody$members
+	classhead$MERGE  classbody$members
 ;
 
 classbody=>List<UniMemberDec>
 :
-	'{' memberspecification?$ADD '}'
+	 '{' memberspecification?$ADD '}'
 ;
-
 
 classhead=>UniClassDec
 :
-	classkey attributespecifierseq? classheadname$MERGE classvirtspecifier? baseclause?
+	classkey attributespecifierseq? nestednamespecifier? classheadname$className classvirtspecifier? baseclause?
 	| classkey attributespecifierseq? baseclause?
 ;
 
-classheadname=>UniClassDec
+
+classheadname
 :
-	nestednamespecifier? classname$className
+	nestednamespecifier? myclassname
 ;
 
 classvirtspecifier
@@ -1144,14 +1205,14 @@ classkey
 
 memberspecification=>List<UniMemberDec>
 :
-	memberdeclaration$ADD memberspecification?
-	| accessspecifier ':' memberspecification?
+	memberdeclaration$ADD memberspecification?$ADD
+	| accessspecifier$ADD ':' memberspecification?$ADD
 ;
 
-memberdeclaration=>List<UniMemberDec>
+memberdeclaration
 :
-	attributespecifierseq? declspecifierseq? memberdeclaratorlist?$ADD ';'
-	| functiondefinition$ADD
+	membervariabledeclarationstatement
+	| functiondefinition
 	| usingdeclaration
 	| static_assertdeclaration
 	| templatedeclaration
@@ -1159,17 +1220,34 @@ memberdeclaration=>List<UniMemberDec>
 	| emptydeclaration
 ;
 
+membervariabledeclarationstatement => List<UniFieldDec>
+:
+	membervariabledeclaration$RETURN ';'
+	
+;
+
+membervariabledeclaration => List<UniFieldDec>
+:
+	attributespecifierseq? declspecifierseqwithouttype?$modifiers 
+		typespecifier$type ptroperator*$type memberdeclaratorlist?$MERGE
+;
+
 memberdeclaratorlist
 :
-	memberdeclarator
-	| memberdeclaratorlist ',' memberdeclarator
+	memberdeclarator$ADD
+	//arrayDeclarator$ADD
+	| memberdeclaratorlist$ADD ',' memberdeclarator$ADD
 ;
 
 memberdeclarator
 :
-	declarator virtspecifierseq? purespecifier?
-	| declarator braceorequalinitializer?
-	| Identifier? attributespecifierseq? ':' constantexpression
+	declaratorid$name virtspecifierseq?$modifiers purespecifier?
+	| declaratorid$name ('=' initializerclause$value)?
+	| declaratorid$name bracedinitlist?$value
+	| Identifier?$name attributespecifierseq? ':' constantexpression$value
+	//declarator virtspecifierseq? purespecifier?
+	//| declarator braceorequalinitializer?
+	//| Identifier? attributespecifierseq? ':' constantexpression
 ;
 
 virtspecifierseq
@@ -1217,7 +1295,7 @@ basespecifier
 
 classordecltype
 :
-	nestednamespecifier? classname
+	nestednamespecifier? myclassname
 	| decltypespecifier
 ;
 
@@ -2143,7 +2221,7 @@ DIGIT
 literal
 :
 	integerliteral
-	| Characterliteral
+	| characterliteral
 	| floatingliteral
 	| stringliteral
 	| booleanliteral
@@ -2250,6 +2328,11 @@ Longlongsuffix
 :
 	'll'
 	| 'LL'
+;
+
+characterliteral => UniCharacterLiteral
+:
+	Characterliteral$value
 ;
 
 Characterliteral
