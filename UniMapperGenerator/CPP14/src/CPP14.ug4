@@ -552,7 +552,8 @@ myclasshead=>UniClassDec
 
 declaration
 :
-	blockdeclaration
+	variabledeclarationstatement
+	| blockdeclaration
 	| myclassspecifier//additionally
 	| functiondefinition
 	| templatedeclaration
