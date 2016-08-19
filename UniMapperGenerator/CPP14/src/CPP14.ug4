@@ -175,8 +175,8 @@ postfixexpression => UniBinOp
 	| postfixexpression$left Arrow$operator Template? idexpressionlapper$right
 	| postfixexpression$left Dot$operator pseudodestructorname$right
 	| postfixexpression$left Arrow$operator pseudodestructorname$right
-	| postfixexpression '++'
-	| postfixexpression '--'
+	| postfixexpression$left PlusPlus$operator
+	| postfixexpression$left MinusMinus$operator
 	| Dynamic_cast '<' typeid '>' '(' expression ')'
 	| Static_cast '<' typeid '>' '(' expression ')'
 	| Reinterpret_cast '<' typeid '>' '(' expression ')'
