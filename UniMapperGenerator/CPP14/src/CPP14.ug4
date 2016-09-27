@@ -605,34 +605,16 @@ variableDeclaratorList
 :
 	| variableDeclarator$ADD (',' variableDeclarator$ADD)*
 ;
-
-arrayCreationExpression => UniNewArray
-:	 
-	 dimExprs$MERGE dims?$type ('=' bracedinitlist$value)?
-	|dims$type bracedinitlist$value
-;
-
-dimExprs => UniNewArray
-:	
-	dimExpr$MERGE dimExpr*$MERGE
-;
-
-dimExpr => UniNewArray
-:	
-	'[' expression$elementsNum ']'
-;
 	
 variableDeclarator
 :
 	/*declarator initializer?*/
-	ptroperator*$name declaratorid$name ('=' initializerclause$value)?
-	| ptroperator*$name declaratorid$name dims ('=' initializerclause$value)?//Additionally
-	| ptroperator*$name declaratorid$name arrayCreationExpression$value//Additionally
+	ptroperator*$name declaratorid$name (LeftBracket$name expression?$arrayLength RightBracket$name)* ('=' initializerclause$value)?
 ;
 
 dims => String
 :	
-	LeftBracket$ADD RightBracket$ADD (LeftBracket$ADD RightBracket$ADD)*
+	LeftBracket RightBracket
 ;
 	
 simpledeclaration
