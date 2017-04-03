@@ -59,7 +59,7 @@ primaryexpression => UniUnaryOp
 :
 	literal$RETURN
 	| This
-	| '(' expression ')'
+	| '(' expression$RETURN ')'
 	| identexpression$RETURN //Additionally
 	//| idexpression
 	| lambdaexpression
@@ -750,6 +750,7 @@ simpletypespecifier
 	| Unsigned
 	| Float
 	| Double
+	| File
 	| Void
 	| Auto
 	| decltypespecifier
@@ -1611,6 +1612,11 @@ Do
 Double
 :
 	'double'
+;
+
+File
+:
+	'FILE'
 ;
 
 Dynamic_cast
